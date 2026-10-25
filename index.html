@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Desain Kustom</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="flex-1 flex flex-col">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: LOGIN & USER REGISTRATION SCREEN -->
+        <!-- ========================================== -->
+        <div id="loginScreen" class="flex-1 flex flex-col justify-between p-4 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden min-h-screen">
+            <!-- Decorative Blobs -->
+            <div class="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex-1 flex items-center justify-center py-8 relative z-10">
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+                    
+                    <!-- Left Banner / Intro -->
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-12 text-white flex flex-col justify-between relative">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs font-semibold backdrop-blur-md mb-6 border border-white/20">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Platform Desain & Workflow
+                            </div>
+                            <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-4">EX STUDIO CUSTOM DESIGN</h1>
+                            <p class="text-blue-100 text-sm leading-relaxed mb-6">
+                                Kelola permintaan desain, unggah foto referensi hingga 5 gambar, atur instruksi revisi, dan pantau penyelesaian karya secara real-time.
+                            </p>
+                        </div>
+
+                        <div class="space-y-4 pt-6 border-t border-white/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-amber-300 font-bold shrink-0">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold">Tim Marketing</h4>
+                                    <p class="text-xs text-blue-200">Buat brief, unggah referensi & ajukan revisi.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300 font-bold shrink-0">
+                                    <i class="fa-solid fa-palette"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold">Tim Desainer</h4>
+                                    <p class="text-xs text-blue-200">Ambil tugas terbuka, kerjakan & unggah hasil karya.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Form & Quick Access -->
+                    <div class="p-8 md:p-10 flex flex-col justify-between bg-white">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-slate-900">Masuk ke Sistem</h2>
+                                    <p class="text-slate-500 text-xs mt-1">Gunakan kredensial akun atau klik tombol login demo.</p>
+                                </div>
+                                <div style="display: none;">
+                                <button onclick="openRegisterModal()" class="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl transition-all border border-blue-100 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-plus"></i> Daftar Akun
+                                </button></div>
+                            </div>
+
+                            <!-- Credential Login Form -->
+                            <form onsubmit="handleManualLogin(event)" class="space-y-4 mb-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Username</label>
+                                    <input type="text" id="loginUsername" required placeholder="username" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+                                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md shadow-blue-500/20">
+                                    Login
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Quick Login Shortcuts & Public Gallery Button -->
+                         <button onclick="openLandingApprovedGallery()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200 flex items-center gap-1.5 transition-all">
+                                    <i class="fa-solid fa-images"></i> Galeri Approve Publik
+                                </button>
+                        <div style="display: none;">
+                        <div class="border-t border-slate-100 pt-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Login Cepat Demo (1-Klik)</p>
+                                
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2" id="quickLoginGrid">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Landing info -->
+            <div class="text-center pb-4 text-xs text-slate-400 relative z-10">
+                Sistem Manajemen Desain Kustom &copy; 2026 &bull; Dilengkapi Galeri Approve & Kunci Proyek
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: DASHBOARD SCREEN                 -->
+        <!-- ========================================== -->
+        <div id="dashboardScreen" class="hidden flex-1 flex-col min-h-screen">
+            
+            <!-- TOP NAVBAR -->
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-30 glass-effect">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <!-- Logo & Brand -->
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-500/20">
+                                <i class="fa-solid fa-layer-group text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 text-lg leading-none block">DesainStudio</span>
+                                <span class="text-xs text-slate-500 font-medium">Sistem Workflow & Revisi Desain</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Navigation Tabs -->
+                        <nav class="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                            <button onclick="switchTab('main')" id="navTabMain" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm">
+                                <i class="fa-solid fa-house mr-1.5"></i> Beranda & Proyek
+                            </button>
+                            <button onclick="switchTab('revision')" id="navTabRevision" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate-left text-rose-500"></i> Menu Revisi
+                                <span id="navRevisionBadge" class="px-1.5 py-0.2 bg-rose-500 text-white rounded-full text-[10px] font-extrabold hidden">0</span>
+                            </button>
+                            <button onclick="switchTab('approvedGallery')" id="navTabApprovedGallery" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
+                                <i class="fa-solid fa-images text-emerald-500"></i> Galeri Approve
+                            </button>
+                        </nav>
+
+                        <!-- User Profile Badge & Logout -->
+                        <div class="flex items-center gap-3">
+                            <!-- Role Badge -->
+                            <div id="userRoleBadge" class="flex items-center gap-3 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                                <div id="userAvatar" class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                                    A
+                                </div>
+                                <div class="text-left pr-1">
+                                    <div id="userName" class="text-xs font-bold text-slate-800 leading-tight">User</div>
+                                    <div id="userRoleText" class="text-[10px] uppercase tracking-wider font-semibold text-blue-600 leading-tight">Role</div>
+                                </div>
+                            </div>
+
+                            <!-- Logout Button -->
+                            <button onclick="logout()" class="text-slate-500 hover:text-red-600 p-2 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 text-xs font-semibold" title="Keluar">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span class="hidden sm:inline">Keluar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Sub Navigation -->
+                    <div class="flex md:hidden border-t border-slate-100 py-2 gap-2">
+                        <button onclick="switchTab('main')" id="mNavTabMain" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 text-center">
+                            Beranda
+                        </button>
+                        <button onclick="switchTab('revision')" id="mNavTabRevision" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-600 text-center flex items-center justify-center gap-1">
+                            Revisi <span id="mNavRevisionBadge" class="px-1.5 py-0.2 bg-rose-500 text-white rounded-full text-[10px] hidden">0</span>
+                        </button>
+                        <button onclick="switchTab('approvedGallery')" id="mNavTabApprovedGallery" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-600 text-center flex items-center justify-center gap-1">
+                            Galeri Approve
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+                <!-- SUMMARY METRICS PANEL (FILTERABLE STATS) -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div onclick="applyStatusFilter('all')" class="stat-card cursor-pointer bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">Total Proyek</p>
+                            <h3 id="statTotal" class="text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                    </div>
+                    <div onclick="applyStatusFilter('Pending')" class="stat-card cursor-pointer bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">Menunggu</p>
+                            <h3 id="statPending" class="text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                    </div>
+                    <div onclick="applyStatusFilter('In Progress')" class="stat-card cursor-pointer bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-spinner"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">Diproses</p>
+                            <h3 id="statInProgress" class="text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                    </div>
+                    <div onclick="applyStatusFilter('Dalam Revisi')" class="stat-card cursor-pointer bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">Dalam Revisi</p>
+                            <h3 id="statRevision" class="text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                    </div>
+                    <div onclick="switchTab('approvedGallery')" class="stat-card cursor-pointer bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm hover:shadow-md transition-all flex items-center gap-4 bg-gradient-to-br from-emerald-50/50 to-white">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-images"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-emerald-700 font-medium">Galeri Approve</p>
+                            <h3 id="statApproved" class="text-2xl font-bold text-emerald-800">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- SECTION: MAIN TAB CONTENT                 -->
+                <!-- ========================================== -->
+                <div id="tabMainContent" class="space-y-8">
+
+                    <!-- VIEW 1: MARKETING MAIN DASHBOARD VIEW -->
+                    <div id="marketingView" class="space-y-8 hidden">
+                        
+                        <!-- Header & Create Request Trigger -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Permintaan Desain Saya</h2>
+                                <p class="text-xs text-slate-500 mt-1">Kelola brief desain, unggah referensi foto, setujui/kunci hasil, dan hapus proyek.</p>
+                            </div>
+                            <button onclick="openCreateRequestModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 text-xs shrink-0">
+                                <i class="fa-solid fa-plus text-sm"></i> Buat Permintaan Desain
+                            </button>
+                        </div>
+
+                        <!-- Tabel Permintaan Desain Saya -->
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                                <h3 class="font-bold text-slate-800 text-sm">Daftar Proyek Desain</h3>
+                                <div id="marketingFilterBadge" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg font-semibold">Filter: Semua Status</div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
+                                            <th class="py-3 px-6">Proyek & Klien</th>
+                                            <th class="py-3 px-6">Foto Brief</th>
+                                            <th class="py-3 px-6">Kategori & Deadline</th>
+                                            <th class="py-3 px-6">Status & Approval</th>
+                                            <th class="py-3 px-6">Desainer</th>
+                                            <th class="py-3 px-6 text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="marketingTableBody" class="divide-y divide-slate-100 text-xs">
+                                        <!-- Data Rows via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- VIEW 2: DESIGNER MAIN DASHBOARD VIEW -->
+                    <div id="designerView" class="space-y-8 hidden">
+                        
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Papan Kerja Desain</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Ambil tugas terbuka dari Marketing, proses karya, dan unggah hasil desain.</p>
+                            </div>
+                            <!-- Status Filter Buttons -->
+                            <div class="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+                                <button onclick="filterDesignerCards('all')" id="btnFilterAll" class="filter-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition-all">Semua</button>
+                                <button onclick="filterDesignerCards('Pending')" id="btnFilterPending" class="filter-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-all">Menunggu</button>
+                                <button onclick="filterDesignerCards('In Progress')" id="btnFilterProgress" class="filter-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-all">Diproses</button>
+                                <button onclick="filterDesignerCards('Dalam Revisi')" id="btnFilterRevision" class="filter-btn px-3 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-all">Dalam Revisi</button>
+                                <button onclick="filterDesignerCards('Completed')" id="btnFilterCompleted" class="filter-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-all">Selesai</button>
+                            </div>
+                        </div>
+
+                        <!-- Designer Task Grid -->
+                        <div id="designerCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Cards injected via JS -->
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ========================================== -->
+                <!-- SECTION: DEDICATED REVISION TAB CONTENT    -->
+                <!-- ========================================== -->
+                <div id="tabRevisionContent" class="space-y-8 hidden">
+                    
+                    <div class="bg-gradient-to-r from-rose-500 to-indigo-600 rounded-3xl p-6 md:p-8 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="space-y-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold backdrop-blur-md inline-block">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Pusat Monitoring Revisi
+                            </span>
+                            <h2 class="text-2xl md:text-3xl font-extrabold">Menu & Riwayat Revisi</h2>
+                            <p class="text-rose-100 text-xs md:text-sm max-w-2xl">
+                                Pantau semua proyek desain yang membutuhkan perbaikan, beri umpan balik catatan revisi baru, dan cek galeri foto instruksi.
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[140px] shrink-0">
+                            <span class="text-xs uppercase tracking-wider font-semibold text-rose-100 block">Perlu Revisi</span>
+                            <span id="tabRevisionCount" class="text-3xl font-black">0 Proyek</span>
+                        </div>
+                    </div>
+
+                    <!-- REVISION LIST TABLE -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800 text-sm">Daftar Proyek Status "Dalam Revisi"</h3>
+                            <span class="text-xs text-slate-500">Urutan revisi terbaru</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
+                                        <th class="py-3 px-6">Proyek & Klien</th>
+                                        <th class="py-3 px-6">Catatan Revisi Terakhir</th>
+                                        <th class="py-3 px-6">Status Revisi</th>
+                                        <th class="py-3 px-6">Foto Coretan</th>
+                                        <th class="py-3 px-6">Desainer Assigned</th>
+                                        <th class="py-3 px-6 text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="revisionTableBody" class="divide-y divide-slate-100 text-xs">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ========================================== -->
+                <!-- SECTION: DEDICATED APPROVED GALLERY TAB    -->
+                <!-- ========================================== -->
+                <div id="tabApprovedGalleryContent" class="space-y-8 hidden">
+                    
+                    <!-- Hero Banner -->
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-6 md:p-8 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="space-y-2">
+                            <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold backdrop-blur-md inline-block">
+                                <i class="fa-solid fa-images mr-1"></i> Portofolio Resmi
+                            </span>
+                            <h2 class="text-2xl md:text-3xl font-extrabold">Galeri Approve (Disetujui & Dikunci)</h2>
+                            <p class="text-emerald-100 text-xs md:text-sm max-w-2xl">
+                                Kumpulan hasil karya desain pilihan yang telah diverifikasi dan disetujui secara resmi oleh tim Marketing. Siap diunduh dan dipublikasikan.
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center min-w-[140px] shrink-0">
+                            <span class="text-xs uppercase tracking-wider font-semibold text-emerald-100 block">Total Disetujui</span>
+                            <span id="approvedGalleryCountBadge" class="text-3xl font-black">0 Karya</span>
+                        </div>
+                    </div>
+
+                    <!-- Search & Category Filters -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="w-full sm:w-80 relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </span>
+                            <input type="text" id="approvedSearchInput" oninput="renderApprovedGalleryGrid()" placeholder="Cari judul proyek, klien, atau desainer..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
+
+                        <div id="approvedCategoryFilterContainer" class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+                            <button onclick="filterApprovedCategory('all')" id="btnAppCategoryAll" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold transition-all">Semua</button>
+                            <button onclick="filterApprovedCategory('Jersey')" id="btnAppCategorySocial" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold transition-all">Jersey</button>
+                            <button onclick="filterApprovedCategory('Kerodong')" id="btnAppCategoryBanner" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold transition-all">Banner</button>
+                            <button onclick="filterApprovedCategory('Jaket')" id="btnAppCategoryLogo" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold transition-all">Logo</button>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Grid -->
+                    <div id="approvedGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <!-- Populated via JS -->
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL: REGISTER NEW USER                   -->
+        <!-- ========================================== -->
+        <div id="registerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+                <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus text-blue-400"></i>
+                        <h3 class="font-bold text-base">Pendaftaran Akun Baru</h3>
+                    </div>
+                    <button onclick="closeRegisterModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="handleUserRegistration(event)" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Lengkap *</label>
+                        <input type="text" id="regName" required placeholder="Contoh: Farhan" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Username *</label>
+                        <input type="text" id="regUsername" required placeholder="Contoh: farhan_mkt" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password *</label>
+                        <input type="password" id="regPassword" required placeholder="••••••••" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Peran / Role *</label>
+                        <select id="regRole" required class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none bg-white">
+                            <option value="marketing">Marketing (Membuat Brief & Revisi)</option>
+                            <option value="designer">Desainer (Mengerjakan & Upload Hasil)</option>
+                        </select>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeRegisterModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20">
+                            Daftarkan Akun
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL: LANDING / PUBLIC APPROVED GALLERY   -->
+        <!-- ========================================== -->
+        <div id="landingGalleryModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100">
+                <div class="px-6 py-4 bg-emerald-700 text-white flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-images text-emerald-300"></i>
+                        <h3 class="font-bold text-base">Galeri Publik & Portofolio Desain Disetujui (Approved)</h3>
+                    </div>
+                    <button onclick="closeLandingApprovedGallery()" class="text-emerald-200 hover:text-white p-1 rounded-lg">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 flex-1 overflow-y-auto custom-scrollbar space-y-6 bg-slate-50">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="w-full sm:w-80 relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </span>
+                            <input type="text" id="landingSearchInput" oninput="renderLandingGalleryGrid()" placeholder="Cari karya di galeri publik..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
+                        <div class="flex items-center gap-1.5 w-full sm:w-auto">
+                            <button onclick="filterLandingCategory('all')" id="btnLandingCatAll" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold">Semua</button>
+                            <button onclick="filterLandingCategory('Jersey')" id="btnLandingCatSocial" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold">Jersey</button>
+                            <button onclick="filterLandingCategory('Kerodong')" id="btnLandingCatBanner" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold">Banner</button>
+                        </div>
+                    </div>
+
+                    <div id="landingGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 bg-white border-t border-slate-200 flex justify-end shrink-0">
+                    <button onclick="closeLandingApprovedGallery()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-all">
+                        Tutup Galeri
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL: MARKETING CREATE NEW REQUEST        -->
+        <!-- ========================================== -->
+        <div id="createRequestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+                <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-folder-plus text-blue-400"></i>
+                        <h3 class="font-bold text-base">Buat Permintaan Desain Baru</h3>
+                    </div>
+                    <button onclick="closeCreateRequestModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="requestForm" onsubmit="handleCreateRequest(event)" class="p-6 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Custom</label>
+                            <input type="text" id="reqTitle" required placeholder="" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Agen</label>
+                            <input type="text" id="reqClient" required placeholder="" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Kategori Desain *</label>
+                            <select id="reqCategory" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs bg-white">
+                                <option value="Jersey">Jersey</option>
+                                <option value="Kerodong">Kerodong</option>
+                                <option value="Jaket">Jaket</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tenggat Waktu (Deadline) *</label>
+                            <input type="date" id="reqDeadline" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Deskripsi Brief & Instruksi Desain *</label>
+                        <textarea id="reqDescription" rows="3" required placeholder="Jelaskan konsep, ukuran, warna dominan, teks utama, dan detail pendukung..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs"></textarea>
+                    </div>
+
+                    <!-- MULTI-IMAGE UPLOAD AREA (5 COLUMNS GRID) -->
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                                <i class="fa-solid fa-images text-blue-600 mr-1.5"></i> Upload Desain dan Logo (Maks. 5 Gambar)
+                            </label>
+                            <span id="reqImagesCounter" class="text-xs font-semibold text-slate-500">0/5 Terunggah</span>
+                        </div>
+
+                        <!-- 5 Columns Image Grid -->
+                        <div id="reqImagesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                            <div id="reqUploadBox" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-3 flex flex-col items-center justify-center min-h-[90px] text-center bg-white cursor-pointer relative transition-colors">
+                                <input type="file" id="reqFileInput" accept="image/*" multiple onchange="handleMultiImageSelect(event, 'req')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <i class="fa-solid fa-cloud-arrow-up text-xl text-blue-500 mb-1"></i>
+                                <span class="text-xs font-bold text-slate-700">+ Foto</span>
+                                <span class="text-[10px] text-slate-400">Klik / Drag</span>
+                            </div>
+                        </div>
+
+                        <!-- Textarea Keterangan / Catatan Gambar -->
+                        <div class="pt-1">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Keterangan Foto Referensi / Catatan Detail Gambar:</label>
+                            <textarea id="reqImagesNotes" rows="2" placeholder="Tuliskan penjelasan mengenai foto yang diunggah (misal: Foto 1 untuk tata letak, Foto 2 untuk gaya font)..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 text-xs outline-none bg-white"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeCreateRequestModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Permintaan Desain
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL: VIEW DETAILS & PROCESS (FOR DESIGNER & MARKETING) -->
+        <!-- ========================================== -->
+        <div id="designerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100">
+                <!-- Modal Header -->
+                <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-3">
+                        <span id="modalCategoryBadge" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500 text-white">Category</span>
+                        <h3 id="modalTitle" class="font-bold text-base leading-snug truncate max-w-md">Judul Proyek Desain</h3>
+                    </div>
+                    <button onclick="closeDesignerModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition-colors">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body (Scrollable) -->
+                <div class="p-6 flex-1 overflow-y-auto custom-scrollbar space-y-6">
+                    
+                    <!-- Client & Meta Info -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/70 text-xs">
+                        <div>
+                            <span class="text-slate-400 font-medium block">Klien:</span>
+                            <span id="modalClient" class="font-bold text-slate-800 text-sm">Nama Klien</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 font-medium block">Tenggat Waktu:</span>
+                            <span id="modalDeadline" class="font-bold text-slate-800 text-sm">-</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 font-medium block">Desainer Assigned:</span>
+                            <span id="modalAssignedDesigner" class="font-bold text-indigo-600 text-sm">Belum Ada</span>
+                        </div>
+                    </div>
+
+                    <!-- Brief Description -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Instruksi Brief Awal:</h4>
+                        <div id="modalDescription" class="p-4 bg-slate-50 rounded-2xl text-slate-700 text-xs leading-relaxed border border-slate-200/70 whitespace-pre-line">
+                            Detail brief awal akan ditampilkan di sini.
+                        </div>
+                    </div>
+
+                    <!-- Initial Reference Photos (5 Columns Grid Display) -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Foto Referensi Brief Awal (5 Kolom):</h4>
+                        <div id="modalRefGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+                            <!-- Populated via JS -->
+                        </div>
+                        <div id="modalRefNotesContainer" class="mt-2 text-xs bg-blue-50/60 p-3 rounded-xl border border-blue-100 text-slate-700 hidden">
+                            <span class="font-bold text-blue-900 block mb-0.5"><i class="fa-solid fa-comment-dots mr-1"></i> Keterangan Gambar Referensi:</span>
+                            <p id="modalRefNotesText" class="whitespace-pre-line text-slate-600"></p>
+                        </div>
+                    </div>
+
+                    <!-- REVISION HISTORY SECTION (If Available) -->
+                    <div id="modalRevisionSection" class="hidden space-y-3 bg-rose-50/60 p-4 rounded-2xl border border-rose-200">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-rose-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate-left"></i> Catatan Instruksi Revisi (Dari Marketing)
+                            </h4>
+                            <span id="modalRevisionCountBadge" class="text-[10px] font-extrabold bg-rose-600 text-white px-2 py-0.5 rounded-full">Revisi ke-1</span>
+                        </div>
+                        
+                        <div id="modalRevisionNotes" class="bg-white p-3 rounded-xl text-xs text-slate-800 border border-rose-100 shadow-sm whitespace-pre-line">
+                            - Catatan revisi...
+                        </div>
+
+                        <!-- Revision Photos 5 Columns Grid -->
+                        <div id="modalRevRefContainer" class="hidden pt-2">
+                            <span class="text-xs font-bold text-rose-700 block mb-1.5">Foto Coretan / Referensi Revisi (5 Kolom):</span>
+                            <div id="modalRevRefGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 bg-white p-2.5 rounded-xl border border-rose-200">
+                                <!-- Populated via JS -->
+                            </div>
+                            <div id="modalRevNotesContainer" class="mt-2 text-xs bg-rose-100/50 p-2.5 rounded-xl border border-rose-200 text-slate-700 hidden">
+                                <span class="font-bold text-rose-900 block mb-0.5"><i class="fa-solid fa-note-sticky mr-1"></i> Keterangan Foto Revisi:</span>
+                                <p id="modalRevNotesText" class="whitespace-pre-line text-slate-700"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DESIGNER WORKFLOW SECTION (VISIBLE TO DESIGNERS OR READ-ONLY FOR MARKETING) -->
+                    <div id="designerInteractiveSection" class="space-y-4 pt-4 border-t border-slate-200">
+                        <!-- Update Status Section -->
+                        <div id="statusUpdateControl">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Perbarui Status Pengerjaan:</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button onclick="updateStatusFromModal('Pending')" id="btnStatusPending" class="py-2 px-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                                    Menunggu
+                                </button>
+                                <button onclick="updateStatusFromModal('In Progress')" id="btnStatusProgress" class="py-2 px-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                                    Diproses
+                                </button>
+                                <button onclick="updateStatusFromModal('Dalam Revisi')" id="btnStatusRevision" class="py-2 px-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                                    Dalam Revisi
+                                </button>
+                                <button onclick="updateStatusFromModal('Completed')" id="btnStatusCompleted" class="py-2 px-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">
+                                    Selesai
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Upload Final / Revised Deliverables (5 Columns Grid) -->
+                        <div class="bg-indigo-50/50 p-5 rounded-2xl border border-indigo-100 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-950 flex items-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i> Multi Upload Hasil Desain (Maks. 5 Gambar)
+                                </h4>
+                                <span id="designerResultCounter" class="text-xs font-semibold text-indigo-600">0/5 Terunggah</span>
+                            </div>
+
+                            <!-- 5 Columns Deliverable Grid -->
+                            <div id="designerResultGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                                <div id="designerResultUploadBox" class="border-2 border-dashed border-indigo-200 hover:border-indigo-500 rounded-xl p-3 flex flex-col items-center justify-center min-h-[90px] text-center bg-white cursor-pointer relative transition-colors">
+                                    <input type="file" id="designerResultFileInput" accept="image/*" multiple onchange="handleMultiImageSelect(event, 'designer')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <i class="fa-solid fa-file-image text-xl text-indigo-500 mb-1"></i>
+                                    <span class="text-xs font-bold text-slate-700">+ Hasil</span>
+                                    <span class="text-[10px] text-slate-400">Format Gambar</span>
+                                </div>
+                            </div>
+
+                            <!-- Textarea Keterangan / Catatan Desainer -->
+                            <div class="pt-1">
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Keterangan / Catatan Hasil Karya Desainer:</label>
+                                <textarea id="designerResultNotes" rows="2" placeholder="Tuliskan keterangan mengenai hasil desain (misal: File opsi 1 & opsi 2 siap cetak resolusi tinggi)..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-xs outline-none bg-white"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 shrink-0">
+                    <button onclick="closeDesignerModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">
+                        Tutup
+                    </button>
+                    <button id="btnSaveDeliverables" onclick="saveDesignerDeliverables()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2 rounded-xl text-xs transition-all shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Hasil & Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL: MARKETING REQUEST REVISION          -->
+        <!-- ========================================== -->
+        <div id="revisionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+                <div class="px-6 py-4 bg-rose-600 text-white flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <h3 class="font-bold text-base">Ajukan Revisi Desain</h3>
+                    </div>
+                    <button onclick="closeRevisionModal()" class="text-rose-200 hover:text-white p-1 rounded-lg">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="submitRevisionRequest(event)" class="p-6 space-y-4 flex-1 overflow-y-auto custom-scrollbar">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Judul Proyek</label>
+                        <input type="text" id="revModalProjectTitle" readonly class="w-full px-3 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs border border-slate-200 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Detail Catatan & Bagian Yang Perlu Direvisi *</label>
+                        <textarea id="revModalNotes" rows="3" required placeholder="Jelaskan secara spesifik apa saja yang perlu diubah (misal: perbesar logo, ganti warna background ke biru, perbaiki typo teks)..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 text-xs outline-none"></textarea>
+                    </div>
+
+                    <!-- MULTI-IMAGE REVISION UPLOAD (5 COLUMNS GRID) -->
+                    <div class="space-y-3 bg-rose-50/50 p-4 rounded-2xl border border-rose-200">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-rose-800">
+                                <i class="fa-solid fa-images mr-1"></i> Upload Foto Tangkapan Layar / Coretan Revisi (Maks. 5 Gambar)
+                            </label>
+                            <span id="revImagesCounter" class="text-xs font-semibold text-rose-600">0/5 Terunggah</span>
+                        </div>
+
+                        <!-- 5 Columns Revision Grid -->
+                        <div id="revImagesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                            <div id="revUploadBox" class="border-2 border-dashed border-rose-300 hover:border-rose-500 rounded-xl p-3 flex flex-col items-center justify-center min-h-[90px] text-center bg-white cursor-pointer relative transition-colors">
+                                <input type="file" id="revFileInput" accept="image/*" multiple onchange="handleMultiImageSelect(event, 'rev')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <i class="fa-solid fa-camera text-xl text-rose-500 mb-1"></i>
+                                <span class="text-xs font-bold text-slate-700">+ Coretan</span>
+                                <span class="text-[10px] text-slate-400">Klik / Drag</span>
+                            </div>
+                        </div>
+
+                        <!-- Textarea Keterangan / Catatan Gambar Revisi -->
+                        <div class="pt-1">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Keterangan Gambar Revisi / Catatan Foto Tambahan:</label>
+                            <textarea id="revImagesNotes" rows="2" placeholder="Tuliskan keterangan detail untuk masing-masing foto coretan revisi..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 text-xs outline-none bg-white"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeRevisionModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-50">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md shadow-rose-500/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Permintaan Revisi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        // --- INITIAL DEFAULT USERS & PERSISTENCE ---
+        const DEFAULT_USERS = [
+            { username: 'marketing1', name: 'Andika', role: 'marketing', pass: 'password123' },
+            { username: 'marketing2', name: 'Siti', role: 'marketing', pass: 'password123' },
+            { username: 'designer1', name: 'Wawan', role: 'designer', pass: 'password123' },
+            { username: 'designer2', name: 'Marchtin', role: 'designer', pass: 'password123' }
+        ];
+
+        // --- SAMPLE DEFAULT MOCK DATA ---
+        const DEFAULT_REQUESTS = [
+            {
+                id: 'REQ-101',
+                title: 'Desain Banner Promo Idul Fitri',
+                client: 'Toko Sarung Nusantara',
+                category: 'Banner / Spanduk',
+                deadline: '2026-05-10',
+                description: 'Membutuhkan banner cetak ukuran 3x1 meter dengan nuansa warna hijau elegan dan islami.',
+                refImages: [
+                    'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=500&auto=format&fit=crop&q=60'
+                ],
+                refNotes: 'Foto 1 sebagai contoh warna ornamen, Foto 2 sebagai contoh jenis font kaligrafi.',
+                resultImages: [
+                    'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=60'
+                ],
+                resultNotes: 'Hasil final siap cetak resolusi tinggi (300 DPI) dengan format CMYK.',
+                status: 'Completed',
+                isApproved: true,
+                designer: 'Budi',
+                createdBy: 'Andi',
+                revisionCount: 0,
+                revisions: []
+            },
+            {
+                id: 'REQ-102',
+                title: 'Konten Instagram Feed Launching Produk',
+                client: 'Skincare GlowUp',
+                category: 'Social Media',
+                deadline: '2026-11-02',
+                description: 'Format carousel 3 slide. Tema minimalis pastel pink & putih. Menyertakan gambar botol produk.',
+                refImages: [
+                    'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&auto=format&fit=crop&q=60'
+                ],
+                refNotes: 'Ref gambar botol produk utama.',
+                resultImages: [
+                    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500&auto=format&fit=crop&q=60'
+                ],
+                resultNotes: 'Draft awal carousel slide 1.',
+                status: 'Dalam Revisi',
+                isApproved: false,
+                designer: 'Budi',
+                createdBy: 'Siti',
+                revisionCount: 1,
+                revisions: [
+                    {
+                        date: '2026-10-25',
+                        notes: 'Tolong ganti font pada judul slide ke-2 agar lebih tegas, lalu warna teks diganti ke emas tua.',
+                        refImages: [
+                            'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500&auto=format&fit=crop&q=60'
+                        ],
+                        refNotes: 'Coretan pada area judul yang perlu diganti warnanya.'
+                    }
+                ]
+            },
+            {
+                id: 'REQ-103',
+                title: 'Redesain Logo & Brand Guideline',
+                client: 'Kedai Kopi Sepadan',
+                category: 'Logo & Branding',
+                deadline: '2026-11-15',
+                description: 'Logo lama terlihat terlalu kuno. Minta konsep modern line-art cangkir kopi minimalis.',
+                refImages: [
+                    'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60'
+                ],
+                refNotes: 'Gaya garis minimalis cangkir kopi.',
+                resultImages: [
+                    'https://images.unsplash.com/photo-1558655146-d09347e92766?w=500&auto=format&fit=crop&q=60'
+                ],
+                resultNotes: 'Konsep logo vektor murni.',
+                status: 'Completed',
+                isApproved: true,
+                designer: 'Rian',
+                createdBy: 'Andi',
+                revisionCount: 0,
+                revisions: []
+            }
+        ];
+
+        // --- APP STATE ---
+        let state = {
+            users: JSON.parse(localStorage.getItem('design_users_v6')) || DEFAULT_USERS,
+            currentUser: null,
+            requests: JSON.parse(localStorage.getItem('design_requests_v6')) || DEFAULT_REQUESTS,
+            activeTab: 'main',
+            activeModalId: null,
+            reqTempImages: [],
+            revTempImages: [],
+            designerTempImages: [],
+            designerFilter: 'all',
+            marketingFilter: 'all',
+            approvedGalleryFilter: 'all',
+            landingGalleryFilter: 'all'
+        };
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', function() {
+            saveUsersToLocalStorage();
+            saveRequestsToLocalStorage();
+            renderQuickLoginButtons();
+            checkSession();
+        });
+
+        function saveUsersToLocalStorage() {
+            localStorage.setItem('design_users_v6', JSON.stringify(state.users));
+        }
+
+        function saveRequestsToLocalStorage() {
+            localStorage.setItem('design_requests_v6', JSON.stringify(state.requests));
+        }
+
+        function checkSession() {
+            const savedUser = JSON.parse(sessionStorage.getItem('active_user_v6'));
+            if (savedUser) {
+                state.currentUser = savedUser;
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        }
+
+        // --- TOAST NOTIFICATIONS ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-slate-800 text-white";
+            let icon = "fa-circle-info";
+            if (type === 'success') { bgClass = "bg-emerald-600 text-white"; icon = "fa-circle-check"; }
+            if (type === 'error') { bgClass = "bg-rose-600 text-white"; icon = "fa-triangle-exclamation"; }
+
+            toast.className = `px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold pointer-events-auto transition-all transform duration-300 ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${escapeHtml(message)}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3500);
+        }
+
+        // --- QUICK LOGIN RENDERER ---
+        function renderQuickLoginButtons() {
+            const grid = document.getElementById('quickLoginGrid');
+            grid.innerHTML = '';
+
+            state.users.forEach(function(u) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                
+                const hoverBorder = u.role === 'marketing' ? 'hover:border-blue-500 hover:bg-blue-50 group-hover:text-blue-600' : 'hover:border-indigo-500 hover:bg-indigo-50 group-hover:text-indigo-600';
+                
+                btn.className = `p-2.5 border border-slate-200 rounded-xl text-left transition-all group ${hoverBorder}`;
+                btn.onclick = function() { loginAsUser(u.username); };
+                
+                btn.innerHTML = `
+                    <div class="text-xs font-bold text-slate-800">${escapeHtml(u.name)}</div>
+                    <div class="text-[10px] text-slate-500 flex items-center justify-between mt-0.5">
+                        <span class="capitalize">${u.role}</span>
+                        <i class="fa-solid fa-arrow-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                `;
+                grid.appendChild(btn);
+            });
+        }
+
+        // --- LOGIN & AUTH LOGIC ---
+        function handleManualLogin(e) {
+            e.preventDefault();
+            const uname = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPassword').value.trim();
+
+            const matchedUser = state.users.find(function(u) {
+                return u.username.toLowerCase() === uname && u.pass === pass;
+            });
+
+            if (matchedUser) {
+                state.currentUser = { name: matchedUser.name, role: matchedUser.role, username: matchedUser.username };
+                sessionStorage.setItem('active_user_v6', JSON.stringify(state.currentUser));
+                showToast('Selamat datang, ' + matchedUser.name + '!', 'success');
+                showDashboard();
+            } else {
+                showToast('Username atau password salah!', 'error');
+            }
+        }
+
+        function loginAsUser(username) {
+            const u = state.users.find(function(user) { return user.username === username; });
+            if (u) {
+                state.currentUser = { name: u.name, role: u.role, username: u.username };
+                sessionStorage.setItem('active_user_v6', JSON.stringify(state.currentUser));
+                showToast('Masuk sebagai ' + u.name + ' (' + u.role + ')', 'success');
+                showDashboard();
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('active_user_v6');
+            state.currentUser = null;
+            showToast('Berhasil keluar sistem', 'info');
+            showLogin();
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden'); // reset
+            document.getElementById('dashboardScreen').classList.remove('hidden');
+            document.getElementById('dashboardScreen').classList.add('flex');
+
+            const avatar = document.getElementById('userAvatar');
+            const name = document.getElementById('userName');
+            const roleText = document.getElementById('userRoleText');
+            const roleBadge = document.getElementById('userRoleBadge');
+
+            name.innerText = state.currentUser.name;
+            roleText.innerText = state.currentUser.role;
+            avatar.innerText = state.currentUser.name.charAt(0);
+
+            if (state.currentUser.role === 'marketing') {
+                roleBadge.className = "flex items-center gap-3 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full";
+                avatar.className = "w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold";
+                roleText.className = "text-[10px] uppercase tracking-wider font-semibold text-blue-600 leading-tight";
+                
+                document.getElementById('marketingView').classList.remove('hidden');
+                document.getElementById('designerView').classList.add('hidden');
+            } else {
+                roleBadge.className = "flex items-center gap-3 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full";
+                avatar.className = "w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold";
+                roleText.className = "text-[10px] uppercase tracking-wider font-semibold text-indigo-600 leading-tight";
+                
+                document.getElementById('marketingView').classList.add('hidden');
+                document.getElementById('designerView').classList.remove('hidden');
+            }
+
+            renderMetrics();
+            renderViews();
+            renderRevisionTabContent();
+            renderApprovedGalleryGrid();
+        }
+
+        // --- PUBLIC LANDING GALLERY MODAL ---
+        function openLandingApprovedGallery() {
+            renderLandingGalleryGrid();
+            document.getElementById('landingGalleryModal').classList.remove('hidden');
+        }
+
+        function closeLandingApprovedGallery() {
+            document.getElementById('landingGalleryModal').classList.add('hidden');
+        }
+
+        function filterLandingCategory(cat) {
+            state.landingGalleryFilter = cat;
+            const btnAll = document.getElementById('btnLandingCatAll');
+            const btnSocial = document.getElementById('btnLandingCatSocial');
+            const btnBanner = document.getElementById('btnLandingCatBanner');
+
+            [btnAll, btnSocial, btnBanner].forEach(b => {
+                if (b) b.className = "px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold";
+            });
+
+            if (cat === 'all' && btnAll) btnAll.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold";
+            if (cat === 'Jersey' && btnSocial) btnSocial.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold";
+            if (cat === 'Kerodong' && btnBanner) btnBanner.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold";
+
+            renderLandingGalleryGrid();
+        }
+
+        function renderLandingGalleryGrid() {
+            const container = document.getElementById('landingGalleryGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const searchInput = document.getElementById('landingSearchInput');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+
+            let approvedList = state.requests.filter(r => r.isApproved && r.resultImages && r.resultImages.length > 0);
+
+            if (state.landingGalleryFilter !== 'all') {
+                approvedList = approvedList.filter(r => r.category === state.landingGalleryFilter);
+            }
+
+            if (query) {
+                approvedList = approvedList.filter(r => 
+                    r.title.toLowerCase().includes(query) || 
+                    r.client.toLowerCase().includes(query) || 
+                    r.designer.toLowerCase().includes(query)
+                );
+            }
+
+            if (approvedList.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200 text-xs">Belum ada karya desain yang disetujui dalam galeri publik.</div>`;
+                return;
+            }
+
+            approvedList.forEach(req => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-all";
+                card.innerHTML = `
+                    <div class="aspect-video bg-slate-100 relative overflow-hidden">
+                        <img src="${req.resultImages[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> Approved & Locked
+                        </div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${escapeHtml(req.category)}</span>
+                            <h4 class="font-bold text-slate-900 text-sm mt-0.5 leading-snug">${escapeHtml(req.title)}</h4>
+                            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-building mr-1"></i> ${escapeHtml(req.client)}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+                            <span>Desainer: <strong class="text-slate-800">${escapeHtml(req.designer)}</strong></span>
+                            <a href="${req.resultImages[0]}" target="_blank" download class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                                <i class="fa-solid fa-download"></i> Unduh
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- USER REGISTRATION MODAL ---
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.remove('hidden');
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').classList.add('hidden');
+        }
+
+        function handleUserRegistration(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const pass = document.getElementById('regPassword').value.trim();
+            const role = document.getElementById('regRole').value;
+
+            const exists = state.users.some(function(u) { return u.username.toLowerCase() === username; });
+            if (exists) {
+                showToast('Username sudah digunakan!', 'error');
+                return;
+            }
+
+            const newUser = { username: username, name: name, role: role, pass: pass };
+            state.users.push(newUser);
+            saveUsersToLocalStorage();
+
+            renderQuickLoginButtons();
+            closeRegisterModal();
+            showToast('Akun baru berhasil terdaftar!', 'success');
+            
+            // Auto login
+            state.currentUser = { name: newUser.name, role: newUser.role, username: newUser.username };
+            sessionStorage.setItem('active_user_v6', JSON.stringify(state.currentUser));
+            showDashboard();
+        }
+
+        // --- TAB NAVIGATION ---
+        function switchTab(tabName) {
+            state.activeTab = tabName;
+            
+            const btnMain = document.getElementById('navTabMain');
+            const btnRev = document.getElementById('navTabRevision');
+            const btnApproved = document.getElementById('navTabApprovedGallery');
+            
+            const mBtnMain = document.getElementById('mNavTabMain');
+            const mBtnRev = document.getElementById('mNavTabRevision');
+            const mBtnApproved = document.getElementById('mNavTabApprovedGallery');
+
+            const tabMainContent = document.getElementById('tabMainContent');
+            const tabRevisionContent = document.getElementById('tabRevisionContent');
+            const tabApprovedContent = document.getElementById('tabApprovedGalleryContent');
+
+            // Reset all active
+            [btnMain, btnRev, btnApproved].forEach(b => {
+                if (b) b.className = "px-4 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5";
+            });
+            [mBtnMain, mBtnRev, mBtnApproved].forEach(b => {
+                if (b) b.className = "flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-600 text-center";
+            });
+
+            [tabMainContent, tabRevisionContent, tabApprovedContent].forEach(c => {
+                if (c) c.classList.add('hidden');
+            });
+
+            if (tabName === 'main') {
+                if (btnMain) btnMain.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm flex items-center gap-1.5";
+                if (mBtnMain) mBtnMain.className = "flex-1 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 text-center";
+                if (tabMainContent) tabMainContent.classList.remove('hidden');
+            } else if (tabName === 'revision') {
+                if (btnRev) btnRev.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm flex items-center gap-1.5";
+                if (mBtnRev) mBtnRev.className = "flex-1 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 text-center";
+                if (tabRevisionContent) tabRevisionContent.classList.remove('hidden');
+                renderRevisionTabContent();
+            } else if (tabName === 'approvedGallery') {
+                if (btnApproved) btnApproved.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm flex items-center gap-1.5";
+                if (mBtnApproved) mBtnApproved.className = "flex-1 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 text-center";
+                if (tabApprovedContent) tabApprovedContent.classList.remove('hidden');
+                renderApprovedGalleryGrid();
+            }
+        }
+
+        // --- MULTI-IMAGE HANDLER FOR 5 COLUMNS GRID ---
+        function handleMultiImageSelect(event, scope) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+
+            let targetArr = scope === 'req' ? state.reqTempImages : (scope === 'rev' ? state.revTempImages : state.designerTempImages);
+
+            const remainingSlots = 5 - targetArr.length;
+            if (remainingSlots <= 0) {
+                showToast('Maksimal 5 foto telah dicapai!', 'error');
+                return;
+            }
+
+            const filesToProcess = files.slice(0, remainingSlots);
+
+            let loadedCount = 0;
+            filesToProcess.forEach(function(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    targetArr.push(e.target.result);
+                    loadedCount++;
+                    if (loadedCount === filesToProcess.length) {
+                        renderMultiImageGrid(scope);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            event.target.value = '';
+        }
+
+        function removeMultiImage(index, scope) {
+            let targetArr = scope === 'req' ? state.reqTempImages : (scope === 'rev' ? state.revTempImages : state.designerTempImages);
+            targetArr.splice(index, 1);
+            renderMultiImageGrid(scope);
+        }
+
+        function renderMultiImageGrid(scope) {
+            let gridEl, uploadBoxEl, counterEl, targetArr;
+
+            if (scope === 'req') {
+                gridEl = document.getElementById('reqImagesGrid');
+                uploadBoxEl = document.getElementById('reqUploadBox');
+                counterEl = document.getElementById('reqImagesCounter');
+                targetArr = state.reqTempImages;
+            } else if (scope === 'rev') {
+                gridEl = document.getElementById('revImagesGrid');
+                uploadBoxEl = document.getElementById('revUploadBox');
+                counterEl = document.getElementById('revImagesCounter');
+                targetArr = state.revTempImages;
+            } else {
+                gridEl = document.getElementById('designerResultGrid');
+                uploadBoxEl = document.getElementById('designerResultUploadBox');
+                counterEl = document.getElementById('designerResultCounter');
+                targetArr = state.designerTempImages;
+            }
+
+            const existingPreviews = gridEl.querySelectorAll('.img-preview-card');
+            existingPreviews.forEach(function(el) { el.remove(); });
+
+            targetArr.forEach(function(imgData, idx) {
+                const card = document.createElement('div');
+                card.className = "img-preview-card relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-square flex items-center justify-center shadow-sm";
+                card.innerHTML = `
+                    <img src="${imgData}" class="w-full h-full object-cover">
+                    <span class="absolute top-1 left-1 bg-slate-900/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md backdrop-blur-sm">Foto ${idx + 1}</span>
+                    <button type="button" onclick="removeMultiImage(${idx}, '${scope}')" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-90 hover:opacity-100 shadow-md transition-all">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                gridEl.insertBefore(card, uploadBoxEl);
+            });
+
+            counterEl.innerText = targetArr.length + '/5 Terunggah';
+
+            if (targetArr.length >= 5) {
+                uploadBoxEl.classList.add('hidden');
+            } else {
+                uploadBoxEl.classList.remove('hidden');
+            }
+        }
+
+        // --- METRICS AND RENDERING ---
+        function renderMetrics() {
+            const total = state.requests.length;
+            const pending = state.requests.filter(function(r) { return r.status === 'Pending'; }).length;
+            const inProgress = state.requests.filter(function(r) { return r.status === 'In Progress'; }).length;
+            const inRevision = state.requests.filter(function(r) { return r.status === 'Dalam Revisi'; }).length;
+            const approvedCount = state.requests.filter(function(r) { return r.isApproved; }).length;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statPending').innerText = pending;
+            document.getElementById('statInProgress').innerText = inProgress;
+            document.getElementById('statRevision').innerText = inRevision;
+            document.getElementById('statApproved').innerText = approvedCount;
+
+            const revBadge = document.getElementById('navRevisionBadge');
+            const mRevBadge = document.getElementById('mNavRevisionBadge');
+            const tabRevCount = document.getElementById('tabRevisionCount');
+            const approvedBadge = document.getElementById('approvedGalleryCountBadge');
+
+            if (inRevision > 0) {
+                revBadge.innerText = inRevision;
+                revBadge.classList.remove('hidden');
+                mRevBadge.innerText = inRevision;
+                mRevBadge.classList.remove('hidden');
+            } else {
+                revBadge.classList.add('hidden');
+                mRevBadge.classList.add('hidden');
+            }
+
+            tabRevCount.innerText = inRevision + ' Proyek';
+            if (approvedBadge) approvedBadge.innerText = approvedCount + ' Karya';
+        }
+
+        function applyStatusFilter(status) {
+            if (state.currentUser.role === 'marketing') {
+                state.marketingFilter = status;
+                document.getElementById('marketingFilterBadge').innerText = 'Filter: ' + (status === 'all' ? 'Semua Status' : status);
+                renderMarketingTable();
+            } else {
+                filterDesignerCards(status);
+            }
+        }
+
+        function renderViews() {
+            if (state.currentUser.role === 'marketing') {
+                renderMarketingTable();
+            } else {
+                renderDesignerCards();
+            }
+        }
+
+        // --- CREATE REQUEST MODAL ---
+        function openCreateRequestModal() {
+            state.reqTempImages = [];
+            document.getElementById('requestForm').reset();
+            renderMultiImageGrid('req');
+            document.getElementById('createRequestModal').classList.remove('hidden');
+        }
+
+        function closeCreateRequestModal() {
+            document.getElementById('createRequestModal').classList.add('hidden');
+        }
+
+        function handleCreateRequest(e) {
+            e.preventDefault();
+
+            const newReq = {
+                id: 'REQ-' + Math.floor(100 + Math.random() * 900),
+                title: document.getElementById('reqTitle').value,
+                client: document.getElementById('reqClient').value,
+                category: document.getElementById('reqCategory').value,
+                deadline: document.getElementById('reqDeadline').value,
+                description: document.getElementById('reqDescription').value,
+                refImages: [...state.reqTempImages],
+                refNotes: document.getElementById('reqImagesNotes').value,
+                resultImages: [],
+                resultNotes: '',
+                status: 'Pending',
+                isApproved: false,
+                designer: 'Unassigned',
+                createdBy: state.currentUser.name,
+                revisionCount: 0,
+                revisions: []
+            };
+
+            state.requests.unshift(newReq);
+            saveRequestsToLocalStorage();
+
+            closeCreateRequestModal();
+            renderMetrics();
+            renderMarketingTable();
+
+            showToast('Permintaan desain baru berhasil diajukan ke pool desainer!', 'success');
+        }
+
+        // --- MARKETING DELETE & APPROVE FEATURES ---
+        function deleteProjectRequest(reqId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus proyek ini secara permanen?')) return;
+            state.requests = state.requests.filter(r => r.id !== reqId);
+            saveRequestsToLocalStorage();
+            renderMetrics();
+            renderMarketingTable();
+            renderApprovedGalleryGrid();
+            showToast('Proyek berhasil dihapus.', 'success');
+        }
+
+        function toggleApproveProject(reqId) {
+            const req = state.requests.find(r => r.id === reqId);
+            if (!req) return;
+
+            req.isApproved = !req.isApproved;
+            saveRequestsToLocalStorage();
+            renderMetrics();
+            renderMarketingTable();
+            renderApprovedGalleryGrid();
+
+            if (req.isApproved) {
+                showToast('Proyek disetujui & dikunci ke Galeri Approve!', 'success');
+            } else {
+                showToast('Persetujuan proyek dibatalkan.', 'info');
+            }
+        }
+
+        // --- MARKETING TABLE RENDER ---
+        function renderMarketingTable() {
+            const tbody = document.getElementById('marketingTableBody');
+            tbody.innerHTML = '';
+
+            let filtered = state.requests;
+            if (state.marketingFilter !== 'all') {
+                filtered = state.requests.filter(function(r) { return r.status === state.marketingFilter; });
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400">Belum ada permintaan desain pada kategori ini.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(function(req) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition-colors";
+
+                let statusBadge = '';
+                if (req.status === 'Pending') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 inline-flex items-center gap-1"><i class="fa-solid fa-clock"></i> Menunggu</span>`;
+                } else if (req.status === 'In Progress') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700 inline-flex items-center gap-1"><i class="fa-solid fa-spinner animate-spin"></i> Diproses</span>`;
+                } else if (req.status === 'Dalam Revisi') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 inline-flex items-center gap-1"><i class="fa-solid fa-rotate-left"></i> Dalam Revisi</span>`;
+                } else if (req.status === 'Completed') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 inline-flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Selesai</span>`;
+                }
+
+                const approvalBadge = req.isApproved 
+                    ? `<span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-600 text-white inline-flex items-center gap-1"><i class="fa-solid fa-lock"></i> Approved</span>`
+                    : `<span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-200 text-slate-600">Belum Approve</span>`;
+
+                const revCountBadge = req.revisionCount > 0 
+                    ? `<span class="ml-1 text-[10px] bg-slate-200 text-slate-700 font-extrabold px-1.5 py-0.5 rounded-md">Rev. ${req.revisionCount}</span>` 
+                    : '';
+
+                let refGallery = `<span class="text-xs text-slate-400 italic">Tanpa Foto</span>`;
+                if (req.refImages && req.refImages.length > 0) {
+                    refGallery = `
+                        <div class="flex items-center gap-1">
+                            <img src="${req.refImages[0]}" class="w-8 h-8 rounded-lg object-cover border border-slate-200 shadow-sm">
+                            ${req.refImages.length > 1 ? `<span class="text-[10px] font-bold bg-slate-100 border border-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md">+${req.refImages.length - 1}</span>` : ''}
+                        </div>
+                    `;
+                }
+
+                let actionContent = `<div class="flex items-center justify-end gap-1.5">`;
+                
+                // View details button
+                actionContent += `
+                    <button onclick="openDesignerModal('${req.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg hover:bg-slate-200 transition-colors border border-slate-200" title="Detail">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                `;
+
+                if (req.resultImages && req.resultImages.length > 0) {
+                    // Approve / Lock toggle button
+                    const approveBtnClass = req.isApproved ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100";
+                    actionContent += `
+                        <button onclick="toggleApproveProject('${req.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg transition-colors border ${approveBtnClass}" title="${req.isApproved ? 'Batal Approve' : 'Approve & Kunci ke Galeri'}">
+                            <i class="fa-solid ${req.isApproved ? 'fa-lock' : 'fa-check'}"></i> ${req.isApproved ? 'Locked' : 'Approve'}
+                        </button>
+                    `;
+                }
+
+                if (req.resultImages && req.resultImages.length > 0 && req.status !== 'Dalam Revisi' && !req.isApproved) {
+                    actionContent += `
+                        <button onclick="openRevisionModal('${req.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg hover:bg-rose-100 transition-colors border border-rose-200" title="Revisi">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    `;
+                }
+
+                // Delete Button
+                actionContent += `
+                    <button onclick="deleteProjectRequest('${req.id}')" class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-lg hover:bg-red-100 transition-colors border border-red-200" title="Hapus Proyek">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+
+                actionContent += `</div>`;
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-6">
+                        <div class="font-bold text-slate-800 text-xs">${escapeHtml(req.title)}</div>
+                        <div class="text-[11px] text-slate-500">${escapeHtml(req.client)}</div>
+                    </td>
+                    <td class="py-3.5 px-6">${refGallery}</td>
+                    <td class="py-3.5 px-6">
+                        <div class="text-xs font-semibold text-slate-700">${escapeHtml(req.category)}</div>
+                        <div class="text-[11px] text-slate-400">${formatDate(req.deadline)}</div>
+                    </td>
+                    <td class="py-3.5 px-6">${statusBadge}${approvalBadge}${revCountBadge}</td>
+                    <td class="py-3.5 px-6 text-xs text-slate-600 font-medium">${escapeHtml(req.designer)}</td>
+                    <td class="py-3.5 px-6 text-right">${actionContent}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- APPROVED GALLERY TAB RENDER ---
+        function filterApprovedCategory(cat) {
+            state.approvedGalleryFilter = cat;
+            const btnAll = document.getElementById('btnAppCategoryAll');
+            const btnSocial = document.getElementById('btnAppCategorySocial');
+            const btnBanner = document.getElementById('btnAppCategoryBanner');
+            const btnLogo = document.getElementById('btnAppCategoryLogo');
+
+            [btnAll, btnSocial, btnBanner, btnLogo].forEach(b => {
+                if (b) b.className = "px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200 transition-all";
+            });
+
+            if (cat === 'all' && btnAll) btnAll.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold transition-all";
+            if (cat === 'Jersey' && btnSocial) btnSocial.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold transition-all";
+            if (cat === 'Kerodong' && btnBanner) btnBanner.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold transition-all";
+            if (cat === 'Jaket' && btnLogo) btnLogo.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold transition-all";
+
+            renderApprovedGalleryGrid();
+        }
+
+        function renderApprovedGalleryGrid() {
+            const container = document.getElementById('approvedGalleryGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const searchInput = document.getElementById('approvedSearchInput');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+
+            let approvedList = state.requests.filter(r => r.isApproved && r.resultImages && r.resultImages.length > 0);
+
+            if (state.approvedGalleryFilter !== 'all') {
+                approvedList = approvedList.filter(r => r.category === state.approvedGalleryFilter);
+            }
+
+            if (query) {
+                approvedList = approvedList.filter(r => 
+                    r.title.toLowerCase().includes(query) || 
+                    r.client.toLowerCase().includes(query) || 
+                    r.designer.toLowerCase().includes(query)
+                );
+            }
+
+            if (approvedList.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-16 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200 text-xs">Belum ada proyek desain yang disetujui (Approved & Locked). Marketing dapat melakukan approve pada menu Beranda & Proyek.</div>`;
+                return;
+            }
+
+            approvedList.forEach(req => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-all";
+                card.innerHTML = `
+                    <div class="aspect-video bg-slate-100 relative overflow-hidden">
+                        <img src="${req.resultImages[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow flex items-center gap-1">
+                            <i class="fa-solid fa-lock"></i> Locked & Approved
+                        </div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${escapeHtml(req.category)}</span>
+                            <h4 class="font-bold text-slate-900 text-sm mt-0.5 leading-snug">${escapeHtml(req.title)}</h4>
+                            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-building mr-1"></i> ${escapeHtml(req.client)}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+                            <span>Desainer: <strong class="text-slate-800">${escapeHtml(req.designer)}</strong></span>
+                            <a href="${req.resultImages[0]}" target="_blank" download class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                                <i class="fa-solid fa-download"></i> Unduh
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- DESIGNER ACTIONS ---
+        function filterDesignerCards(category) {
+            state.designerFilter = category;
+            
+            const btnMap = {
+                'all': 'btnFilterAll',
+                'Pending': 'btnFilterPending',
+                'In Progress': 'btnFilterProgress',
+                'Dalam Revisi': 'btnFilterRevision',
+                'Completed': 'btnFilterCompleted'
+            };
+
+            Object.keys(btnMap).forEach(function(key) {
+                const btn = document.getElementById(btnMap[key]);
+                if (btn) {
+                    if (key === category) {
+                        btn.className = "filter-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition-all";
+                    } else {
+                        btn.className = key === 'Dalam Revisi' ? "filter-btn px-3 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-all" : "filter-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-all";
+                    }
+                }
+            });
+
+            renderDesignerCards();
+        }
+
+        function renderDesignerCards() {
+            const container = document.getElementById('designerCardGrid');
+            container.innerHTML = '';
+
+            let filtered = state.requests;
+            if (state.designerFilter !== 'all') {
+                filtered = state.requests.filter(function(r) { return r.status.trim() === state.designerFilter.trim(); });
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200 text-xs">Tidak ada tugas desain pada kategori ini.</div>`;
+                return;
+            }
+
+            filtered.forEach(function(req) {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden";
+
+                let statusColor = "bg-amber-100 text-amber-700";
+                if (req.status === 'In Progress') statusColor = "bg-indigo-100 text-indigo-700";
+                if (req.status === 'Dalam Revisi') statusColor = "bg-rose-100 text-rose-700";
+                if (req.status === 'Completed') statusColor = "bg-emerald-100 text-emerald-700";
+
+                const refCount = (req.refImages && req.refImages.length) || 0;
+
+                card.innerHTML = `
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 border border-slate-200">${escapeHtml(req.category)}</span>
+                                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${statusColor}">${req.status}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm leading-snug mb-1">${escapeHtml(req.title)}</h3>
+                            <p class="text-xs font-medium text-slate-500 mb-3"><i class="fa-solid fa-building mr-1"></i> ${escapeHtml(req.client)}</p>
+                            
+                            ${req.status === 'Dalam Revisi' && req.revisions.length > 0 
+                                ? `<div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-xs text-rose-900">
+                                    <span class="font-bold text-rose-700 block mb-1"><i class="fa-solid fa-rotate-left"></i> Catatan Revisi Marketing:</span>
+                                    <p class="line-clamp-2">${escapeHtml(req.revisions[req.revisions.length - 1].notes)}</p>
+                                   </div>`
+                                : `<p class="text-xs text-slate-600 line-clamp-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${escapeHtml(req.description)}</p>`
+                            }
+                        </div>
+
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                            <span class="text-slate-500 font-medium"><i class="fa-solid fa-images text-blue-500 mr-1"></i> ${refCount} Foto Ref.</span>
+                            <span class="text-slate-400 font-medium"><i class="fa-solid fa-calendar-days mr-1"></i> ${formatDate(req.deadline)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 p-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="openDesignerModal('${req.id}')" class="w-full ${req.status === 'Dalam Revisi' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pen-to-square"></i> ${req.status === 'Dalam Revisi' ? 'Kerjakan Revisi & Upload' : 'Proses & Upload Hasil'}
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // --- REVISION TAB ---
+        function renderRevisionTabContent() {
+            const tbody = document.getElementById('revisionTableBody');
+            tbody.innerHTML = '';
+
+            const revisedProjects = state.requests.filter(function(r) { return r.status === 'Dalam Revisi' || r.revisionCount > 0; });
+
+            if (revisedProjects.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400">Belum ada proyek yang membutuhkan revisi atau memiliki riwayat revisi.</td></tr>`;
+                return;
+            }
+
+            revisedProjects.forEach(function(req) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+
+                const lastRevision = req.revisions.length > 0 ? req.revisions[req.revisions.length - 1] : null;
+                const lastNotes = lastRevision ? escapeHtml(lastRevision.notes) : 'Tidak ada catatan khusus.';
+                
+                let revPhotoThumb = `<span class="text-xs text-slate-400 italic">Tanpa Foto</span>`;
+                if (lastRevision && lastRevision.refImages && lastRevision.refImages.length > 0) {
+                    revPhotoThumb = `
+                        <div class="flex items-center gap-1">
+                            <img src="${lastRevision.refImages[0]}" class="w-8 h-8 rounded-lg object-cover border border-rose-200 shadow-sm">
+                            ${lastRevision.refImages.length > 1 ? `<span class="text-[10px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded-md">+${lastRevision.refImages.length - 1}</span>` : ''}
+                        </div>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-6">
+                        <div class="font-bold text-slate-800 text-xs">${escapeHtml(req.title)}</div>
+                        <div class="text-[11px] text-slate-500">${escapeHtml(req.client)}</div>
+                    </td>
+                    <td class="py-3.5 px-6 max-w-xs">
+                        <p class="text-xs text-slate-700 line-clamp-2 bg-rose-50/50 p-2 rounded-lg border border-rose-100">${lastNotes}</p>
+                    </td>
+                    <td class="py-3.5 px-6">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">Revisi ke-${req.revisionCount}</span>
+                    </td>
+                    <td class="py-3.5 px-6">${revPhotoThumb}</td>
+                    <td class="py-3.5 px-6 text-xs text-slate-600 font-medium">${escapeHtml(req.designer)}</td>
+                    <td class="py-3.5 px-6 text-right">
+                        ${state.currentUser.role === 'designer' 
+                            ? `<button onclick="openDesignerModal('${req.id}')" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all"><i class="fa-solid fa-file-pen mr-1"></i> Tanggapi</button>`
+                            : `<button onclick="openRevisionModal('${req.id}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"><i class="fa-solid fa-plus mr-1"></i> Catatan Baru</button>`
+                        }
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- MARKETING REVISION MODAL ---
+        function openRevisionModal(reqId) {
+            const req = state.requests.find(function(r) { return r.id === reqId; });
+            if (!req) return;
+
+            state.activeModalId = reqId;
+            document.getElementById('revModalProjectTitle').value = req.title;
+            document.getElementById('revModalNotes').value = '';
+            document.getElementById('revImagesNotes').value = '';
+
+            state.revTempImages = [];
+            renderMultiImageGrid('rev');
+
+            document.getElementById('revisionModal').classList.remove('hidden');
+        }
+
+        function closeRevisionModal() {
+            document.getElementById('revisionModal').classList.add('hidden');
+            state.activeModalId = null;
+            state.revTempImages = [];
+        }
+
+        function submitRevisionRequest(e) {
+            e.preventDefault();
+            if (!state.activeModalId) return;
+
+            const req = state.requests.find(function(r) { return r.id === state.activeModalId; });
+            if (req) {
+                const notes = document.getElementById('revModalNotes').value;
+
+                req.status = 'Dalam Revisi';
+                req.isApproved = false; // reset approval if revision requested
+                req.revisionCount = (req.revisionCount || 0) + 1;
+                
+                if (!req.revisions) req.revisions = [];
+                req.revisions.push({
+                    date: new Date().toISOString().split('T')[0],
+                    notes: notes,
+                    refImages: [...state.revTempImages],
+                    refNotes: document.getElementById('revImagesNotes').value
+                });
+
+                saveRequestsToLocalStorage();
+                closeRevisionModal();
+
+                renderMetrics();
+                renderViews();
+                renderRevisionTabContent();
+                renderApprovedGalleryGrid();
+
+                showToast('Permintaan revisi berhasil dikirim ke desainer!', 'success');
+            }
+        }
+
+        // --- DESIGNER / DETAIL MODAL ---
+        function openDesignerModal(reqId) {
+            const req = state.requests.find(function(r) { return r.id === reqId; });
+            if (!req) return;
+
+            state.activeModalId = reqId;
+
+            // Auto assign designer if pending & logged in as designer
+            if (state.currentUser.role === 'designer' && (req.designer === 'Unassigned' || !req.designer)) {
+                req.designer = state.currentUser.name;
+                saveRequestsToLocalStorage();
+            }
+
+            document.getElementById('modalTitle').innerText = req.title;
+            document.getElementById('modalClient').innerText = req.client;
+            document.getElementById('modalCategoryBadge').innerText = req.category;
+            document.getElementById('modalDeadline').innerText = formatDate(req.deadline);
+            document.getElementById('modalDescription').innerText = req.description;
+            document.getElementById('modalAssignedDesigner').innerText = req.designer || 'Belum Ada';
+
+            const refGrid = document.getElementById('modalRefGrid');
+            refGrid.innerHTML = '';
+            
+            if (req.refImages && req.refImages.length > 0) {
+                req.refImages.forEach(function(imgUrl, idx) {
+                    const card = document.createElement('div');
+                    card.className = "relative rounded-xl overflow-hidden border border-slate-200 bg-white aspect-square shadow-sm";
+                    card.innerHTML = `
+                        <img src="${imgUrl}" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 right-1 bg-slate-900/70 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">Foto ${idx + 1}</span>
+                    `;
+                    refGrid.appendChild(card);
+                });
+            } else {
+                refGrid.innerHTML = `<span class="col-span-full text-slate-400 text-xs italic text-center py-4">Tidak ada foto referensi awal.</span>`;
+            }
+
+            const refNotesBox = document.getElementById('modalRefNotesContainer');
+            if (req.refNotes) {
+                document.getElementById('modalRefNotesText').innerText = req.refNotes;
+                refNotesBox.classList.remove('hidden');
+            } else {
+                refNotesBox.classList.add('hidden');
+            }
+
+            const modalRevSection = document.getElementById('modalRevisionSection');
+            if (req.revisions && req.revisions.length > 0) {
+                const lastRev = req.revisions[req.revisions.length - 1];
+                document.getElementById('modalRevisionNotes').innerText = lastRev.notes;
+                document.getElementById('modalRevisionCountBadge').innerText = 'Revisi ke-' + req.revisionCount;
+
+                const revRefContainer = document.getElementById('modalRevRefContainer');
+                const revRefGrid = document.getElementById('modalRevRefGrid');
+                revRefGrid.innerHTML = '';
+
+                if (lastRev.refImages && lastRev.refImages.length > 0) {
+                    lastRev.refImages.forEach(function(imgUrl, idx) {
+                        const card = document.createElement('div');
+                        card.className = "relative rounded-xl overflow-hidden border border-rose-200 bg-white aspect-square shadow-sm";
+                        card.innerHTML = `
+                            <img src="${imgUrl}" class="w-full h-full object-cover">
+                            <span class="absolute bottom-1 right-1 bg-rose-900/80 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">Coretan ${idx + 1}</span>
+                        `;
+                        revRefGrid.appendChild(card);
+                    });
+                    revRefContainer.classList.remove('hidden');
+                } else {
+                    revRefContainer.classList.add('hidden');
+                }
+
+                const revNotesBox = document.getElementById('modalRevNotesContainer');
+                if (lastRev.refNotes) {
+                    document.getElementById('modalRevNotesText').innerText = lastRev.refNotes;
+                    revNotesBox.classList.remove('hidden');
+                } else {
+                    revNotesBox.classList.add('hidden');
+                }
+
+                modalRevSection.classList.remove('hidden');
+            } else {
+                modalRevSection.classList.add('hidden');
+            }
+
+            // Controls adjustment for role
+            const designerSec = document.getElementById('designerInteractiveSection');
+            const saveBtn = document.getElementById('btnSaveDeliverables');
+
+            if (state.currentUser.role === 'marketing') {
+                document.getElementById('statusUpdateControl').classList.add('hidden');
+                document.getElementById('designerResultFileInput').disabled = true;
+                document.getElementById('designerResultNotes').readOnly = true;
+                saveBtn.classList.add('hidden');
+            } else {
+                document.getElementById('statusUpdateControl').classList.remove('hidden');
+                document.getElementById('designerResultFileInput').disabled = false;
+                document.getElementById('designerResultNotes').readOnly = false;
+                saveBtn.classList.remove('hidden');
+            }
+
+            state.designerTempImages = req.resultImages ? [...req.resultImages] : [];
+            document.getElementById('designerResultNotes').value = req.resultNotes || '';
+            renderMultiImageGrid('designer');
+
+            updateModalStatusButtonsUI(req.status);
+
+            document.getElementById('designerModal').classList.remove('hidden');
+        }
+
+        function closeDesignerModal() {
+            document.getElementById('designerModal').classList.add('hidden');
+            state.activeModalId = null;
+            state.designerTempImages = [];
+            renderMetrics();
+            renderViews();
+            renderRevisionTabContent();
+            renderApprovedGalleryGrid();
+        }
+
+        function saveDesignerDeliverables() {
+            if (!state.activeModalId) return;
+            const req = state.requests.find(function(r) { return r.id === state.activeModalId; });
+            if (req) {
+                req.resultImages = [...state.designerTempImages];
+                req.resultNotes = document.getElementById('designerResultNotes').value;
+                
+                if (req.resultImages.length > 0 && req.status !== 'Completed') {
+                    req.status = 'Completed';
+                }
+
+                saveRequestsToLocalStorage();
+                closeDesignerModal();
+                showToast('Hasil desain berhasil disimpan!', 'success');
+            }
+        }
+
+        function updateModalStatusButtonsUI(status) {
+            const btnPending = document.getElementById('btnStatusPending');
+            const btnProgress = document.getElementById('btnStatusProgress');
+            const btnRevision = document.getElementById('btnStatusRevision');
+            const btnCompleted = document.getElementById('btnStatusCompleted');
+
+            const baseStyle = "py-2 px-2.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-1";
+            btnPending.className = baseStyle + " border-slate-300 text-slate-600 hover:bg-slate-50";
+            btnProgress.className = baseStyle + " border-slate-300 text-slate-600 hover:bg-slate-50";
+            btnRevision.className = baseStyle + " border-slate-300 text-slate-600 hover:bg-slate-50";
+            btnCompleted.className = baseStyle + " border-slate-300 text-slate-600 hover:bg-slate-50";
+
+            const cleanedStatus = status.trim();
+
+            if (cleanedStatus === 'Pending') {
+                btnPending.className = baseStyle + " border-amber-500 bg-amber-500 text-white shadow-md shadow-amber-500/20";
+            } else if (cleanedStatus === 'In Progress') {
+                btnProgress.className = baseStyle + " border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-600/20";
+            } else if (cleanedStatus === 'Dalam Revisi') {
+                btnRevision.className = baseStyle + " border-rose-600 bg-rose-600 text-white shadow-md shadow-rose-600/20";
+            } else if (cleanedStatus === 'Completed') {
+                btnCompleted.className = baseStyle + " border-emerald-600 bg-emerald-600 text-white shadow-md shadow-emerald-600/20";
+            }
+        }
+
+        function updateStatusFromModal(newStatus) {
+            if (!state.activeModalId) return;
+            const req = state.requests.find(function(r) { return r.id === state.activeModalId; });
+            if (req) {
+                req.status = newStatus;
+                saveRequestsToLocalStorage();
+                updateModalStatusButtonsUI(newStatus);
+                showToast('Status diperbarui ke: ' + newStatus, 'info');
+            }
+        }
+
+        // --- HELPERS ---
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
