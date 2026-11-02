@@ -372,6 +372,7 @@ function openDesignDetail(id) {
         <p>${escapeHtml(d.apparel_type || "—")}</p>
       </div>
 
+    
       <div class="detail-info-item">
         <small>Deadline</small>
         <p>${escapeHtml(formatDate(d.deadline))}</p>
