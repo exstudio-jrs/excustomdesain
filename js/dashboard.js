@@ -373,11 +373,6 @@ function openDesignDetail(id) {
       </div>
 
       <div class="detail-info-item">
-        <small>Warna Utama</small>
-        <p>${escapeHtml(d.main_color || "—")}</p>
-      </div>
-
-      <div class="detail-info-item">
         <small>Deadline</small>
         <p>${escapeHtml(formatDate(d.deadline))}</p>
       </div>

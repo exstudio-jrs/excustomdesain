@@ -108,11 +108,6 @@ function renderDesignInfo(design) {
     </div>
 
     <div class="revision-info-item">
-      <small>Warna Utama</small>
-      <p>${escapeHtml(design.main_color || "-")}</p>
-    </div>
-
-    <div class="revision-info-item">
       <small>Deadline</small>
       <p>${escapeHtml(design.deadline || "-")}</p>
     </div>
