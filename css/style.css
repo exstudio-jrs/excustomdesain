@@ -405,3 +405,47 @@ input:focus,textarea:focus,select:focus{border-color:var(--lime)}input[type=file
   border: 1px solid #ddd;
   padding: 4px;
 }
+
+.reference-preview img + span,
+.reference-preview p,
+.reference-preview .file-name,
+.reference-preview .image-name {
+  display: none !important;
+}
+
+.image-preview-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.92);
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.image-preview-modal.show {
+  display: flex;
+}
+
+.image-preview-modal img {
+  max-width: 95%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.image-preview-close {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 42px;
+  cursor: pointer;
+}
+
+.drive-preview-image {
+  cursor: zoom-in;
+}
