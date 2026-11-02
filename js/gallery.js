@@ -1,6 +1,12 @@
 
-import { supabase } from "./config.js";
+import {
+  supabase,
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+} from "./config.js";
+
 import { requireUser, escapeHtml } from "./common.js";
+
 
 const context = await requireUser();
 
@@ -9,6 +15,57 @@ if (!context) {
 }
 
 const grid = document.querySelector("#galleryGrid");
+
+// ======================================
+// PREVIEW GOOGLE DRIVE GALLERY
+// ======================================
+
+async function loadGalleryPreview(img, designId, fileId) {
+  try {
+    const { data: { session }, error } =
+      await supabase.auth.getSession();
+
+    if (error) throw error;
+
+    if (!session?.access_token) {
+      throw new Error("Sesi login tidak ditemukan.");
+    }
+
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/drive-preview?designId=${encodeURIComponent(designId)}&fileId=${encodeURIComponent(fileId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: SUPABASE_ANON_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Preview gagal: HTTP ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const imageUrl = URL.createObjectURL(blob);
+
+    img.src = imageUrl;
+
+    img.onload = () => {
+      URL.revokeObjectURL(imageUrl);
+    };
+
+  } catch (error) {
+    console.error("Gallery preview error:", error);
+
+    img.style.display = "none";
+
+    const fallback = img.nextElementSibling;
+
+    if (fallback) {
+      fallback.style.display = "grid";
+    }
+  }
+}
 
 // ======================================
 // 1. MODAL DETAIL GALLERY
@@ -74,9 +131,9 @@ function formatDate(value) {
 }
 
 function thumbnailUrl(file) {
-  if (!file.drive_file_id) return "";
+  if (!file?.drive_file_id) return "";
 
-  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(file.drive_file_id)}&sz=w1000`;
+  return file.drive_file_id;
 }
 
 function driveUrl(file) {
@@ -258,13 +315,10 @@ async function loadGallery() {
             firstImage
               ? `
                 <img
-                  src="${escapeHtml(firstImage)}"
+                  data-gallery-preview="${escapeHtml(firstImage)}"
+                  data-design-id="${escapeHtml(design.id)}"
                   alt="${escapeHtml(design.project_name)}"
                   loading="lazy"
-                  onerror="
-                    this.style.display='none';
-                    this.nextElementSibling.style.display='grid';
-                  "
                 >
                 <div class="gallery-no-preview" style="display:none">
                   Preview tidak tersedia
@@ -309,6 +363,16 @@ async function loadGallery() {
       </article>
     `;
   }).join("");
+
+  // Load preview gambar dari Google Drive
+grid.querySelectorAll("[data-gallery-preview]")
+  .forEach(img => {
+    loadGalleryPreview(
+      img,
+      img.dataset.designId,
+      img.dataset.galleryPreview
+    );
+  });
 
   // Event tombol detail
   grid.querySelectorAll("[data-gallery-detail]")
