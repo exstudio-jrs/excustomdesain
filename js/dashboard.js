@@ -167,6 +167,57 @@ function showBriefMessage(message, isError = false) {
   msg.style.color = isError ? "#ffaaaa" : "var(--lime)";
 }
 
+window.openImagePreview = function(img) {
+  const imageUrl = img?.dataset.previewBlobUrl;
+
+  if (!imageUrl) {
+    console.error("URL preview gambar tidak tersedia.");
+    return;
+  }
+
+  let modal = document.getElementById("imagePreviewModal");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "imagePreviewModal";
+    modal.className = "image-preview-modal";
+
+    modal.innerHTML = `
+      <button class="image-preview-close" onclick="closeImagePreview()">
+        &times;
+      </button>
+      <img id="imagePreviewFull" alt="Preview gambar">
+    `;
+
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById("imagePreviewFull").src = imageUrl;
+  modal.classList.add("show");
+};
+
+window.closeImagePreview = function() {
+  const modal = document.getElementById("imagePreviewModal");
+
+  if (modal) {
+    modal.classList.remove("show");
+
+    const previewImage = document.getElementById("imagePreviewFull");
+
+    if (previewImage) {
+      previewImage.src = "";
+    }
+  }
+};
+
+function closeImagePreview() {
+  const modal = document.getElementById("imagePreviewModal");
+
+  if (modal) {
+    modal.classList.remove("show");
+  }
+}
+
 // ======================================
 // 5. DETAIL DESAIN
 // ======================================
@@ -175,6 +226,7 @@ const detailModal = document.querySelector("#designDetailModal");
 const detailContent = document.querySelector("#detailContent");
 const closeDetailBtn = document.querySelector("#closeDetailModal");
 const detailBackdrop = document.querySelector("#detailBackdrop");
+
 
 async function loadDrivePreviews() {
   if (!detailContent) return;
@@ -231,12 +283,10 @@ async function loadDrivePreviews() {
 
         const objectUrl = URL.createObjectURL(blob);
 
-        img.onload = () => {
-          URL.revokeObjectURL(objectUrl);
-        };
+        // Simpan URL blob agar dapat digunakan popup
+        img.dataset.previewBlobUrl = objectUrl;
 
         img.onerror = () => {
-          URL.revokeObjectURL(objectUrl);
           img.alt = "Gagal menampilkan preview gambar";
           img.dataset.loaded = "false";
         };
@@ -251,6 +301,7 @@ async function loadDrivePreviews() {
     })
   );
 }
+
 
 function openDesignDetail(id) {
   const d = designCache.get(String(id));
@@ -276,42 +327,37 @@ function openDesignDetail(id) {
   );
 
   function renderImages(items, emptyMessage) {
-    if (!items.length) {
-      return `<p class="muted">${emptyMessage}</p>`;
-    }
-
-    return `
-      <div class="detail-images">
-        ${items.map(file => {
-          const previewUrl = getDrivePreview(file);
-          const driveUrl = getDriveFileUrl(file);
-
-          return `
-            <a
-              class="detail-image-link"
-              href="${escapeHtml(driveUrl || "#")}"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Buka gambar di Google Drive"
-            >
-              ${
-                previewUrl
-                  ? `<img
-                      data-drive-preview="${escapeHtml(file.drive_file_id || "")}"
-                      data-design-id="${escapeHtml(d.id)}"
-                      alt="${escapeHtml(file.file_name || "Preview desain")}"
-                      loading="lazy"
-                      class="drive-preview-image"
-                    >`
-                  : ""
-              }
-              
-            </a>
-          `;
-        }).join("")}
-      </div>
-    `;
+  if (!items.length) {
+    return `<p class="muted">${emptyMessage}</p>`;
   }
+
+  return `
+    <div class="detail-images">
+      ${items.map(file => {
+        const previewUrl = getDrivePreview(file);
+
+        return `
+          <div class="detail-image-item">
+            ${
+              previewUrl
+                ? `<img
+                    data-drive-preview="${escapeHtml(file.drive_file_id || "")}"
+                    data-design-id="${escapeHtml(d.id)}"
+                    alt="${escapeHtml(file.file_name || "Preview desain")}"
+                    loading="lazy"
+                    class="drive-preview-image"
+                    onclick="openImagePreview(this)"
+                    title="Klik untuk memperbesar gambar"
+                  >`
+                : `<p class="muted">Preview tidak tersedia</p>`
+            }
+            
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
 
   detailContent.innerHTML = `
     <div class="detail-info-grid">
