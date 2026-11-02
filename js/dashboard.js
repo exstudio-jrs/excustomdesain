@@ -300,10 +300,7 @@ function openDesignDetail(id) {
                     >`
                   : ""
               }
-
-              <small>
-                ${escapeHtml(file.file_name || "Gambar")}
-              </small>
+              
             </a>
           `;
         }).join("")}
