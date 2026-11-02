@@ -179,8 +179,8 @@ const detailBackdrop = document.querySelector("#detailBackdrop");
 async function loadDrivePreviews() {
   if (!detailContent) return;
 
-  const images = detailContent.querySelectorAll(
-    "img[data-drive-preview]"
+  const images = Array.from(
+    detailContent.querySelectorAll("img[data-drive-preview]")
   );
 
   const {
@@ -193,58 +193,63 @@ async function loadDrivePreviews() {
     return;
   }
 
-  for (const img of images) {
-    const fileId = img.dataset.drivePreview;
-    const designId = img.dataset.designId;
+  await Promise.all(
+    images.map(async (img) => {
+      const fileId = img.dataset.drivePreview;
+      const designId = img.dataset.designId;
 
-    if (!fileId || !designId) continue;
+      if (!fileId || !designId || img.dataset.loaded === "true") {
+        return;
+      }
 
-    try {
-      const params = new URLSearchParams({
-        designId,
-        fileId
-      });
+      try {
+        const params = new URLSearchParams({
+          designId,
+          fileId
+        });
 
-      const response = await fetch(
-        `${SUPABASE_URL}/functions/v1/drive-preview?${params}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            apikey: SUPABASE_ANON_KEY
+        const response = await fetch(
+          `${SUPABASE_URL}/functions/v1/drive-preview?${params}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+              apikey: SUPABASE_ANON_KEY
+            }
           }
+        );
+
+        if (!response.ok) {
+          throw new Error(await response.text());
         }
-      );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
+        const blob = await response.blob();
+
+        if (!blob.type.startsWith("image/")) {
+          throw new Error("Respons bukan file gambar.");
+        }
+
+        const objectUrl = URL.createObjectURL(blob);
+
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+        };
+
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          img.alt = "Gagal menampilkan preview gambar";
+          img.dataset.loaded = "false";
+        };
+
+        img.src = objectUrl;
+        img.dataset.loaded = "true";
+
+      } catch (error) {
+        console.error("Gagal memuat preview:", fileId, error);
+        img.alt = "Preview tidak tersedia";
       }
-
-      const blob = await response.blob();
-
-      if (!blob.type.startsWith("image/")) {
-        throw new Error("Respons bukan file gambar.");
-      }
-
-      const objectUrl = URL.createObjectURL(blob);
-
-      img.onload = () => {
-        URL.revokeObjectURL(objectUrl);
-      };
-
-      img.onerror = () => {
-        URL.revokeObjectURL(objectUrl);
-        img.alt = "Gagal menampilkan preview gambar";
-      };
-
-      img.src = objectUrl;
-
-    } catch (error) {
-      console.error("Gagal memuat preview:", fileId, error);
-      img.alt = "Preview tidak tersedia";
-    }
-  }
+    })
+  );
 }
 
 function openDesignDetail(id) {
