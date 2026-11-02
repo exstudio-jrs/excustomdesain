@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SPORTWEAR — Login</title><link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-bg">
+  <main class="auth-shell">
+    <div class="brand-mark">EXS<span>.</span></div>
+    <p class="eyebrow">EX STUDIO CUSTOM DESAIN</p>
+    <h1>Masuk ke<br><span>CUSTOM DESAIN</span></h1>
+    <p class="muted">Kelola brief dan hasil desain dalam satu tempat.</p>
+    <form id="loginForm" class="panel form-stack">
+      <label>Username<input id="username" autocomplete="username" placeholder="contoh: marketing01" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required></label>
+      <button class="btn btn-primary" type="submit">LOGIN <span>→</span></button>
+      <p id="loginError" class="error" role="alert"></p>
+    </form>
+    <p class="tiny muted">Akses hanya untuk user terdaftar.</p>
+  </main>
+  <script type="module" src="js/auth.js"></script>
+</body></html>

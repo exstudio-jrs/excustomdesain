@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPORTWEAR — Form Revisi</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/revision.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="dashboard.html">SW<span>.</span> <small>SPORTWEAR</small></a>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="gallery.html">Gallery</a>
+    </nav>
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container revision-container">
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">WORKSPACE / DESIGN REVISION</p>
+        <h1>Form Revisi<span>.</span></h1>
+        <p class="muted">Tuliskan perubahan yang diperlukan dan lampirkan gambar referensi tambahan.</p>
+      </div>
+      <a class="btn btn-ghost" href="dashboard.html">← Kembali ke Dashboard</a>
+    </section>
+
+    <div id="pageMessage" class="revision-message hidden" role="alert"></div>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">PROJECT INFORMATION</p>
+          <h2>Informasi Desain</h2>
+        </div>
+        <span id="currentStatus" class="status submitted">SUBMITTED</span>
+      </div>
+      <div id="designInfo" class="revision-info">
+        <p class="muted">Memuat informasi desain...</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">REVISION REQUEST</p>
+          <h2>Instruksi Revisi</h2>
+        </div>
+        <span class="pill">CATATAN + GAMBAR</span>
+      </div>
+
+      <form id="revisionForm" class="form-stack">
+        <label>
+          Catatan revisi <span class="required-mark">*</span>
+          <textarea
+            id="revisionNotes"
+            name="notes"
+            rows="7"
+            required
+            minlength="3"
+            placeholder="Contoh: ubah warna kerah menjadi hitam, motif bagian lengan diperbesar, logo sponsor dipindah ke tengah dada..."
+          ></textarea>
+        </label>
+
+        <label>
+          Upload gambar referensi tambahan
+          <input
+            id="revisionFiles"
+            name="revisionFiles"
+            type="file"
+            accept="image/*"
+            multiple
+          >
+          <small class="muted">Maksimal 10 gambar, masing-masing 15 MB.</small>
+        </label>
+
+        <div id="revisionPreview" class="revision-preview-grid"></div>
+
+        <div class="revision-submit-row">
+          <p class="muted tiny">Pastikan instruksi dan gambar sudah benar sebelum dikirim ke desainer.</p>
+          <button id="submitRevisionBtn" class="btn btn-primary" type="submit">
+            KIRIM REVISI ↗
+          </button>
+        </div>
+        <p id="formMessage" class="inline-message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">REVISION LOG</p>
+          <h2>Riwayat Revisi</h2>
+        </div>
+      </div>
+      <div id="revisionHistory" class="revision-history">
+        <p class="muted">Memuat riwayat revisi...</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/revision.js"></script>
+</body>
+</html>
