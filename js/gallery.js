@@ -405,7 +405,61 @@ grid.querySelectorAll("[data-gallery-preview]")
 }
 
 // ======================================
-// 5. JALANKAN GALLERY
+// HAPUS PERMANEN KHUSUS ADMIN
+// ======================================
+
+grid.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-gallery-delete]");
+
+  if (!button || !isAdmin) return;
+
+  const designId = button.dataset.galleryDelete;
+
+  const confirmed = window.confirm(
+    "YAKIN HAPUS PERMANEN?\n\n" +
+    "Data desain dan seluruh file terkait akan dihapus " +
+    "dari Supabase dan Google Drive.\n\n" +
+    "Tindakan ini tidak dapat dibatalkan."
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+  button.textContent = "MENGHAPUS...";
+
+  try {
+    const { data, error } =
+      await supabase.functions.invoke("drive-delete", {
+        body: { designId }
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data?.success) {
+      throw new Error(data?.error || "Penghapusan gagal.");
+    }
+
+    window.alert("Desain berhasil dihapus permanen.");
+
+    await loadGallery();
+
+  } catch (error) {
+    console.error("DELETE GALLERY ERROR:", error);
+
+    window.alert(
+      "Gagal menghapus desain:\n" +
+      (error.message || String(error))
+    );
+
+    button.disabled = false;
+    button.textContent = "HAPUS PERMANEN";
+  }
+});
+
+// ======================================
+// JALANKAN GALLERY
 // ======================================
 
 await loadGallery();
