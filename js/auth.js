@@ -23,7 +23,9 @@ loginForm.addEventListener("submit", async (e) => {
 
   try {
     // Mengubah username menjadi email Supabase
-    const email = username.trim().toLowerCase();
+    const email = username.includes("@")
+      ? username
+      : `${username}@exstudio.com`;
 
 
     console.log("Mencoba login:", email);
