@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SPORTWEAR — Form Revisi</title>
-  <link rel="icon" type="image/png" href="./favicon.png">
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/revision.css">
 </head>
@@ -73,12 +73,10 @@
 
           <form id="briefForm">
 
-<form id="briefForm">
-
   <div class="form-grid">
 
     <div class="form-group">
-      <label for="project_name">Nama Custom</label>
+      <label for="project_name">Nama Project / Customer *</label>
       <input
         type="text"
         id="project_name"
@@ -89,7 +87,7 @@
     </div>
 
     <div class="form-group">
-      <label for="apparel_type">Genre</label>
+      <label for="apparel_type">Jenis Apparel *</label>
       <select
         id="apparel_type"
         name="apparel_type"
@@ -102,7 +100,14 @@
         <option value="Running">Running</option>
         <option value="JKicau">Kicau</option>
         <option value="Lainnya">Lainnya</option>
-        </select>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="assigned_designer">Pilih Desainer *</label>
+      <select id="assigned_designer" name="assigned_designer" required>
+        <option value="">Memuat daftar desainer...</option>
+      </select>
     </div>
 
     <div class="form-group">
@@ -114,6 +119,7 @@
       >
     </div>
 
+   
     <div class="form-group full">
       <label for="brief">Detail Brief / Konsep Desain *</label>
       <textarea
@@ -147,8 +153,6 @@
   </button>
 
 </form>
-
-          </form>
 
         </div>
 

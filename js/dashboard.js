@@ -34,6 +34,7 @@ const isDesigner = profile.role === "designer";
 const marketingPanel = document.querySelector("#marketingPanel");
 const workTitle = document.querySelector("#workTitle");
 const form = document.querySelector("#briefForm");
+const designerSelect = document.querySelector("#assigned_designer");
 
 const fileInput = document.querySelector("#referenceFiles");
 const preview = document.querySelector("#referencePreview");
@@ -493,7 +494,37 @@ fileInput?.addEventListener("change", () => {
 });
 
 // ======================================
-// 7. INPUT BRIEF DESAIN
+// 7. DAFTAR DESAINER UNTUK PENUGASAN
+// ======================================
+
+async function loadDesignerOptions() {
+  if (!designerSelect || (!isMarketing && !isAdmin)) return;
+
+  designerSelect.innerHTML = '<option value="">Memuat daftar desainer...</option>';
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .eq("role", "designer")
+    .order("username", { ascending: true });
+
+  if (error) {
+    console.error("Gagal memuat daftar desainer:", error);
+    designerSelect.innerHTML = '<option value="">Gagal memuat desainer</option>';
+    return;
+  }
+
+  designerSelect.innerHTML = '<option value="">Pilih desainer</option>';
+  (data || []).forEach(designer => {
+    const option = document.createElement("option");
+    option.value = designer.id;
+    option.textContent = designer.username;
+    designerSelect.appendChild(option);
+  });
+}
+
+// ======================================
+// 8. INPUT BRIEF DESAIN
 // ======================================
 
 form?.addEventListener("submit", async event => {
@@ -534,6 +565,10 @@ form?.addEventListener("submit", async event => {
       throw new Error("Jenis apparel wajib dipilih.");
     }
 
+    if (!values.assigned_designer) {
+      throw new Error("Pilih desainer yang akan mengerjakan brief.");
+    }
+
     showBriefMessage("Menyimpan brief...");
 
     const { data: design, error } = await supabase
@@ -545,7 +580,8 @@ form?.addEventListener("submit", async event => {
         main_color: values.main_color || "",
         brief: values.brief.trim(),
         created_by: profile.id,
-        status: "queued"
+        assigned_to: values.assigned_designer,
+        status: "claimed"
       })
       .select()
       .single();
@@ -679,10 +715,7 @@ async function load() {
   const visible = isDesigner
     ? designs.filter(design =>
         design.status !== "approved" &&
-        (
-          design.status === "queued" ||
-          design.assigned_to === profile.id
-        )
+        design.assigned_to === profile.id
       )
     : isMarketing
       ? designs.filter(design =>
@@ -741,17 +774,6 @@ async function load() {
     const statusText = statusLabels[d.status] || d.status;
 
     let actions = "";
-
-    if (isDesigner && d.status === "queued") {
-      actions += `
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-claim="${escapeHtml(d.id)}">
-          KERJAKAN →
-        </button>
-      `;
-    }
 
     if (
       isDesigner &&
@@ -927,34 +949,6 @@ async function load() {
     btn.addEventListener("click", () => {
       window.location.href =
         `revision.html?id=${encodeURIComponent(btn.dataset.revision)}`;
-    });
-  });
-
-  // ======================================
-  // 13. KLAIM PEKERJAAN
-  // ======================================
-
-  workList.querySelectorAll("[data-claim]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      btn.disabled = true;
-
-      try {
-        const { error } = await supabase.rpc(
-          "claim_design",
-          {
-            p_design_id: btn.dataset.claim
-          }
-        );
-
-        if (error) throw error;
-
-        await load();
-
-      } catch (error) {
-        console.error("Claim error:", error);
-        alert(`Gagal mengambil pekerjaan: ${error.message}`);
-        btn.disabled = false;
-      }
     });
   });
 
@@ -1204,4 +1198,5 @@ workList.querySelectorAll("[data-file]").forEach(input => {
 // 18. JALANKAN DASHBOARD
 // ======================================
 
+await loadDesignerOptions();
 await load();
