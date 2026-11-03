@@ -23,6 +23,7 @@ loginForm.addEventListener("submit", async (e) => {
 
   try {
     // username - email login
+    
     let email;
 
     if (username.includes("@")) {
@@ -51,6 +52,7 @@ loginForm.addEventListener("submit", async (e) => {
     if (error) {
       throw error;
     }
+
 
     if (error) {
       throw error;
