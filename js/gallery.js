@@ -15,6 +15,7 @@ if (!context) {
 }
 
 const grid = document.querySelector("#galleryGrid");
+const isAdmin = context.profile?.role === "admin";
 
 // ======================================
 // PREVIEW GOOGLE DRIVE GALLERY
@@ -351,6 +352,7 @@ async function loadGallery() {
             ${results.length} hasil desain
           </small>
 
+          <div class="gallery-actions">
           <button
             type="button"
             class="btn btn-primary gallery-detail-btn"
@@ -358,6 +360,21 @@ async function loadGallery() {
           >
             LIHAT DETAIL ↗
           </button>
+
+          ${
+            isAdmin
+              ? `
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-gallery-delete="${escapeHtml(design.id)}"
+                >
+                  HAPUS PERMANEN
+                </button>
+              `
+              : ""
+          }
+          </div>
 
         </div>
       </article>
