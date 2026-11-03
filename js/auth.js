@@ -22,11 +22,23 @@ loginForm.addEventListener("submit", async (e) => {
   button.textContent = "MEMERIKSA...";
 
   try {
-    // Mengubah username menjadi email Supabase
-    const email = username.includes("@")
-      ? username
-      : `${username}@exstudio.com`;
+    // username - email login
+    let email;
 
+    if (username.includes("@")) {
+      email = username.toLowerCase();
+    } else {
+      const { data: lookup, error: lookupError } =
+        await supabase.functions.invoke("get-email-by-username", {
+          body: { username }
+        });
+
+      if (lookupError || !lookup?.email) {
+        throw new Error("Username tidak ditemukan.");
+      }
+
+      email = lookup.email;
+    }
 
     console.log("Mencoba login:", email);
 
@@ -35,6 +47,10 @@ loginForm.addEventListener("submit", async (e) => {
         email,
         password
       });
+
+    if (error) {
+      throw error;
+    }
 
     if (error) {
       throw error;
