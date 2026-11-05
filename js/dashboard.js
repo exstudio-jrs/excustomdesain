@@ -23,6 +23,12 @@ if (!context?.user || !context?.profile) {
 
 const { user, profile } = context;
 
+// Admin_PO diarahkan ke halaman manajemen PO
+if (profile.role === "admin_po") {
+  location.replace("po.html");
+  throw new Error("Admin_PO dialihkan ke halaman PO.");
+}
+
 const isAdmin = profile.role === "admin";
 const isMarketing = profile.role === "marketing";
 const isDesigner = profile.role === "designer";
@@ -1101,12 +1107,22 @@ workList.querySelectorAll("[data-file]").forEach(input => {
   });
 });
 
+  
   // ======================================
   // 16. APPROVAL DESAIN
   // ======================================
 
   workList.querySelectorAll("[data-approve]").forEach(btn => {
     btn.addEventListener("click", async () => {
+      const designId = btn.getAttribute("data-approve")?.trim();
+
+        console.log("ID desain yang akan di-approve:", designId);
+
+        if (!designId || designId === "undefined" || designId === "null") {
+          alert("ID desain kosong. Periksa tombol Approve pada daftar desain.");
+          return;
+        }
+
       if (!confirm("Setujui desain ini dan masukkan ke Gallery?")) {
         return;
       }
@@ -1121,7 +1137,7 @@ workList.querySelectorAll("[data-file]").forEach(input => {
             approved_by: profile.id,
             approved_at: new Date().toISOString()
           })
-          .eq("id", btn.dataset.approve)
+          .eq("id", designId)
           .eq("status", "submitted");
 
         if (isMarketing) {
@@ -1140,8 +1156,21 @@ workList.querySelectorAll("[data-file]").forEach(input => {
           );
         }
 
+        // Gunakan ID hasil update database.
+          const approvedDesignId = data.id;
+
+          console.log("ID desain berhasil di-approve:", approvedDesignId);
+
         alert("Desain berhasil di-approve dan masuk Gallery.");
 
+        // Marketing langsung diarahkan ke form PO baru.
+        if (isMarketing) {
+            window.location.href =
+              `po-form.html?design_id=${encodeURIComponent(approvedDesignId)}`;
+            return;
+          }
+
+        // Admin tetap berada di dashboard.
         await load();
 
       } catch (error) {
@@ -1151,6 +1180,7 @@ workList.querySelectorAll("[data-file]").forEach(input => {
       }
     });
   });
+
 
   // ======================================
   // 17. HAPUS BRIEF

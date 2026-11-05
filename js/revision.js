@@ -107,6 +107,7 @@ function renderDesignInfo(design) {
       <p>${escapeHtml(design.apparel_type || "-")}</p>
     </div>
 
+    
     <div class="revision-info-item">
       <small>Deadline</small>
       <p>${escapeHtml(design.deadline || "-")}</p>

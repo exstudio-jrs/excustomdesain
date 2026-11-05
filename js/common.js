@@ -47,7 +47,8 @@ export async function requireUser() {
     const validRoles = [
       "marketing",
       "designer",
-      "admin"
+      "admin",
+      "admin_po"
     ];
 
     if (!validRoles.includes(profile.role)) {
