@@ -1,0 +1,209 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS—Revisi Purchase Order</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/po.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="dashboard.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="po-form.html">Buat PO</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost" type="button">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">PURCHASE ORDER / REVISION</p>
+        <h1>Revisi Purchase Order<span>.</span></h1>
+        <p class="muted">
+          Perbaiki informasi PO berdasarkan catatan Admin_PO.
+        </p>
+      </div>
+
+      <div class="head-actions">
+        <a href="dashboard.html" class="btn btn-ghost">← Kembali</a>
+      </div>
+    </section>
+
+    <div id="formMessage" class="form-message"></div>
+
+    <section class="panel" id="revisionInfo">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">REVISION REQUEST</p>
+          <h2>Catatan Revisi Admin_PO</h2>
+        </div>
+      </div>
+
+      <div id="revisionNote">
+        Memuat catatan revisi...
+      </div>
+    </section>
+
+    <form id="poForm">
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ORDER INFORMATION</p>
+            <h2>Informasi Pesanan</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>Nama Customer *
+            <input type="text" id="customerName" required>
+          </label>
+
+          <label>Nomor PO
+            <input type="text" id="poNumber" readonly>
+          </label>
+
+          <label>Tanggal PO *
+            <input type="date" id="orderDate" required>
+          </label>
+
+          <label>Deadline
+            <input type="date" id="deadline">
+          </label>
+
+          <label>Genre
+            <select id="apparelType">
+              <option value="">Pilih Genre</option>
+              <option value="Bola">Bola</option>
+              <option value="Voli">Voli</option>
+              <option value="Badminton">Badminton</option>
+              <option value="Mancing">Mancing</option>
+              <option value="Running">Running</option>
+              <option value="Kicau">Kicau</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">PRODUCT SPECIFICATION</p>
+            <h2>Spesifikasi Produk</h2>
+          </div>
+        </div>
+
+        <h3>Spesifikasi Baju</h3>
+        <div class="form-grid">
+          <label>Model Kerah
+            <input type="text" id="shirtCollar">
+          </label>
+          <label>Bahan
+            <input type="text" id="shirtMaterial">
+          </label>
+          <label>Lengan
+            <input type="text" id="shirtSleeve">
+          </label>
+          <label>Catatan Baju
+            <textarea id="shirtNotes" rows="3"></textarea>
+          </label>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Spesifikasi Celana</h3>
+        <div class="form-grid">
+          <label>Model Celana
+            <input type="text" id="pantsModel">
+          </label>
+          <label>Bahan
+            <input type="text" id="pantsMaterial">
+          </label>
+          <label>Catatan Celana
+            <textarea id="pantsNotes" rows="3"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">SHIPPING INFORMATION</p>
+            <h2>Informasi Pengiriman</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>Nama Penerima
+            <input type="text" id="receiverName">
+          </label>
+          <label>Nomor Telepon
+            <input type="text" id="receiverPhone">
+          </label>
+          <label class="full-width">Alamat Pengiriman
+            <textarea id="shippingAddress" rows="3"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ORDER ITEMS</p>
+            <h2>Daftar Nama dan Ukuran</h2>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="addItemBtn">
+            + Tambah Nama
+          </button>
+        </div>
+
+        <div class="po-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Ukuran</th>
+                <th>Jumlah</th>
+                <th>Catatan</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="itemRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label>Catatan Tambahan
+          <textarea id="poNotes" rows="4"></textarea>
+        </label>
+      </section>
+
+      <div class="po-form-actions">
+        <button type="submit" class="btn btn-primary" id="submitPOBtn">
+          KIRIM ULANG PO →
+        </button>
+      </div>
+
+    </form>
+  </main>
+
+  <script type="module" src="js/po-revision.js"></script>
+</body>
+</html>

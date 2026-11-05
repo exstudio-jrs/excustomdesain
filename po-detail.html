@@ -1,0 +1,115 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PO-DETAIL</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/po.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="po.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
+      <a href="po.html">Manajemen PO</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">PURCHASE ORDER / DETAIL</p>
+        <h1>Detail PO<span>.</span></h1>
+        <p class="muted">Periksa informasi dan proses Purchase Order.</p>
+      </div>
+
+      <div class="head-actions">
+        <a href="po.html" class="btn btn-ghost">← Kembali</a>
+      </div>
+    </section>
+
+    <div id="detailMessage" class="form-message"></div>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">ORDER INFORMATION</p>
+          <h2>Informasi PO</h2>
+        </div>
+
+        <span id="poStatus" class="po-status">Memuat...</span>
+      </div>
+
+      <div id="poInformation">
+        <p class="muted">Memuat informasi PO...</p>
+      </div>
+    </section>
+
+    <section class="panel">
+  <h3>Preview Desain Approved</h3>
+
+  <div id="designPreview" class="design-preview">
+    <div class="preview-placeholder">
+      Memuat preview desain...
+    </div>
+  </div>
+</section>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">ORDER ITEMS</p>
+          <h2>Daftar Nama dan Ukuran</h2>
+        </div>
+        <button type="button" class="btn btn-primary" id="printPOBtn">
+          ↓ PREVIEW / CETAK PDF
+        </button>
+      </div>
+
+      <div id="poItems">
+        <p class="muted">Memuat daftar item...</p>
+      </div>
+    </section>
+
+    <section class="panel" id="actionsPanel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">APPROVAL WORKFLOW</p>
+          <h2>Tindakan PO</h2>
+        </div>
+      </div>
+
+      <div id="poActions">
+        <p class="muted">Memuat tindakan...</p>
+      </div>
+    </section>
+
+    <section class="panel" id="revisionPanel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">REVISION HISTORY</p>
+          <h2>Riwayat Revisi</h2>
+        </div>
+      </div>
+
+      <div id="revisionHistory">
+        <p class="muted">Memuat riwayat revisi...</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/po-detail.js"></script>
+</body>
+</html>

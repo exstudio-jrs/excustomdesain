@@ -1,0 +1,118 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS—Manajemen PO</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/po.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="po.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
+      <a href="dashboard.html" id="dashboardLink">Dashboard Desain</a>
+      <a href="gallery.html" id="dashboardLink">Gallery</a>
+      <a href="po-approved.html">PO Approved</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">PURCHASE ORDER / WORKSPACE</p>
+        <h1>Manajemen PO<span>.</span></h1>
+        <p class="muted">
+          Periksa, revisi, dan setujui Purchase Order.
+        </p>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span>Total PO</span>
+        <strong id="statTotal">—</strong>
+        <small>Semua PO</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Menunggu Pemeriksaan</span>
+        <strong id="statSubmitted">—</strong>
+        <small>PO masuk</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Perlu Revisi</span>
+        <strong id="statRevision">—</strong>
+        <small>Menunggu Marketing</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Approved</span>
+        <strong id="statApproved">—</strong>
+        <small>Siap dicetak</small>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">PURCHASE ORDER LIST</p>
+          <h2>Daftar PO</h2>
+        </div>
+
+        <button id="refreshPO" class="btn btn-ghost">
+          ↻ Refresh
+        </button>
+      </div>
+
+      
+      <div class="filter-bar">
+        <select id="statusFilter">
+          <option value="">Semua Status</option>
+          <option value="draft">Draft</option>
+          <option value="submitted">Menunggu Pemeriksaan</option>
+          <option value="revision">Perlu Revisi</option>
+        </select>
+
+        <input
+          type="search"
+          id="searchPO"
+          placeholder="Cari nomor PO / customer..."
+        >
+
+        <a
+          href="po-form.html"
+          id="createPOButton"
+          class="btn btn-primary"
+        >
+          + BUAT PO
+        </a>
+      </div>
+
+
+      <div id="poMessage" class="form-message"></div>
+
+      <div id="poList" class="work-list">
+        <p class="muted">
+          Daftar pekerjaan PO, pemeriksaan, revisi, dan persetujuan.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/po.js"></script>
+</body>
+</html>

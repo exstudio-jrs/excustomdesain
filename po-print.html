@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumen PO - EXSTUDIO</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/po.css">
+
+  <style>
+    
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #eee;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+.print-actions {
+  max-width: 1100px;
+  margin: 15px auto;
+  text-align: right;
+}
+
+.print-container {
+  width: 1100px;
+  min-height: 760px;
+  margin: 20px auto;
+  padding: 22px;
+  background: #fff;
+}
+
+.print-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid #222;
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+}
+
+.print-header h1 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: 0.8px;
+}
+
+.print-header p {
+  margin: 2px 0 0;
+  color: #666;
+  font-size: 8px;
+}
+
+.print-header h2 {
+  margin: 0 0 2px;
+  font-size: 14px;
+}
+
+.print-header strong {
+  font-size: 10px;
+}
+
+.print-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.print-logo {
+  display: block;
+  width: 150px;
+  max-height: 55px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.print-brand p {
+  margin: 3px 0 0;
+  color: #666;
+  font-size: 8px;
+}
+
+.print-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.4fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.print-column {
+  min-width: 0;
+}
+
+.print-section {
+  margin: 0 0 11px;
+  break-inside: avoid;
+}
+
+.print-section h3 {
+  margin: 0 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #aaa;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.print-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px 10px;
+}
+
+.print-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 3px 0;
+  border-bottom: 1px dotted #ddd;
+  min-width: 0;
+}
+
+.print-row strong {
+  flex: 0 0 105px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #333;
+  text-transform: none;
+}
+
+.print-row strong::after {
+  content: ":";
+  float: right;
+}
+
+.print-row span {
+  flex: 1;
+  min-width: 0;
+  font-size: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.design-preview {
+  width: 100%;
+  min-height: 250px;
+  max-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  padding: 6px;
+}
+
+.design-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 325px;
+  object-fit: contain;
+}
+
+.preview-placeholder {
+  color: #777;
+  font-size: 11px;
+  text-align: center;
+  padding: 20px;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  font-size: 9px;
+}
+
+.print-table th,
+.print-table td {
+  border: 1px solid #aaa;
+  padding: 4px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.print-table th {
+  background: #fff;
+  text-align: center;
+}
+
+.print-table td:first-child,
+.print-table td:nth-child(2),
+.print-table td:nth-child(3),
+.print-table td:nth-child(5) {
+  text-align: center;
+}
+
+.print-total {
+  text-align: right;
+  margin: 6px 0 0;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.print-note {
+  margin-top: 9px;
+  padding: 7px;
+  border: 1px solid #ccc;
+  font-size: 9px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.print-note p {
+  margin: 4px 0 0;
+}
+
+.print-error {
+  color: #b42318;
+  font-size: 11px;
+  text-align: center;
+}
+
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .print-actions {
+    display: none !important;
+  }
+
+  .print-container {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-layout {
+    grid-template-columns: 0.85fr 1.4fr;
+    gap: 14px;
+  }
+
+  .print-section,
+  .print-table tr {
+    break-inside: avoid;
+  }
+
+  .design-preview {
+    min-height: 220px;
+    max-height: 300px;
+  }
+
+  .design-preview img {
+    max-height: 285px;
+  }
+
+  .print-table th {
+    background: #eee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .print-container {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+
+  .print-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .print-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.print-table td.size-cell {
+  background-color: #fff !important;
+  color: #222 !important;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="print-actions">
+    <button onclick="window.print()">CETAK / SIMPAN PDF</button>
+  </div>
+
+  <main class="print-container">
+    <header class="print-header">
+  <div class="print-brand">
+    <img
+      src="assets/ex_studio_logo.png"
+      alt="Logo EX STUDIO"
+      class="print-logo"
+    >
+  </div>
+
+  <div style="text-align:right">
+    <h2>PURCHASE ORDER</h2>
+    <strong id="printPONumber">Memuat...</strong>
+  </div>
+</header>
+
+    <div id="printContent">
+      Memuat data PO...
+    </div>
+  </main>
+
+  <script type="module" src="js/po-print.js"></script>
+</body>
+</html>
