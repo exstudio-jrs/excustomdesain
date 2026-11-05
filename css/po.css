@@ -1,0 +1,627 @@
+
+/* =====================================
+   PO MANAGEMENT PAGE
+===================================== */
+
+.page-head {
+  margin-bottom: 28px;
+}
+
+.page-head h1 {
+  margin-bottom: 8px;
+}
+
+.stats-grid {
+  margin-bottom: 28px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.filter-bar select,
+.filter-bar input {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: inherit;
+  font: inherit;
+}
+
+.filter-bar select {
+  min-width: 210px;
+}
+
+.filter-bar input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.po-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+
+/* =====================================
+   PO MANAGEMENT PAGE
+===================================== */
+
+.page-head {
+  margin-bottom: 28px;
+}
+
+.page-head h1 {
+  margin-bottom: 8px;
+}
+
+.stats-grid {
+  margin-bottom: 28px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.filter-bar select,
+.filter-bar input {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: #000;
+  font: inherit;
+}
+
+.filter-bar select {
+  min-width: 210px;
+}
+
+.filter-bar input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.po-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+
+.po-card-info {
+  min-width: 0;
+  color: #000000;
+}
+
+.po-card-info h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: #000000;
+}
+
+.po-card-info p {
+  margin: 5px 0;
+  color: #000000;
+  font-size: 13px;
+}
+
+.po-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.po-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #eee;
+  color: #444;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.po-status.submitted {
+  background: #fff0d5;
+  color: #9a6200;
+}
+
+.po-status.revision {
+  background: #ffe3e3;
+  color: #b42318;
+}
+
+.po-status.approved {
+  background: #dff5e6;
+  color: #16743a;
+}
+
+.po-status.printed {
+  background: #e3eaff;
+  color: #3156a5;
+}
+
+.po-empty {
+  padding: 35px 20px;
+  text-align: center;
+  color: #000000;
+}
+
+@media (max-width: 650px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar select,
+  .filter-bar input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .po-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .po-card-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 650px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar select,
+  .filter-bar input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .po-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .po-card-actions {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* DETAIL PO */
+
+.po-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.po-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.po-info-row strong {
+  font-size: 12px;
+  color: var(--muted, #777);
+}
+
+.po-info-row span {
+  font-size: 14px;
+}
+
+.po-specification {
+  margin-bottom: 22px;
+  padding: 14px;
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 8px;
+}
+
+.po-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.po-action-group textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.po-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.po-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.po-table-wrap th,
+.po-table-wrap td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border, #e5e5e5);
+}
+
+@media (max-width: 650px) {
+  .po-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .topbar,
+  .page-head .head-actions,
+  #poActions,
+  #revisionHistory,
+  .section-title button {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  .panel {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+}
+
+
+/* FORM PO MARKETING */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.form-grid label,
+#poForm > .panel > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea,
+#poForm > .panel > label textarea {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: inherit;
+  font: inherit;
+}
+
+.form-grid textarea {
+  resize: vertical;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border, #ddd);
+  margin: 25px 0;
+}
+
+.po-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 25px 0 40px;
+}
+
+#itemRows input {
+  width: 100%;
+  min-width: 90px;
+  padding: 9px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 650px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .po-form-actions {
+    flex-direction: column;
+  }
+
+  .po-form-actions button {
+    width: 100%;
+  }
+}
+
+
+/* =====================================
+   PO FORM - INPUT STYLE UPDATE
+===================================== */
+
+/* Warna teks input, dropdown, dan textarea */
+#poForm input,
+#poForm select,
+#poForm textarea,
+#itemRows input {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000;
+}
+
+/* Placeholder */
+#poForm input::placeholder,
+#poForm textarea::placeholder,
+#itemRows input::placeholder {
+  color: #888888;
+  opacity: 1;
+}
+
+/* Dropdown */
+#poForm select {
+  background-color: #ffffff !important;
+  color: #222222 !important;
+  border: 1px solid #ccc;
+}
+
+#poForm select option {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+/* Tabel input PO */
+.po-input-table {
+  min-width: 760px;
+}
+
+.po-input-table th {
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: #222222;
+  background: #f4f4f4;
+}
+
+.po-input-table td {
+  vertical-align: middle;
+}
+
+.po-input-table input {
+  min-width: 75px;
+  min-height: 40px;
+  background: #ffffff;
+}
+
+.po-input-table .item-size {
+  width: 85px;
+}
+
+.po-input-table .item-number {
+  width: 85px;
+}
+
+.po-input-table .item-name {
+  min-width: 140px;
+}
+
+.po-input-table .item-quantity {
+  width: 75px;
+  min-width: 65px;
+}
+
+@media (max-width: 650px) {
+  .po-input-table {
+    min-width: 760px;
+  }
+}
+
+
+/* =====================================
+   PO DETAIL - PRINT / PDF
+===================================== */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11px;
+  }
+
+  .topbar,
+  .page-head,
+  #detailMessage,
+  #actionsPanel,
+  #revisionPanel,
+  #logoutBtn {
+    display: none !important;
+  }
+
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .panel {
+    display: block !important;
+    margin: 0 0 16px !important;
+    padding: 14px !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .section-title {
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+
+  .section-title h2 {
+    font-size: 16px;
+    color: #111111 !important;
+  }
+
+  #poStatus {
+    border: 1px solid #999999;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  .po-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .po-info-row {
+    padding: 8px;
+    border: 1px solid #dddddd;
+    break-inside: avoid;
+  }
+
+  .po-info-row strong {
+    color: #555555 !important;
+  }
+
+  .po-info-row span {
+    color: #111111 !important;
+  }
+
+  .po-specification {
+    border: 1px solid #dddddd;
+    padding: 10px;
+  }
+
+  .po-table-wrap {
+    overflow: visible !important;
+  }
+
+  .po-table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .po-table-wrap th,
+  .po-table-wrap td {
+    padding: 7px;
+    border: 1px solid #cccccc !important;
+    color: #111111 !important;
+  }
+
+  .po-table-wrap thead {
+    display: table-header-group;
+  }
+
+  .po-table-wrap tr {
+    break-inside: avoid;
+  }
+
+  .po-input-table th {
+    background: #eeeeee !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  h3 {
+    color: #111111 !important;
+    font-size: 13px;
+  }
+}
+
+/* =====================================
+   PREVIEW DESAIN PO
+===================================== */
+
+.design-preview {
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.po-design-image {
+  display: block;
+  width: 100%;
+  max-width: 650px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: zoom-in;
+}
+
+.preview-placeholder {
+  width: 100%;
+  padding: 35px 15px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
