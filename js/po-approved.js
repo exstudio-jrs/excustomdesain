@@ -159,13 +159,23 @@ function renderApprovedPO() {
       </div>
 
       <div class="po-card-actions">
-        <button
+               <button
           type="button"
           class="btn btn-primary"
           data-detail-po="${escapeHtml(po.id)}"
         >
           DETAIL PO →
         </button>
+
+        ${(isMarketing || isAdmin || isAdminPO) ? `
+          <button
+            type="button"
+            class="btn btn-success"
+            data-repeat-po="${escapeHtml(po.id)}"
+          >
+            REPEAT ORDER
+          </button>
+        ` : ""}
 
         ${isAdmin ? `
           <button
@@ -251,6 +261,24 @@ searchApproved.addEventListener("input", renderApprovedPO);
 approvedList.addEventListener("click", async event => {
   const detailButton = event.target.closest("[data-detail-po]");
   const deleteButton = event.target.closest("[data-delete-po]");
+  const repeatButton = event.target.closest("[data-repeat-po]");
+
+  if (repeatButton) {
+    const poId = repeatButton.dataset.repeatPo;
+
+    const confirmed = confirm(
+      "Buat Repeat Order dari PO ini?\n\n" +
+      "Desain dan spesifikasi akan disalin. " +
+      "Daftar nama dan ukuran akan diisi ulang."
+    );
+
+    if (!confirmed) return;
+
+    location.href =
+      `po-form.html?repeat_from=${encodeURIComponent(poId)}`;
+
+    return;
+  }
 
   if (detailButton) {
     location.href =

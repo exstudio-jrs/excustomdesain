@@ -9,10 +9,12 @@ if (!context) {
 }
 
 const { user, profile } = context;
+const isMarketing = profile.role === "marketing";
 
 const params = new URLSearchParams(location.search);
 const poId = params.get("id");
 const designId = params.get("design_id");
+const repeatFromId = params.get("repeat_from");
 console.log("PO ID:", poId);
 console.log("Admin edit mode:", params.get("mode"));
 
@@ -369,6 +371,72 @@ async function loadExistingPO() {
 );
 }
 
+// =====================================
+// LOAD REPEAT ORDER
+// =====================================
+
+async function loadRepeatSourcePO() {
+  if (!repeatFromId) return;
+
+  if (!["marketing", "admin"].includes(profile.role)) {
+    throw new Error("Repeat Order hanya dapat dibuat oleh Marketing atau Admin.");
+  }
+
+  const { data: sourcePO, error } = await supabase
+    .from("purchase_orders")
+    .select("*")
+    .eq("id", repeatFromId)
+    .single();
+
+  if (error) {
+    throw new Error("PO sumber Repeat Order tidak ditemukan: " + error.message);
+  }
+
+  if (!["approved", "printed"].includes(sourcePO.status)) {
+    throw new Error("Repeat Order hanya dapat dibuat dari PO Approved atau Sudah Dicetak.");
+  }
+
+  if (isMarketing && sourcePO.created_by !== user.id) {
+    throw new Error("Anda hanya dapat mengulang PO milik akun Marketing Anda.");
+  }
+
+  // Pertahankan desain dari PO sumber.
+  if (!sourcePO.design_id) {
+  throw new Error(
+    "PO sumber belum memiliki desain. Repeat Order tidak dapat dilanjutkan."
+  );
+    }
+
+    linkedDesignId = sourcePO.design_id;
+
+  // Salin data customer dan spesifikasi.
+  fillForm(sourcePO);
+
+  // Kosongkan nomor PO lama agar PO baru menggunakan nomor baru.
+  setValue("poNumber", "");
+
+  // Tanggal PO baru menggunakan tanggal hari ini.
+  setValue("orderDate", new Date().toISOString().slice(0, 10));
+
+  // Deadline diisi ulang untuk pesanan baru.
+  setValue("deadline", "");
+
+  // Pastikan nomor PO tetap tidak dapat diedit manual.
+  document.querySelector("#poNumber").readOnly = true;
+
+  // Tidak menyalin item dari PO lama.
+  itemRows.innerHTML = "";
+  addItemRow();
+
+  // PO sumber hanya untuk referensi, bukan untuk diedit.
+  currentPO = null;
+
+  showMessage(
+    `Repeat Order dari ${sourcePO.po_number} berhasil dimuat. Desain dan spesifikasi disalin. Silakan isi ulang daftar nama, ukuran, nomor jersey, dan jumlah.`,
+    "info"
+  );
+}
+
 /* =====================================
    SAVE PO
 ===================================== */
@@ -558,12 +626,17 @@ try {
     new Date().toISOString().slice(0, 10)
   );
 
-  if (poId) {
+    if (poId) {
     if (adminApprovedEditMode) {
-    submitPOBtn.hidden = true;
-    saveDraftBtn.textContent = "SIMPAN PERUBAHAN";
+      submitPOBtn.hidden = true;
+      saveDraftBtn.textContent = "SIMPAN PERUBAHAN";
     }
+
     await loadExistingPO();
+
+  } else if (repeatFromId) {
+    await loadRepeatSourcePO();
+
   } else {
     await loadApprovedDesign();
     addItemRow();
