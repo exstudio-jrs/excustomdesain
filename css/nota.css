@@ -1,0 +1,199 @@
+
+.nota-container {
+  padding-bottom: 50px;
+}
+
+.nota-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.nota-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.nota-filter input {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.nota-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.nota-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.nota-table th,
+.nota-table td {
+  padding: 15px 13px;
+  text-align: left;
+  border-bottom: 1px solid #e8e8e8;
+  font-size: 14px;
+}
+
+.nota-table th {
+  background: #f7f7f7;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nota-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.nota-table .nota-number {
+  font-weight: 700;
+}
+
+.nota-table .nota-customer {
+  font-weight: 600;
+}
+
+.nota-actions {
+  display: flex;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.nota-actions .btn {
+  padding: 8px 11px;
+  font-size: 12px;
+}
+
+.nota-empty {
+  text-align: center !important;
+  padding: 35px !important;
+  color: #777;
+}
+
+.nota-message-error {
+  color: #c62828;
+  margin: 10px 0;
+}
+
+.nota-message-success {
+  color: #218838;
+  margin: 10px 0;
+}
+
+@media (max-width: 700px) {
+  .nota-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .nota-filter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .nota-filter .btn {
+    text-align: center;
+  }
+}
+
+
+/* =====================================
+   REKAP TAHUNAN DAN BULANAN
+===================================== */
+
+.nota-year-panel {
+  margin-bottom: 28px;
+}
+
+.nota-year-panel .section-title select,
+.panel .section-title select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+}
+
+.nota-month-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.nota-month-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 17px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+  color: inherit;
+}
+
+.nota-month-card:hover {
+  border-color: #888;
+  transform: translateY(-2px);
+}
+
+.nota-month-card.active {
+  border: 2px solid #222;
+  background: #f7f7f7;
+}
+
+.nota-month-name {
+  font-size: 13px;
+  color: #777;
+}
+
+.nota-month-card strong {
+  font-size: 17px;
+}
+
+.nota-month-amount {
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.nota-month-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+
+@media (max-width: 900px) {
+  .nota-month-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .nota-month-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nota-month-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .nota-year-panel .section-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

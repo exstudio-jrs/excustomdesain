@@ -1,0 +1,270 @@
+
+.master-description {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.master-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.master-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.master-tab {
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  color: var(--muted);
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.master-tab.active {
+  color: var(--lime);
+  border-color: var(--lime);
+  background: #c6f35b12;
+}
+
+.master-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.master-actions input {
+  width: 230px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.master-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 950px;
+  font-size: 12px;
+}
+
+.master-table th {
+  text-align: left;
+  padding: 14px 12px;
+  color: var(--lime);
+  background: #0d1116;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.master-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--line);
+  color: #e2e7eb;
+  vertical-align: middle;
+}
+
+.master-table tbody tr:hover {
+  background: #ffffff08;
+}
+
+.master-table .empty-row {
+  text-align: center;
+  color: var(--muted);
+  padding: 30px;
+}
+
+.master-status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.master-status.active {
+  color: var(--lime);
+  background: #c6f35b18;
+  border: 1px solid #718d35;
+}
+
+.master-status.inactive {
+  color: #ffaaaa;
+  background: #ff555518;
+  border: 1px solid #754040;
+}
+
+.master-row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.master-row-actions button {
+  padding: 7px 10px;
+  font-size: 10px;
+}
+
+.master-loading,
+.master-message {
+  padding: 14px;
+  margin-bottom: 16px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.master-loading {
+  color: var(--muted);
+  background: var(--panel2);
+}
+
+.master-message.success {
+  color: var(--lime);
+  background: #c6f35b12;
+  border: 1px solid #718d35;
+}
+
+.master-message.error {
+  color: #ffaaaa;
+  background: #ff555512;
+  border: 1px solid #754040;
+}
+
+.master-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #000b;
+  overflow-y: auto;
+}
+
+.master-modal.hidden {
+  display: none;
+}
+
+.master-modal-card {
+  width: min(680px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 26px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 20px 70px #0008;
+}
+
+.modal-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-heading h2 {
+  margin: 0;
+}
+
+.modal-close {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.master-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.master-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.master-field.full {
+  grid-column: 1 / -1;
+}
+
+.master-field label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.master-field input,
+.master-field select,
+.master-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.master-field textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+.master-field input:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+@media(max-width: 760px) {
+  .master-actions {
+    width: 100%;
+  }
+
+  .master-actions input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .master-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .master-field.full {
+    grid-column: auto;
+  }
+
+  .master-modal-card {
+    padding: 18px;
+  }
+}
+
+@media(max-width: 440px) {
+  .master-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .master-actions input {
+    width: 100%;
+  }
+}

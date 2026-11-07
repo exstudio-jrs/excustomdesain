@@ -174,8 +174,7 @@ Deno.serve(async (req) => {
       return json({ error: "Design not found" }, 404);
     }
 
-    
-// 7. Validasi hak upload
+    // 7. Validasi hak upload
 const allowed =
   profile.role === "admin" ||
   (
@@ -195,7 +194,6 @@ if (!allowed) {
     error: "You cannot upload to this design",
   }, 403);
 }
-
 
     // 8. Ambil access token OAuth
     const token = await driveToken(admin);

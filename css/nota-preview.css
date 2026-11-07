@@ -1,0 +1,366 @@
+
+.preview-container {
+  max-width: 1100px;
+  padding: 28px 0 50px;
+}
+
+.preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.nota-document {
+  background: #fff;
+  color: #202020;
+  padding: 42px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.nota-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #222;
+}
+
+.nota-header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.nota-header h1 span {
+  color: #e63946;
+}
+
+.nota-header p {
+  margin: 5px 0 0;
+  font-size: 11px;
+  color: #666;
+}
+
+.nota-title {
+  text-align: right;
+}
+
+.nota-title h2 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.nota-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 22px 0;
+}
+
+.nota-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nota-info span {
+  font-size: 12px;
+  color: #777;
+}
+
+.nota-po-section {
+  margin-top: 24px;
+  page-break-inside: avoid;
+}
+
+.nota-po-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.nota-pricing-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.nota-detail-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.nota-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.nota-detail-table th,
+.nota-detail-table td {
+  border: 1px solid #ddd;
+  padding: 9px 8px;
+  text-align: left;
+}
+
+.nota-detail-table th {
+  background: #f3f4f6;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.nota-extra-list {
+  margin: 12px 0;
+  padding: 12px;
+  background: #f8f8f8;
+  border: 1px solid #e5e5e5;
+}
+
+.nota-po-total {
+  display: flex;
+  justify-content: flex-end;
+  gap: 25px;
+  padding: 12px 0;
+  border-bottom: 1px solid #bbb;
+}
+
+.nota-grand-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding: 18px 20px;
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+}
+
+.nota-grand-total strong {
+  font-size: 23px;
+}
+
+.nota-notes {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px solid #ddd;
+}
+
+.nota-notes p {
+  white-space: pre-wrap;
+}
+
+.nota-footer {
+  margin-top: 45px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-size: 12px;
+}
+
+.preview-error {
+  padding: 16px;
+  color: #a32222;
+  background: #fff0f0;
+  border: 1px solid #efcaca;
+  border-radius: 8px;
+}
+
+@media (max-width: 700px) {
+  .nota-document {
+    padding: 20px 14px;
+  }
+
+  .nota-info {
+    grid-template-columns: 1fr;
+  }
+
+  .nota-detail-table {
+    min-width: 720px;
+  }
+}
+
+/* PENGATURAN CETAK */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #notaDocument,
+  #notaDocument * {
+    visibility: visible !important;
+  }
+
+  #notaDocument {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .preview-container {
+    max-width: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nota-po-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .nota-detail-table th {
+    background: #eee !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .nota-grand-total,
+  .nota-extra-list {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+.nota-promo-info {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px dashed #999;
+  border-radius: 6px;
+  background: #f8f8f8;
+}
+
+.nota-promo-info h4 {
+  margin: 0 0 8px;
+}
+
+.nota-promo-info p {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.nota-promo-info > div {
+  margin-top: 4px;
+}
+
+.nota-promo-info .promo-total {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #ccc;
+  font-weight: 700;
+}
+
+@media print {
+  .nota-promo-info {
+    background: #fff;
+    break-inside: avoid;
+  }
+}
+
+.nota-summary-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.nota-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.nota-summary-table th,
+.nota-summary-table td {
+  border: 1px solid #ccc;
+  padding: 9px 7px;
+  vertical-align: middle;
+}
+
+.nota-summary-table th {
+  background: #f1f1f1;
+  font-weight: 700;
+  text-align: center;
+}
+
+.nota-summary-table td {
+  text-align: left;
+}
+
+.nota-summary-table .text-right {
+  text-align: right;
+}
+
+.nota-summary-table .text-center {
+  text-align: center;
+}
+
+.nota-grand-summary {
+  width: 100%;
+  max-width: 380px;
+  margin: 22px 0 0 auto;
+}
+
+.nota-summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.nota-discount-row {
+  color: #c62828;
+}
+
+.nota-summary-final {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 13px 0;
+  border-top: 2px solid #222;
+  border-bottom: 2px solid #222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+@media print {
+  .nota-summary-table {
+    font-size: 10px;
+  }
+
+  .nota-summary-table th,
+  .nota-summary-table td {
+    padding: 6px 4px;
+  }
+
+  .nota-summary-table-wrap {
+    overflow: visible;
+  }
+
+  .nota-grand-summary {
+    break-inside: avoid;
+  }
+}

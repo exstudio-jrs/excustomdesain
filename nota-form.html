@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Nota - EXSTUDIO</title>
+  <link rel="stylesheet" href="css/nota-form.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-brand">EXSTUDIO</div>
+    <nav class="topbar-nav">
+      <a href="dashboard.html">Dashboard Desain</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="po.html">Manajemen PO</a>
+      <a href="po-approved.html">PO Approved</a>
+      <a href="nota.html" class="active">Manajemen Nota</a>
+      <a href="report-omset.html">Report Omset</a>
+    </nav>
+    <div class="topbar-user">
+      <span id="userLabel">Memuat pengguna...</span>
+      <button id="logoutBtn" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="nota-form-container">
+    <div class="nota-form-heading">
+      <div>
+        <h1>Input Nota Baru</h1>
+        <p>Buat Nota dari satu atau beberapa PO yang sudah approved.</p>
+      </div>
+      <a href="nota.html" class="btn btn-secondary">Kembali</a>
+    </div>
+
+    <div id="formMessage" class="form-message" hidden></div>
+
+    <section class="form-section">
+      <h2>Informasi Nota</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="notaNumber">Nomor Nota</label>
+          <input id="notaNumber" type="text" readonly placeholder="Otomatis dibuat saat disimpan">
+        </div>
+
+        <div class="form-group">
+          <label for="notaDate">Tanggal Nota</label>
+          <input id="notaDate" type="date" required>
+        </div>
+
+        <div class="form-group form-grid-full">
+          <label for="customerSelect">Customer</label>
+          <select id="customerSelect" required>
+            <option value="">Pilih customer dari PO Approved</option>
+          </select>
+        </div>
+
+        <div class="form-group form-grid-full">
+          <label for="notaNotes">Catatan Nota</label>
+          <textarea id="notaNotes" rows="3" placeholder="Catatan tambahan jika ada"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="section-heading">
+        <div>
+          <h2>Pilih Purchase Order</h2>
+          <p>Hanya PO approved milik customer yang dipilih.</p>
+        </div>
+        <button id="loadPOBtn" type="button" class="btn btn-secondary">
+          Muat PO
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label for="poSelect">Daftar PO Approved</label>
+        <select id="poSelect">
+          <option value="">Pilih PO</option>
+        </select>
+      </div>
+
+      <div id="selectedPOList" class="selected-po-list">
+        <div class="empty-state">Belum ada PO yang dipilih.</div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h2>Ringkasan Nota</h2>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span>Jumlah PO</span>
+          <strong id="summaryPOCount">0</strong>
+        </div>
+        <div class="summary-item">
+          <span>Total Qty</span>
+          <strong id="summaryQty">0</strong>
+        </div>
+        <div class="summary-item summary-total">
+          <span>Total Nota</span>
+          <strong id="summaryTotal">Rp0</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <a href="nota.html" class="btn btn-secondary">Batal</a>
+      <button id="saveNotaBtn" type="button" class="btn btn-primary">
+        Simpan Nota
+      </button>
+    </div>
+  </main>
+
+  <script type="module" src="js/nota-form.js"></script>
+</body>
+</html>

@@ -23,18 +23,62 @@ if (!context?.user || !context?.profile) {
 
 const { user, profile } = context;
 
-// Admin_PO diarahkan ke halaman manajemen PO
-if (profile.role === "admin_po") {
+// Identifikasi role
+const isAdmin = profile.role === "admin";
+const isMarketing = profile.role === "marketing";
+const isDesigner = profile.role === "designer";
+const isAdminPO = profile.role === "admin_po";
+
+// Admin_PO diarahkan ke halaman Manajemen PO
+if (isAdminPO) {
   location.replace("po.html");
   throw new Error("Admin_PO dialihkan ke halaman PO.");
 }
 
-const isAdmin = profile.role === "admin";
-const isMarketing = profile.role === "marketing";
-const isDesigner = profile.role === "designer";
+const navMasterHarga =
+  document.querySelector("#navMasterHarga");
+
+if (navMasterHarga) {
+  navMasterHarga.classList.toggle(
+    "hidden",
+    !["admin", "marketing"].includes(profile.role)
+  );
+}
 
 // ======================================
-// 2. ELEMEN DASHBOARD
+// 2. PENGATURAN NAVIGASI BERDASARKAN ROLE
+// ======================================
+
+const navManajemenPO = document.querySelector("#navManajemenPO");
+const navManajemenNota = document.querySelector("#navManajemenNota");
+const navReportOmset = document.querySelector("#navReportOmset");
+
+// Manajemen PO: Marketing dan Admin
+if (navManajemenPO) {
+  navManajemenPO.classList.toggle(
+    "hidden",
+    isDesigner
+  );
+}
+
+// Manajemen Nota: Marketing, Admin, dan Admin_PO
+if (navManajemenNota) {
+  navManajemenNota.classList.toggle(
+    "hidden",
+    isDesigner
+  );
+}
+
+// Report Omset: Marketing, Admin, Admin_PO, dan Designer
+if (navReportOmset) {
+  navReportOmset.classList.toggle(
+    "hidden",
+    !["marketing", "admin", "admin_po", "designer"].includes(profile.role)
+  );
+}
+
+// ======================================
+// 3. ELEMEN DASHBOARD
 // ======================================
 
 const marketingPanel = document.querySelector("#marketingPanel");
@@ -47,7 +91,7 @@ const preview = document.querySelector("#referencePreview");
 const workList = document.querySelector("#workList");
 const refreshBtn = document.querySelector("#refreshBtn");
 
-// Panel Marketing tampil untuk Marketing dan Admin.
+// Panel Marketing hanya tampil untuk Marketing dan Admin
 if (marketingPanel) {
   marketingPanel.classList.toggle(
     "hidden",
@@ -55,13 +99,14 @@ if (marketingPanel) {
   );
 }
 
-// Variabel global dashboard.
+// Variabel dashboard
 let selectedFiles = [];
 let previewUrls = [];
+
 const designCache = new Map();
 
 // ======================================
-// 3. BRIEF FORM ACCORDION
+// 4. BRIEF FORM ACCORDION
 // ======================================
 
 const briefToggle = document.querySelector("#briefToggle");
@@ -111,7 +156,7 @@ briefToggle?.addEventListener("click", () => {
 });
 
 // ======================================
-// 4. HELPER
+// 5. HELPER
 // ======================================
 
 function formatDate(value) {
@@ -226,7 +271,7 @@ function closeImagePreview() {
 }
 
 // ======================================
-// 5. DETAIL DESAIN
+// 6. DETAIL DESAIN
 // ======================================
 
 const detailModal = document.querySelector("#designDetailModal");
@@ -444,7 +489,7 @@ document.addEventListener("keydown", event => {
 });
 
 // ======================================
-// 6. PREVIEW GAMBAR REFERENSI
+// 7. PREVIEW GAMBAR REFERENSI
 // ======================================
 
 function clearPreview() {
@@ -500,7 +545,7 @@ fileInput?.addEventListener("change", () => {
 });
 
 // ======================================
-// 7. DAFTAR DESAINER UNTUK PENUGASAN
+// 8. DAFTAR DESAINER UNTUK PENUGASAN
 // ======================================
 
 async function loadDesignerOptions() {
@@ -530,7 +575,7 @@ async function loadDesignerOptions() {
 }
 
 // ======================================
-// 8. INPUT BRIEF DESAIN
+// 9. INPUT BRIEF DESAIN
 // ======================================
 
 form?.addEventListener("submit", async event => {
@@ -661,7 +706,7 @@ form?.addEventListener("submit", async event => {
 });
 
 // ======================================
-// 8. REFRESH DATA
+// 10. REFRESH DATA
 // ======================================
 
 refreshBtn?.addEventListener("click", async () => {
@@ -678,7 +723,7 @@ refreshBtn?.addEventListener("click", async () => {
 });
 
 // ======================================
-// 9. LOAD DATA DESAIN
+// 11. LOAD DATA DESAIN
 // ======================================
 
 async function load() {
@@ -765,7 +810,7 @@ async function load() {
   }
 
   // ======================================
-  // 10. RENDER DAFTAR PEKERJAAN
+  // 12. RENDER DAFTAR PEKERJAAN
   // ======================================
 
   workList.innerHTML = visible.map(d => {
@@ -921,7 +966,7 @@ async function load() {
   }).join("");
 
   // ======================================
-  // 11. EVENT LISTENER DETAIL
+  // 13. EVENT LISTENER DETAIL
   // ======================================
 
   workList.querySelectorAll("[data-detail]").forEach(item => {
@@ -948,7 +993,7 @@ async function load() {
   });
 
   // ======================================
-  // 12. EVENT LISTENER REVISI
+  // 14. EVENT LISTENER REVISI
   // ======================================
 
   workList.querySelectorAll("[data-revision]").forEach(btn => {
@@ -959,7 +1004,7 @@ async function load() {
   });
 
   // ======================================
-  // 14. PILIH FILE HASIL DESAIN
+  // 15. PILIH FILE HASIL DESAIN
   // ======================================
 
   workList.querySelectorAll("[data-upload]").forEach(btn => {
@@ -973,7 +1018,7 @@ async function load() {
   });
 
 // ======================================
-// 15. UPLOAD HASIL DESAIN
+// 16. UPLOAD HASIL DESAIN
 // ======================================
 
 workList.querySelectorAll("[data-file]").forEach(input => {
@@ -1109,7 +1154,7 @@ workList.querySelectorAll("[data-file]").forEach(input => {
 
   
   // ======================================
-  // 16. APPROVAL DESAIN
+  // 17. APPROVAL DESAIN
   // ======================================
 
   workList.querySelectorAll("[data-approve]").forEach(btn => {
@@ -1183,7 +1228,7 @@ workList.querySelectorAll("[data-file]").forEach(input => {
 
 
   // ======================================
-  // 17. HAPUS BRIEF
+  // 18. HAPUS BRIEF
   // ======================================
 
   workList.querySelectorAll("[data-delete]").forEach(btn => {
@@ -1225,7 +1270,7 @@ workList.querySelectorAll("[data-file]").forEach(input => {
 }
 
 // ======================================
-// 18. JALANKAN DASHBOARD
+// 19. JALANKAN DASHBOARD
 // ======================================
 
 await loadDesignerOptions();

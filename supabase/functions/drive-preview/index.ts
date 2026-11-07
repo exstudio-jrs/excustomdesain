@@ -115,9 +115,9 @@ Deno.serve(async (req) => {
       return json({ error: "Profile not found" }, 403);
     }
 
-    if (!["marketing", "designer", "admin"].includes(profile.role)) {
-      return json({ error: "Forbidden role" }, 403);
-    }
+    if (!["marketing", "designer", "admin", "admin_po"].includes(profile.role)) {
+    return json({ error: "Forbidden role" }, 403);
+    }   
 
     const params = new URL(req.url).searchParams;
     const designId = params.get("designId");
@@ -130,39 +130,60 @@ Deno.serve(async (req) => {
     }
 
     // Pastikan pengguna berhak melihat desain ini.
-    const { data: design, error: designError } = await supabase
-      .from("designs")
-      .select("id, created_by, assigned_to")
-      .eq("id", designId)
-      .single();
+const { data: design, error: designError } = await supabase
+  .from("designs")
+  .select("id, created_by, assigned_to, status")
+  .eq("id", designId)
+  .single();
 
-    if (designError || !design) {
-      return json({ error: "Design not found" }, 404);
-    }
+if (designError || !design) {
+  return json({ error: "Design not found" }, 404);
+}
 
-    const allowed =
-      profile.role === "admin" ||
-      (
-        profile.role === "marketing" &&
-        design.created_by === user.id
-      ) ||
-      (
-        profile.role === "designer" &&
-        design.assigned_to === user.id
-      );
+let allowed =
+  // Semua role boleh melihat desain approved di Gallery.
+  design.status === "approved" ||
 
-      console.log("PREVIEW ACCESS CHECK:", {
+  profile.role === "admin" ||
+  (
+    profile.role === "marketing" &&
+    design.created_by === user.id
+  ) ||
+  (
+    profile.role === "designer" &&
+    design.assigned_to === user.id
+  );
+
+// Admin PO tetap boleh melihat desain yang terhubung
+// dengan PO yang dapat diaksesnya.
+if (profile.role === "admin_po" && design.status !== "approved") {
+  const { data: po, error: poError } = await supabase
+    .from("purchase_orders")
+    .select("id")
+    .eq("design_id", designId)
+    .maybeSingle();
+
+  if (poError) {
+    console.error("PO access check error:", poError);
+    return json({ error: "Gagal memeriksa akses PO." }, 500);
+  }
+
+  allowed = !!po;
+}
+
+console.log("PREVIEW ACCESS CHECK:", {
   userId: user.id,
   role: profile.role,
   designId: design.id,
+  designStatus: design.status,
   createdBy: design.created_by,
   assignedTo: design.assigned_to,
   allowed,
 });
 
-    if (!allowed) {
-      return json({ error: "Forbidden" }, 403);
-    }
+if (!allowed) {
+  return json({ error: "Forbidden" }, 403);
+}
 
     // Pastikan file memang terdaftar pada desain tersebut.
     const { data: fileRecord, error: fileError } = await admin

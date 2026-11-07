@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Master Harga | EXSTUDIO</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/master-harga.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="dashboard.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="po.html" id="navManajemenPO">Manajemen PO</a>
+      <a href="nota.html" id="navManajemenNota">Manajemen Nota</a>
+      <a href="report-omset.html" id="navReportOmset">Report Omset</a>
+      <a href="master-harga.html" class="active">Master Harga</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">DATABASE / PENGATURAN</p>
+        <h1>Master Harga</h1>
+        <p class="master-description">
+          Kelola data promo dan harga tambahan yang terhubung ke Google Spreadsheet.
+        </p>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="master-toolbar">
+        <div class="master-tabs">
+          <button class="master-tab active" data-tab="promo">
+            Master Promo
+          </button>
+          <button class="master-tab" data-tab="harga">
+            Harga Tambahan
+          </button>
+        </div>
+
+        <div class="master-actions">
+          <input
+            type="search"
+            id="searchMaster"
+            placeholder="Cari kode atau nama..."
+          >
+          <button class="btn btn-primary" id="btnTambah">
+            + Tambah Data
+          </button>
+        </div>
+      </div>
+
+      <div id="masterMessage" class="master-message hidden"></div>
+
+      <div id="masterLoading" class="master-loading">
+        Memuat data Master Harga...
+      </div>
+
+      <div class="table-wrap" id="tablePromoWrap">
+        <table class="master-table">
+          <thead>
+            <tr>
+              <th>Kode Promo</th>
+              <th>Nama Promo</th>
+              <th>Kategori</th>
+              <th>Jenis Pesanan</th>
+              <th>Grade</th>
+              <th>Diskon / Pcs</th>
+              <th>Min. Qty</th>
+              <th>Periode</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tablePromo">
+            <tr><td colspan="10">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap hidden" id="tableHargaWrap">
+        <table class="master-table">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Kategori</th>
+              <th>Nama Tambahan</th>
+              <th>Harga</th>
+              <th>Metode Hitung</th>
+              <th>Status</th>
+              <th>Catatan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableHarga">
+            <tr><td colspan="8">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal tambah/edit -->
+  <div class="master-modal hidden" id="masterModal">
+    <div class="master-modal-card">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">MASTER DATA</p>
+          <h2 id="modalTitle">Tambah Data</h2>
+        </div>
+        <button type="button" class="modal-close" id="btnCloseModal">×</button>
+      </div>
+
+      <form id="masterForm">
+        <div id="formFields" class="master-form-grid"></div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="btnBatal">
+            Batal
+          </button>
+          <button type="submit" class="btn btn-primary" id="btnSimpan">
+            Simpan Data
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/master-harga.js"></script>
+</body>
+</html>

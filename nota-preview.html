@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS — Preview Nota</title>
+
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nota-preview.css">
+</head>
+<body>
+
+  <header class="topbar no-print">
+    <a class="brand" href="nota.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="nota.html">Manajemen Nota</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container preview-container">
+    <div class="preview-toolbar no-print">
+      <a href="nota.html" class="btn btn-ghost">← Kembali</a>
+
+      <button type="button" id="printBtn" class="btn btn-primary">
+        Cetak Nota
+      </button>
+    </div>
+
+    <div id="previewMessage" class="form-message">
+      Memuat data Nota...
+    </div>
+
+    <article id="notaDocument" class="nota-document" hidden>
+      <header class="nota-header">
+        <div>
+          <h1>EX<span>.</span> STUDIO</h1>
+          <p>SPORT APPAREL & CUSTOM JERSEY</p>
+        </div>
+
+        <div class="nota-title">
+          <h2>NOTA</h2>
+          <strong id="notaNumber">-</strong>
+        </div>
+      </header>
+
+      <div class="nota-info">
+        <div>
+          <span>Tanggal</span>
+          <strong id="notaDate">-</strong>
+        </div>
+
+        <div>
+          <span>Customer</span>
+          <strong id="notaCustomer">-</strong>
+        </div>
+      </div>
+
+      <div id="notaPOContainer"></div>
+
+      <section class="nota-grand-total">
+        <span>TOTAL KESELURUHAN</span>
+        <strong id="notaGrandTotal">Rp0</strong>
+      </section>
+
+      <section class="nota-notes" id="notaNotesSection" hidden>
+        <strong>Catatan:</strong>
+        <p id="notaNotes"></p>
+      </section>
+
+      <footer class="nota-footer">
+        <p>Terima kasih telah mempercayakan pesanan Anda kepada EX STUDIO.</p>
+        <strong>EX STUDIO</strong>
+      </footer>
+    </article>
+  </main>
+
+  <script type="module" src="js/nota-preview.js"></script>
+</body>
+</html>

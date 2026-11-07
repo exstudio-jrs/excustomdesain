@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS — Manajemen Nota</title>
+
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nota.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="nota.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="dashboard.html">Dashboard Desain</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="po.html">Manajemen PO</a>
+      <a href="po-approved.html">PO Approved</a>
+      <a href="nota.html">Manajemen Nota</a>
+      <a href="report-omset.html">Report Omset</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container nota-container">
+
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">NOTA / WORKSPACE</p>
+        <h1>Manajemen Nota<span>.</span></h1>
+        <p class="muted">
+          Kelola Nota berdasarkan Purchase Order yang sudah approved.
+        </p>
+      </div>
+    </section>
+
+    
+<section class="nota-stats">
+  <article class="stat-card">
+    <span>Total Nota Tahun Ini</span>
+    <strong id="statYearTotal">0</strong>
+    <small id="statYearLabel">Tahun 2026</small>
+  </article>
+
+  <article class="stat-card">
+    <span>Nilai Nota Tahunan</span>
+    <strong id="statYearAmount">Rp 0</strong>
+    <small>Akumulasi seluruh bulan</small>
+  </article>
+</section>
+
+<section class="panel nota-year-panel">
+  <div class="section-title">
+    <div>
+      <p class="eyebrow">YEARLY REPORT</p>
+      <h2>Ringkasan Tahunan</h2>
+    </div>
+
+    <select id="yearFilter" aria-label="Pilih tahun"></select>
+  </div>
+
+  <div class="nota-month-grid" id="monthlySummary">
+    <p class="muted">Memuat rekap bulanan...</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="section-title">
+    <div>
+      <p class="eyebrow">MONTHLY REPORT</p>
+      <h2 id="monthlyTitle">Detail Bulanan</h2>
+    </div>
+
+    <select id="monthFilter" aria-label="Pilih bulan">
+      <option value="1">Januari</option>
+      <option value="2">Februari</option>
+      <option value="3">Maret</option>
+      <option value="4">April</option>
+      <option value="5">Mei</option>
+      <option value="6">Juni</option>
+      <option value="7">Juli</option>
+      <option value="8">Agustus</option>
+      <option value="9">September</option>
+      <option value="10">Oktober</option>
+      <option value="11">November</option>
+      <option value="12">Desember</option>
+    </select>
+  </div>
+
+  <div class="nota-month-stats">
+    <article class="stat-card">
+      <span>Jumlah Nota</span>
+      <strong id="statMonthTotal">0</strong>
+    </article>
+
+    <article class="stat-card">
+      <span>Jumlah PO</span>
+      <strong id="statMonthPO">0</strong>
+    </article>
+
+    <article class="stat-card">
+      <span>Total Nilai Nota</span>
+      <strong id="statMonthAmount">Rp 0</strong>
+    </article>
+  </div>
+
+  <div class="nota-filter">
+    <input
+      type="search"
+      id="searchNota"
+      placeholder="Cari nomor Nota / customer..."
+    >
+
+    <a href="nota-form.html" class="btn btn-primary" id="createNota">
+      + BUAT NOTA
+    </a>
+  </div>
+
+  <div id="notaMessage" class="form-message"></div>
+
+  <div class="nota-table-wrap">
+    <table class="nota-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nomor Nota</th>
+          <th>Tanggal</th>
+          <th>Customer</th>
+          <th>Jumlah PO</th>
+          <th>Total Nota</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="notaList">
+        <tr>
+          <td colspan="7">Memuat data Nota...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+  </main>
+
+  <script type="module" src="js/nota.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS — Report Omset</title>
+
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/report-omset.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="nota.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="dashboard.html">Dashboard Desain</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="po.html">Manajemen PO</a>
+      <a href="po-approved.html">PO Approved</a>
+      <a href="nota.html">Manajemen Nota</a>
+      <a href="report-omset.html" class="active">Report Omset</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container report-container">
+
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">REPORT / OMSET</p>
+        <h1>Report Omset<span>.</span></h1>
+        <p class="muted">
+          Laporan nilai seluruh Nota berdasarkan tanggal Nota.
+        </p>
+      </div>
+    </section>
+
+    <section class="report-filter panel">
+      <div>
+        <label for="yearFilter">Tahun laporan</label>
+        <select id="yearFilter">
+          <option value="">Memuat...</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="monthFilter">Bulan detail</label>
+        <select id="monthFilter">
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+    </section>
+
+    <div id="reportMessage" class="report-message"></div>
+
+    <section class="report-stats">
+      <article class="stat-card">
+        <span>Total Omset Tahunan</span>
+        <strong id="yearAmount">Rp 0</strong>
+        <small id="yearLabel">Tahun berjalan</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Total Omset Bulanan</span>
+        <strong id="monthAmount">Rp 0</strong>
+        <small id="monthLabel">Bulan berjalan</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Jumlah Nota Tahunan</span>
+        <strong id="yearNotaCount">0</strong>
+        <small>Nota tercatat</small>
+      </article>
+
+      <article class="stat-card">
+        <span>Jumlah PO Tahunan</span>
+        <strong id="yearPOCount">0</strong>
+        <small>Relasi PO dalam Nota</small>
+      </article>
+    </section>
+
+    <section class="panel report-chart-panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">YEARLY OVERVIEW</p>
+          <h2>Grafik Omset Bulanan</h2>
+        </div>
+        <strong id="chartYearLabel"></strong>
+      </div>
+
+      <div id="monthlyChart" class="monthly-chart">
+        <p class="muted">Memuat grafik...</p>
+      </div>
+    </section>
+
+    <section class="panel report-month-panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">MONTHLY DETAIL</p>
+          <h2 id="detailTitle">Detail Omset Bulanan</h2>
+        </div>
+      </div>
+
+      <div class="report-month-stats">
+        <article>
+          <span>Jumlah Nota</span>
+          <strong id="monthNotaCount">0</strong>
+        </article>
+
+        <article>
+          <span>Jumlah PO</span>
+          <strong id="monthPOCount">0</strong>
+        </article>
+
+        <article>
+          <span>Total Omset</span>
+          <strong id="monthDetailAmount">Rp 0</strong>
+        </article>
+      </div>
+
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Nomor Nota</th>
+              <th>Tanggal</th>
+              <th>Customer</th>
+              <th>Jumlah PO</th>
+              <th>Total Nota</th>
+            </tr>
+          </thead>
+          <tbody id="reportNotaList">
+            <tr>
+              <td colspan="6" class="report-empty">
+                Memuat data laporan...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="report-footnote">
+      * Omset dihitung dari total nilai Nota, bukan dari pembayaran yang telah diterima.
+    </p>
+
+  </main>
+
+  <script type="module" src="js/report-omset.js"></script>
+</body>
+</html>
