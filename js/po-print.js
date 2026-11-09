@@ -345,18 +345,22 @@ async function loadPrintData() {
 </section>
 
   ${section("Spesifikasi Baju", `
-    ${row("Model Kerah", shirt.collar, "highlight-row")}
-    ${row("Bahan", shirt.material)}
-    ${row("Model Lengan", shirt.sleeve)}
-    ${row("Lis Lengan", shirt.sleeve_trim)}
-    ${row("Catatan Baju", shirt.notes)}
-  `)}
+  ${row("Model Kerah", shirt.collar, "highlight-row")}
+  ${row("Bahan", shirt.material)}
+  ${row("Model Lengan", shirt.sleeve)}
+  ${row("Lis Lengan", shirt.sleeve_trim)}
+  ${row("Kantong Dada", shirt.chest_pocket)}
+  ${row("Karet Pinggang", shirt.waist_elastic)}
+  ${row("Warna Kancing", shirt.button_color)}
+  ${row("Puring", shirt.lining)}
+` )}
 
   ${section("Spesifikasi Celana", `
   ${row("Model Celana", pants.model)}
   ${row("Bahan Celana", pants.material)}
   ${row("Lis Celana", pants.trim)}
-  ${row("Catatan Celana", pants.notes)}
+  ${row("Kantong Celana", pants.pocket)}
+  ${row("Tali Kolor", pants.drawstring)}
   `)}
 
   <section class="print-section">

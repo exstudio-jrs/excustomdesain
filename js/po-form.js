@@ -237,14 +237,17 @@ function collectPOData(status) {
       material: value("shirtMaterial"),
       sleeve: value("shirtSleeve"),
       sleeve_trim: value("shirtSleeveTrim"),
-      notes: value("shirtNotes")
+      chest_pocket: value("shirtChestPocket"),
+      waist_elastic: value("shirtWaistElastic"),
+      button_color: value("shirtButtonColor"),
+      lining: value("shirtLining")
     },
-
     pants_spec: {
       model: value("pantsModel"),
       material: value("pantsMaterial"),
       trim: value("pantsTrim"),
-      notes: value("pantsNotes")
+      pocket: value("pantsPocket"),
+      drawstring: value("pantsDrawstring")
     },
 
     shipping_info: {
