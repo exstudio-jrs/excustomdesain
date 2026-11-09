@@ -55,11 +55,18 @@ async function driveToken(admin: ReturnType<typeof createClient>) {
   const result = await response.json();
 
   if (!response.ok || !result.access_token) {
-    throw new Error(
-      result.error_description ||
-      "Gagal mendapatkan Google access token."
-    );
-  }
+  console.error("GOOGLE TOKEN REFRESH ERROR:", {
+    status: response.status,
+    error: result.error,
+    description: result.error_description
+  });
+
+  throw new Error(
+    `Google OAuth gagal: ${result.error || "unknown_error"} - ${
+      result.error_description || "Gagal mendapatkan access token."
+    }`
+  );
+}
 
   return result.access_token as string;
 }
