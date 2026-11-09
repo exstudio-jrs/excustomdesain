@@ -276,15 +276,20 @@ function fillForm(po) {
   setValue("shirtMaterial", shirt.material);
   setValue("shirtSleeve", shirt.sleeve);
   setValue("shirtSleeveTrim", shirt.sleeve_trim);
-  setValue("shirtNotes", shirt.notes);
+  setValue("shirtChestPocket", shirt.chest_pocket);
+  setValue("shirtWaistElastic", shirt.waist_elastic);
+  setValue("shirtButtonColor", shirt.button_color);
+  setValue("shirtLining", shirt.lining);
 
+  
   const pants = po.pants_spec || {};
 
   setValue("pantsModel", pants.model);
   setValue("pantsMaterial", pants.material);
   setValue("pantsTrim", pants.trim);
-  setValue("pantsNotes", pants.notes);
-
+  setValue("pantsPocket", pants.pocket);
+  setValue("pantsDrawstring", pants.drawstring);
+ 
   const shipping = po.shipping_info || {};
 
   setValue("receiverName", shipping.receiver_name);
