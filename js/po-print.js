@@ -33,8 +33,8 @@ const poNumber = document.querySelector("#printPONumber");
 const safe = (value) =>
   escapeHtml(String(value ?? "-") || "-");
 
-const row = (label, value) => `
-  <div class="print-row">
+const row = (label, value, extraClass = "") => `
+  <div class="print-row ${extraClass}">
     <strong>${safe(label)}</strong>
     <span>${safe(value || "-")}</span>
   </div>
@@ -55,6 +55,74 @@ function dateFormat(value) {
     month: "long",
     year: "numeric"
   });
+}
+
+/* =====================================
+   TABEL DAFTAR PEMAIN 2 KOLOM
+===================================== */
+
+function renderPlayerTable(items) {
+  const players = items || [];
+  const perSide = 25;
+  const perPage = 50;
+
+  if (!players.length) {
+    return `<p>Belum ada daftar pemain.</p>`;
+  }
+
+  let html = "";
+
+  for (let page = 0; page < players.length; page += perPage) {
+    const pagePlayers = players.slice(page, page + perPage);
+
+    const left = pagePlayers.slice(0, perSide);
+    const right = pagePlayers.slice(perSide, perPage);
+
+    const rowCount = Math.max(left.length, right.length);
+
+    html += `
+      <div class="player-table-page"
+           style="${page > 0 ? 'break-before: page; page-break-before: always;' : ''}">
+
+        <table class="print-table player-double-table">
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>SIZE</th>
+              <th>NOMOR</th>
+              <th>NAMA</th>
+              <th>SIZE</th>
+              <th>NOMOR</th>
+              <th>NAMA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${Array.from({ length: rowCount }, (_, i) => {
+              const a = left[i];
+              const b = right[i];
+
+              return `
+                <tr>
+                  <td>${a ? page + i + 1 : ""}</td>
+                  <td class="size-cell">${a ? safe(a.size) : ""}</td>
+                  <td>${a ? safe(a.jersey_number) : ""}</td>
+                  <td>${a ? safe(a.person_name) : ""}</td>
+
+                  <td class="size-cell">${b ? safe(b.size) : ""}</td>
+                  <td>${b ? safe(b.jersey_number) : ""}</td>
+                  <td>${b ? safe(b.person_name) : ""}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+
+      </div>
+    `;
+  }
+
+  return html;
 }
 
 /* =====================================
@@ -228,9 +296,15 @@ async function loadPrintData() {
 <div class="print-column">
 
   <section class="print-section">
-    <h3>Preview Desain Approved</h3>
+    <!-- <h3>Preview Desain Approved</h3> !-->
+   
+   <img
+        src="assets/ex_studio_logo.png"
+        alt="Logo EX STUDIO"
+        class="po-brand-logo"
+      >
 
-    <div class="design-preview" id="designPreview">
+    <div class="design-preview" id="designPreview">  
       <div class="preview-placeholder">
         Memuat preview desain...
       </div>
@@ -241,6 +315,7 @@ async function loadPrintData() {
     ${row("Nama Penerima", shipping.receiver_name)}
     ${row("Nomor Telepon", shipping.phone)}
     ${row("Alamat", shipping.address)}
+    ${row("Tulangan/Merk", po.tulangan_merk, "highlight-row")}
   `, false)}
 
 </div>
@@ -248,17 +323,29 @@ async function loadPrintData() {
 <!-- KOLOM KANAN -->
 <div class="print-column">
 
-  ${section("Informasi Pesanan", `
-    ${row("Nomor PO", po.po_number)}
-    ${row("Tanggal PO", dateFormat(po.order_date))}
-    ${row("Customer", po.customer_name)}
-    ${row("Deadline", dateFormat(po.deadline))}
-    ${row("Genre", po.apparel_type)}
-    ${row("Bentuk Jahitan", po.wearer_category)}
-  `, false)}
+  <section class="print-section">
+
+  <div class="po-info-header">
+    <h3>Informasi Pesanan</h3>
+
+    <div class="po-title">
+      <strong>PURCHASE ORDER</strong>
+      <span>${safe(po.po_number)}</span>
+    </div>
+  </div>
+
+  ${row("Nomor PO", po.po_number)}
+  ${row("Tanggal PO", dateFormat(po.order_date))}
+  ${row("Agen", po.customer_name)}
+  ${row("Deadline", dateFormat(po.deadline))}
+  ${false ? row("Genre", po.apparel_type) : ""}
+  ${row("Bentuk Jahitan", po.wearer_category, "highlight-row")}
+  
+
+</section>
 
   ${section("Spesifikasi Baju", `
-    ${row("Model Kerah", shirt.collar)}
+    ${row("Model Kerah", shirt.collar, "highlight-row")}
     ${row("Bahan", shirt.material)}
     ${row("Model Lengan", shirt.sleeve)}
     ${row("Lis Lengan", shirt.sleeve_trim)}
@@ -273,43 +360,25 @@ async function loadPrintData() {
   `)}
 
   <section class="print-section">
+
+  <div class="player-section-header">
     <h3>Daftar Nama dan Ukuran</h3>
-
-    <table class="print-table">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>SIZE</th>
-          <th>NOMOR</th>
-          <th>NAMA</th>
-          <th>JUMLAH</th>
-          <th>CATATAN</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        ${(items || []).map((item, index) => `
-          <tr>
-            <td>${index + 1}</td>
-            <td class="size-cell">${safe(item.size)}</td>
-            <td>${safe(item.jersey_number)}</td>
-            <td>${safe(item.person_name)}</td>
-            <td>${safe(item.quantity)}</td>
-            <td>${safe(item.notes)}</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
 
     <p class="print-total">
       TOTAL PESANAN: ${total} PCS
     </p>
+  </div>
+
+  ${renderPlayerTable(items)}
+
   </section>
 
+  ${false ? `
   <div class="print-note">
     <strong>CATATAN TAMBAHAN</strong>
     <p>${safe(po.notes)}</p>
   </div>
+` : ""}
 
 </div>
   `;

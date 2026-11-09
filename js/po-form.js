@@ -230,6 +230,7 @@ function collectPOData(status) {
     apparel_type: value("apparelType") || null,
 
     wearer_category: value("wearerCategory") || null,
+    tulangan_merk: value("tulanganMerk") || null,
 
     shirt_spec: {
       collar: value("shirtCollar"),
@@ -264,6 +265,7 @@ function fillForm(po) {
   setValue("deadline", po.deadline);
   setValue("apparelType", po.apparel_type);
   setValue("wearerCategory", po.wearer_category);
+  setValue("tulanganMerk", po.tulangan_merk);
 
   const shirt = po.shirt_spec || {};
 
