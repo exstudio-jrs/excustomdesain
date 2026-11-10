@@ -103,8 +103,8 @@ body {
 .print-section h3 {
   margin: 0 0 6px;
   padding-bottom: 4px;
-  border-bottom: 1px solid #aaa;
-  font-size: 11px;
+  border-bottom: 0px solid #aaa;
+  font-size: 14px;
   text-transform: uppercase;
 }
 
@@ -128,7 +128,7 @@ body {
   flex: 0 0 105px;
   font-size: 9px;
   font-weight: bold;
-  color: #333;
+  color: #000000;
   text-transform: none;
 }
 
@@ -298,11 +298,13 @@ body {
 
 <body>
   <div class="print-actions">
-    <button onclick="window.print()">CETAK / SIMPAN PDF</button>
-  </div>
+  <button onclick="window.print()">CETAK / SIMPAN PDF</button>
+  <button id="downloadCSVBtn" type="button">DOWNLOAD CSV</button>
+  <button id="downloadExcelBtn" type="button">DOWNLOAD EXCEL</button>
+</div>
 
   <main class="print-container">
-    <header class="print-header">
+  <header class="print-header">
   <div class="print-brand">
     <img
       src="assets/ex_studio_logo.png"
