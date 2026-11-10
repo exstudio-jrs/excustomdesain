@@ -58,6 +58,116 @@ function dateFormat(value) {
 }
 
 /* =====================================
+   EXPORT DATA PO KE CSV / EXCEL
+===================================== */
+
+let exportItems = [];
+let exportPONumber = "";
+
+function getExportRows() {
+  return exportItems.map((item, index) => ({
+    PCS: index + 1,
+    SIZE: item.size ?? "",
+    NOMOR: String(item.jersey_number ?? ""),
+    NAMA: item.person_name ?? "",
+    JUMLAH: Number(item.quantity || 0),
+    CATATAN: item.notes ?? ""
+  }));
+}
+
+function downloadFile(content, fileName, mimeType) {
+  const blob = new Blob([content], {
+    type: `${mimeType};charset=utf-8;`
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+}
+
+function downloadCSV() {
+  const rows = getExportRows();
+  const headers = ["PCS", "SIZE", "NOMOR", "NAMA", "JUMLAH", "CATATAN"];
+
+  const csv = [
+    headers.join(","),
+    ...rows.map(row => {
+      return headers.map(header => {
+        let value = String(row[header] ?? "");
+
+        // Pertahankan nomor jersey seperti 00 dan 09 di Excel.
+        if (header === "NOMOR" && value !== "") {
+          value = `="${value.replace(/"/g, '""')}"`;
+        }
+
+        return `"${value.replace(/"/g, '""')}"`;
+      }).join(",");
+    })
+  ].join("\r\n");
+
+  downloadFile(
+    "\uFEFF" + csv,
+    `PO-${exportPONumber}.csv`,
+    "text/csv"
+  );
+}
+
+function downloadExcel() {
+  const rows = getExportRows();
+  const headers = ["PCS", "SIZE", "NOMOR", "NAMA", "JUMLAH", "CATATAN"];
+
+  const tableRows = rows.map(row => `
+    <tr>
+      ${headers.map(header => `
+        <td style="mso-number-format:'\\@';">
+          ${escapeHtml(String(row[header] ?? ""))}
+        </td>
+      `).join("")}
+    </tr>
+  `).join("");
+
+  const excelContent = `
+    <html>
+      <head>
+        <meta charset="UTF-8">
+      </head>
+      <body>
+        <table border="1">
+          <thead>
+            <tr>
+              ${headers.map(header => `<th>${header}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  downloadFile(
+    "\uFEFF" + excelContent,
+    `PO-${exportPONumber}.xls`,
+    "application/vnd.ms-excel"
+  );
+}
+
+// Hubungkan tombol download.
+document.querySelector("#downloadCSVBtn")
+  ?.addEventListener("click", downloadCSV);
+
+document.querySelector("#downloadExcelBtn")
+  ?.addEventListener("click", downloadExcel);
+
+/* =====================================
    TABEL DAFTAR PEMAIN 2 KOLOM
 ===================================== */
 
@@ -277,6 +387,11 @@ async function loadPrintData() {
     return;
   }
 
+    // Simpan data untuk kebutuhan export CSV dan Excel.
+  exportItems = items || [];
+  exportPONumber = String(po.po_number || "PO")
+    .replace(/[^\w-]/g, "_");
+
   const shirt = po.shirt_spec || {};
   const pants = po.pants_spec || {};
   const shipping = po.shipping_info || {};
@@ -345,22 +460,18 @@ async function loadPrintData() {
 </section>
 
   ${section("Spesifikasi Baju", `
-  ${row("Model Kerah", shirt.collar, "highlight-row")}
-  ${row("Bahan", shirt.material)}
-  ${row("Model Lengan", shirt.sleeve)}
-  ${row("Lis Lengan", shirt.sleeve_trim)}
-  ${row("Kantong Dada", shirt.chest_pocket)}
-  ${row("Karet Pinggang", shirt.waist_elastic)}
-  ${row("Warna Kancing", shirt.button_color)}
-  ${row("Puring", shirt.lining)}
-` )}
+    ${row("Model Kerah", shirt.collar, "highlight-row")}
+    ${row("Bahan", shirt.material)}
+    ${row("Model Lengan", shirt.sleeve)}
+    ${row("Lis Lengan", shirt.sleeve_trim)}
+    ${row("Catatan Baju", shirt.notes)}
+  `)}
 
   ${section("Spesifikasi Celana", `
   ${row("Model Celana", pants.model)}
   ${row("Bahan Celana", pants.material)}
   ${row("Lis Celana", pants.trim)}
-  ${row("Kantong Celana", pants.pocket)}
-  ${row("Tali Kolor", pants.drawstring)}
+  ${row("Catatan Celana", pants.notes)}
   `)}
 
   <section class="print-section">
