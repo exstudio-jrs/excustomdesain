@@ -1,200 +1,463 @@
+
 <!doctype html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EXS-Dashboard</title>
+  <title>EXS - Dashboard</title>
   <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/revision.css">
 </head>
+
 <body class="dashboard-page">
-  <header class="topbar">
-  <a class="brand" href="dashboard.html">
-    EXS<span>.</span> <small>EX STUDIO</small>
-  </a>
 
-    <nav>
-      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="gallery.html">Gallery</a>
+  <div class="dashboard-layout">
 
-      <a href="po.html" id="navManajemenPO">Manajemen PO</a>
-      <a href="nota.html" id="navManajemenNota" class="hidden">Manajemen Nota</a>
-      <a href="master-harga.html" id="navMasterHarga" class="hidden">Master Harga</a>
-      <a href="report-omset.html" id="navReportOmset" class="hidden">Report Omset</a>
-    </nav>
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
 
-  <div class="user-area">
-    <span id="userLabel">Loading...</span>
-    <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
-  </div>
-</header>
-  <main class="container">
-    <section class="page-head">
-      <div><p class="eyebrow">WORKSPACE / OVERVIEW</p><h1>Dashboard<span>.</span></h1><p class="muted">Pantau brief dan progres custom desain.</p></div>
-      <div class="head-actions"><a class="btn btn-ghost" href="gallery.html">Lihat Gallery ↗</a></div>
-    </section>
-    <section class="stats-grid">
-      <article class="stat-card">
-        <span>Total Brief</span>
-        <strong id="statTotal">—</strong>
-        <small>Semua pekerjaan</small>
-      </article>
-      <article class="stat-card"><span>Antrian Desain</span><strong id="statQueue">—</strong><small>Menunggu desainer</small></article>
-      <article class="stat-card"><span>Sedang Dikerjakan</span><strong id="statWorking">—</strong><small>Dalam proses</small></article>
-      <article class="stat-card"><span>Approved</span><strong id="statApproved">—</strong><small>Masuk gallery</small></article>
-    </section>
+      <a class="brand" href="dashboard.html">
+        EXS<span>.</span>
+        <small>EX STUDIO</small>
+      </a>
 
-    <section id="marketingPanel" class="panel hidden">
+      <div class="sidebar-label">MAIN MENU</div>
 
-      <div class="section-title">
-        <div>
-          <p class="eyebrow">MARKETING WORKSPACE</p>
-          <h2>Input brief desain</h2>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="active">
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+
+        <a href="gallery.html">
+          <span class="nav-icon">▧</span>
+          Gallery
+        </a>
+
+        <a href="po.html" id="navManajemenPO">
+          <span class="nav-icon">▤</span>
+          Manajemen PO
+        </a>
+
+        <a href="nota.html" id="navManajemenNota" class="hidden">
+          <span class="nav-icon">▣</span>
+          Manajemen Nota
+        </a>
+
+        <a href="master-harga.html" id="navMasterHarga" class="hidden">
+          <span class="nav-icon">◈</span>
+          Master Harga
+        </a>
+
+        <a href="report-omset.html" id="navReportOmset" class="hidden">
+          <span class="nav-icon">▥</span>
+          Report Omset
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-status">
+          <span class="status-dot"></span>
+          <span>EXSTUDIO WORKSPACE</span>
         </div>
-        <span class="pill">MAX 10 FOTO</span>
+
+        <a href="https://exstudio-jrs.github.io/exstudio/"
+           target="_blank"
+           rel="noopener">
+          Home Ex Studio ↗
+        </a>
       </div>
 
-      <section class="brief-accordion">
+    </aside>
+
+
+    <!-- MAIN AREA -->
+    <div class="dashboard-main">
+
+      <!-- TOP HEADER -->
+      <header class="dashboard-topbar">
+
+        <div class="topbar-left">
+          <p class="eyebrow">EXSTUDIO / WORKSPACE</p>
+          <span class="topbar-title">Dashboard Overview</span>
+        </div>
+
+        <div class="user-area">
+          <div class="user-indicator">
+            <span class="user-indicator-dot"></span>
+            <span id="userLabel">Loading...</span>
+          </div>
+
+          <button id="logoutBtn" class="btn btn-ghost">
+            Keluar ↗
+          </button>
+        </div>
+
+      </header>
+
+
+      <!-- CONTENT -->
+      <main class="dashboard-content">
+
+        <!-- PAGE HEADING -->
+        <section class="page-head dashboard-page-head">
+
+          <div>
+            <p class="eyebrow">WORKSPACE / OVERVIEW</p>
+            <h1>Dashboard<span>.</span></h1>
+            <p class="muted">
+              Pantau pekerjaan desain dan progres pesanan EXSTUDIO.
+            </p>
+          </div>
+
+          <div class="head-actions">
+            <a class="btn btn-primary" href="gallery.html">
+              LIHAT GALLERY ↗
+            </a>
+          </div>
+
+        </section>
+
+
+        <!-- DESIGN STATISTICS -->
+        <section class="dashboard-section">
+
+          <div class="dashboard-section-heading">
+            <div>
+              <p class="eyebrow">DESIGN OVERVIEW</p>
+              <h2>Statistik Desain</h2>
+            </div>
+            <span class="section-tag">LIVE DATA</span>
+          </div>
+
+          <div class="stats-grid">
+
+            <article class="stat-card stat-highlight">
+              <div class="stat-card-top">
+                <span>Total Brief</span>
+                <span class="stat-icon">▦</span>
+              </div>
+              <strong id="statTotal">—</strong>
+              <small>Semua pekerjaan desain</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Antrian Desain</span>
+                <span class="stat-icon">◷</span>
+              </div>
+              <strong id="statQueue">—</strong>
+              <small>Menunggu desainer</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Sedang Dikerjakan</span>
+                <span class="stat-icon">✳</span>
+              </div>
+              <strong id="statWorking">—</strong>
+              <small>Dalam proses pengerjaan</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Approved</span>
+                <span class="stat-icon">✓</span>
+              </div>
+              <strong id="statApproved">—</strong>
+              <small>Desain masuk Gallery</small>
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- PO OVERVIEW -->
+        <section class="dashboard-section po-overview-section">
+
+          <div class="dashboard-section-heading">
+            <div>
+              <p class="eyebrow">PURCHASE ORDER</p>
+              <h2>Ringkasan PO</h2>
+            </div>
+
+            <a href="po.html" class="text-link">
+              Lihat Semua PO ↗
+            </a>
+          </div>
+
+          <div class="po-stats-grid">
+
+            <article class="po-stat-card">
+              <span class="po-stat-icon">▤</span>
+              <div>
+                <small>Total PO</small>
+                <strong id="dashPoTotal">—</strong>
+              </div>
+            </article>
+
+            <article class="po-stat-card">
+              <span class="po-stat-icon">◷</span>
+              <div>
+                <small>Menunggu Pemeriksaan</small>
+                <strong id="dashPoSubmitted">—</strong>
+              </div>
+            </article>
+
+            <article class="po-stat-card">
+              <span class="po-stat-icon">↻</span>
+              <div>
+                <small>Perlu Revisi</small>
+                <strong id="dashPoRevision">—</strong>
+              </div>
+            </article>
+
+            <article class="po-stat-card">
+              <span class="po-stat-icon">✓</span>
+              <div>
+                <small>Approved</small>
+                <strong id="dashPoApproved">—</strong>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- PO TERBARU -->
+          <div class="dashboard-panel po-activity-panel">
+
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">LATEST ACTIVITY</p>
+                <h3>PO Terbaru</h3>
+              </div>
+
+              <span class="section-tag">RECENT PO</span>
+            </div>
+
+            <div id="dashRecentPO" class="recent-po-list">
+              <p class="muted">
+                Data PO akan ditampilkan di sini.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- MARKETING BRIEF -->
+        <section id="marketingPanel"
+                 class="panel marketing-panel hidden">
+
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">MARKETING WORKSPACE</p>
+              <h2>Input Brief Desain</h2>
+            </div>
+
+            <span class="pill">MAX 10 FOTO</span>
+          </div>
+
+          <section class="brief-accordion">
+
+            <button
+              type="button"
+              id="briefToggle"
+              class="brief-toggle"
+              aria-expanded="false"
+              aria-controls="briefFormContent"
+            >
+              <span>
+                <strong>+ TAMBAH BRIEF DESAIN</strong>
+                <small>Input project dan kebutuhan desain baru</small>
+              </span>
+
+              <span id="briefToggleIcon">+</span>
+            </button>
+
+            <div id="briefFormContent"
+                 class="brief-form-content hidden">
+
+              <form id="briefForm">
+
+                <div class="form-grid">
+
+                  <div class="form-group">
+                    <label for="project_name">
+                      Nama Project / Customer *
+                    </label>
+
+                    <input
+                      type="text"
+                      id="project_name"
+                      name="project_name"
+                      placeholder="Contoh: Jersey FC Garuda"
+                      required
+                    >
+                  </div>
+
+                  <div class="form-group" hidden>
+                    <label for="apparel_type">Genre *</label>
+
+                    <select
+                      id="apparel_type"
+                      name="apparel_type"
+                      required
+                    >
+                      <option value="">Pilih Genre</option>
+                      <option value="Bola">Bola</option>
+                      <option value="Voli">Voli</option>
+                      <option value="Badminton">Badminton</option>
+                      <option value="Mancing">Mancing</option>
+                      <option value="Running">Running</option>
+                      <option value="Kicau">Kicau</option>
+                      <option value="Lainnya">Lainnya</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="assigned_designer">
+                      Pilih Desainer *
+                    </label>
+
+                    <select
+                      id="assigned_designer"
+                      name="assigned_designer"
+                      required
+                    >
+                      <option value="">
+                        Memuat daftar desainer...
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="deadline">Deadline</label>
+
+                    <input
+                      type="date"
+                      id="deadline"
+                      name="deadline"
+                    >
+                  </div>
+
+                  <div class="form-group full">
+                    <label for="brief">
+                      Detail Brief / Konsep Desain *
+                    </label>
+
+                    <textarea
+                      id="brief"
+                      name="brief"
+                      rows="5"
+                      placeholder="Jelaskan konsep desain, motif, warna, logo, tulisan, dan kebutuhan lainnya..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div class="form-group full">
+                    <label for="referenceFiles">
+                      Upload Gambar Referensi (Maksimal 10 Foto)
+                    </label>
+
+                    <input
+                      type="file"
+                      id="referenceFiles"
+                      name="referenceFiles"
+                      accept="image/*"
+                      multiple
+                    >
+
+                    <div id="referencePreview"
+                         class="reference-preview"></div>
+                  </div>
+
+                </div>
+
+                <div id="briefMessage"
+                     class="form-message"></div>
+
+                <button type="submit" class="btn btn-primary">
+                  SIMPAN BRIEF →
+                </button>
+
+              </form>
+
+            </div>
+
+          </section>
+
+        </section>
+
+
+        <!-- DESIGN WORK LIST -->
+        <section class="panel dashboard-work-panel">
+
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">PRODUCTION FLOW</p>
+              <h2 id="workTitle">Antrian Desain</h2>
+            </div>
+
+            <button id="refreshBtn" class="btn btn-ghost">
+              ↻ Refresh
+            </button>
+          </div>
+
+          <div id="workList" class="work-list">
+            <p class="muted">Memuat data...</p>
+          </div>
+
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+          <span>EXS<span class="footer-lime">.</span> EX STUDIO</span>
+          <span>DESIGN • PRODUCTION • QUALITY</span>
+        </footer>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL DETAIL DESAIN -->
+  <div id="designDetailModal" class="detail-modal hidden">
+
+    <div class="detail-modal-backdrop"
+         id="detailBackdrop"></div>
+
+    <div class="detail-modal-content">
+
+      <div class="detail-modal-header">
+        <div>
+          <p class="eyebrow">DESIGN INFORMATION</p>
+          <h2>Detail Desain<span>.</span></h2>
+        </div>
 
         <button
           type="button"
-          id="briefToggle"
-          class="brief-toggle"
-          aria-expanded="false"
-          aria-controls="briefFormContent"
+          id="closeDetailModal"
+          class="btn btn-ghost detail-close"
         >
-          <span>
-            <strong>+ TAMBAH BRIEF DESAIN</strong>
-            <small>Input project dan kebutuhan desain baru</small>
-          </span>
-
-          <span id="briefToggleIcon">+</span>
+          ✕
         </button>
-
-        <div
-          id="briefFormContent"
-          class="brief-form-content hidden"
-        >
-
-          <!-- FORM BRIEF LAMA HARUS DIMASUKKAN DI SINI -->
-
-          <form id="briefForm">
-
-  <div class="form-grid">
-
-    <div class="form-group">
-      <label for="project_name">Nama Project / Customer *</label>
-      <input
-        type="text"
-        id="project_name"
-        name="project_name"
-        placeholder="Contoh: Jersey FC Garuda"
-        required
-      >
-    </div>
-
-    <div class="form-group" hidden>
-      <label for="apparel_type">Genre *</label>
-      <select
-        id="apparel_type"
-        name="apparel_type"
-        required
-      >
-        <option value="">Pilih Genre</option>
-        <option value="Bola">Bola</option>
-        <option value="Voli">Voli</option>
-        <option value="Badminton">Badminton</option>
-        <option value="Mancing">Mancing</option>
-        <option value="Running">Running</option>
-        <option value="Kicau">Kicau</option>
-        <option value="Lainnya">Lainnya</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="assigned_designer">Pilih Desainer *</label>
-      <select id="assigned_designer" name="assigned_designer" required>
-        <option value="">Memuat daftar desainer...</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="deadline">Deadline</label>
-      <input
-        type="date"
-        id="deadline"
-        name="deadline"
-      >
-    </div>
-
-   
-    <div class="form-group full">
-      <label for="brief">Detail Brief / Konsep Desain *</label>
-      <textarea
-        id="brief"
-        name="brief"
-        rows="5"
-        placeholder="Jelaskan konsep desain, motif, warna, logo, tulisan, dan kebutuhan lainnya..."
-        required
-      ></textarea>
-    </div>
-
-    <div class="form-group full">
-      <label for="referenceFiles">Upload Gambar Referensi (Maksimal 10 Foto)</label>
-      <input
-        type="file"
-        id="referenceFiles"
-        name="referenceFiles"
-        accept="image/*"
-        multiple
-      >
-
-      <div id="referencePreview" class="reference-preview"></div>
-    </div>
-
-  </div>
-
-  <div id="briefMessage" class="form-message"></div>
-
-  <button type="submit" class="btn btn-primary">
-    SIMPAN BRIEF →
-  </button>
-
-</form>
-
-        </div>
-
-      </section>
-
-    </section>
-
-    <section class="panel">
-      <div class="section-title"><div><p class="eyebrow">PRODUCTION FLOW</p><h2 id="workTitle">Antrian desain</h2></div><button id="refreshBtn" class="btn btn-ghost">↻ Refresh</button></div>
-      <div id="workList" class="work-list"><p class="muted">Memuat data...</p></div>
-    </section>
-  </main>
-
-  <!-- MODAL DETAIL DESAIN -->
-<div id="designDetailModal" class="detail-modal hidden">
-  <div class="detail-modal-backdrop" id="detailBackdrop"></div>
-
-  <div class="detail-modal-content">
-    <div class="detail-modal-header">
-      <div>
-        <p class="eyebrow">DESIGN INFORMATION</p>
-        <h2>Detail Desain<span>.</span></h2>
       </div>
-      <button type="button" id="closeDetailModal"
-        class="btn btn-ghost detail-close">✕</button>
+
+      <div id="detailContent">
+        <p class="muted">Memuat detail desain...</p>
+      </div>
+
     </div>
 
-    <div id="detailContent">
-      <p class="muted">Memuat detail desain...</p>
-    </div>
   </div>
-</div>
+
 
   <script type="module" src="js/dashboard.js"></script>
-</body></html>
+
+</body>
+</html>
