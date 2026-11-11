@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/revision.css">
 </head>
-<body>
+<body class="dashboard-page">
   <header class="topbar">
   <a class="brand" href="dashboard.html">
     EXS<span>.</span> <small>EX STUDIO</small>
@@ -21,15 +21,8 @@
 
       <a href="po.html" id="navManajemenPO">Manajemen PO</a>
       <a href="nota.html" id="navManajemenNota" class="hidden">Manajemen Nota</a>
-      <a href="master-harga.html"
-        id="navMasterHarga"
-        class="hidden">
-        Master Harga
-      </a>
+      <a href="master-harga.html" id="navMasterHarga" class="hidden">Master Harga</a>
       <a href="report-omset.html" id="navReportOmset" class="hidden">Report Omset</a>
-      <a href="master-harga.html" id="navMasterHarga" class="hidden">
-        Master Harga
-      </a>
     </nav>
 
   <div class="user-area">
@@ -43,7 +36,11 @@
       <div class="head-actions"><a class="btn btn-ghost" href="gallery.html">Lihat Gallery ↗</a></div>
     </section>
     <section class="stats-grid">
-      <div hidden><article class="stat-card"><span>Total Brief</span><strong id="statTotal">—</strong><small>Semua pekerjaan</small></article></div>
+      <article class="stat-card">
+        <span>Total Brief</span>
+        <strong id="statTotal">—</strong>
+        <small>Semua pekerjaan</small>
+      </article>
       <article class="stat-card"><span>Antrian Desain</span><strong id="statQueue">—</strong><small>Menunggu desainer</small></article>
       <article class="stat-card"><span>Sedang Dikerjakan</span><strong id="statWorking">—</strong><small>Dalam proses</small></article>
       <article class="stat-card"><span>Approved</span><strong id="statApproved">—</strong><small>Masuk gallery</small></article>
