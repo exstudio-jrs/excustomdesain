@@ -1,0 +1,609 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXS—Form Purchase Order</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/po.css">
+  <style>
+    .po-wizard-progress{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+    .po-wizard-progress span{flex:1 1 120px;padding:10px 12px;border-radius:10px;background:#eef1f5;color:#667085;font-size:12px;font-weight:700;text-align:center}
+    .po-wizard-progress span.active{background:#172b4d;color:#fff}
+    .po-wizard-progress span.done{background:#dff5e8;color:#176b3a}
+    .po-wizard [data-wizard-step]{display:none}
+    .po-wizard [data-wizard-step].wizard-active{display:block}
+    .po-wizard-nav{display:flex;justify-content:space-between;gap:12px;margin:18px 0}
+    .po-wizard-nav button{min-width:130px}
+    .po-wizard-caption{margin:0 0 12px;color:#667085;font-size:13px}
+    @media(max-width:600px){.po-wizard-progress span{flex-basis:28%;font-size:10px;padding:8px 5px}.po-wizard-nav button{flex:1;min-width:0}}
+  
+    /* Tampilan ringkas daftar nama dan ukuran */
+    [data-wizard-step="4"] .section-title {
+      margin-bottom: 10px;
+    }
+
+    [data-wizard-step="4"] .section-title h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    [data-wizard-step="4"] .po-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+
+    [data-wizard-step="4"] .po-input-table {
+      width: 100%;
+      min-width: 650px;
+      border-collapse: collapse;
+    }
+
+    [data-wizard-step="4"] .po-input-table th {
+      padding: 7px 6px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    [data-wizard-step="4"] .po-input-table td {
+      padding: 5px 4px;
+    }
+
+    [data-wizard-step="4"] .po-input-table input,
+    [data-wizard-step="4"] .po-input-table select {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      height: 32px;
+      padding: 5px 7px;
+      font-size: 12px;
+    }
+
+    [data-wizard-step="4"] .po-input-table .btn {
+      padding: 6px 8px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* Tombol tambah nama di bawah tabel */
+    [data-wizard-step="4"] .po-add-item-bar {
+      position: sticky;
+      bottom: 10px;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 0 4px;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0),
+        #fff 35%
+      );
+    }
+
+    [data-wizard-step="4"] #addItemBtn {
+      padding: 9px 16px;
+      font-size: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    }
+
+    @media (max-width: 600px) {
+      [data-wizard-step="4"] .po-input-table {
+        min-width: 610px;
+      }
+
+      [data-wizard-step="4"] .po-input-table th {
+        font-size: 9px;
+      }
+
+      [data-wizard-step="4"] .po-input-table input,
+      [data-wizard-step="4"] .po-input-table select {
+        height: 30px;
+        padding: 5px;
+        font-size: 11px;
+      }
+
+      [data-wizard-step="4"] .po-add-item-bar {
+        bottom: 6px;
+      }
+    }  
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="dashboard.html">
+      EXS<span>.</span> <small>EX STUDIO</small>
+    </a>
+
+    <nav>
+      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
+      <a href="dashboard.html" id="dashboardLink">Dashboard Desain</a>
+      <a href="gallery.html" id="dashboardLink">Gallery</a>
+      <a href="po.html" id="dashboardLink">Manajemen PO</a>
+    </nav>
+
+    <div class="user-area">
+      <span id="userLabel">Loading...</span>
+      <button id="logoutBtn" class="btn btn-ghost">Keluar</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="page-head">
+      <div>
+        <p class="eyebrow">PURCHASE ORDER / MARKETING</p>
+        <h1>Form Purchase Order<span>.</span></h1>
+        <p class="muted">Input informasi pesanan dan spesifikasi produk.</p>
+      </div>
+
+      <div class="head-actions">
+        <a href="dashboard.html" class="btn btn-ghost">← Kembali</a>
+      </div>
+    </section>
+
+    <div id="formMessage" class="form-message"></div>
+
+    <form id="poForm" novalidate>
+      <div class="po-wizard-progress" id="poWizardProgress" aria-label="Tahapan input PO">
+        <span class="active">1. Pesanan</span><span>2. Baju & Celana</span><span>3. Pengiriman</span><span>4. Nama & Ukuran</span><span>5. Catatan & Simpan</span>
+      </div>
+      <p class="po-wizard-caption" id="poWizardCaption">Tahap 1 dari 5 — Informasi Pesanan</p>
+      <div class="po-wizard" id="poWizard">
+
+      <section class="panel" data-wizard-step="1">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ORDER INFORMATION</p>
+            <h2>Informasi Pesanan</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Nama Agen/User *
+            <input type="text" id="customerName" required>
+          </label>
+
+          <label>
+            Nomor PO
+            <input type="text" id="poNumber"
+              placeholder="Nomor dibuat otomatis" readonly>
+          </label>
+
+          <label>
+            Tanggal PO *
+            <input type="date" id="orderDate" required>
+          </label>
+
+          <label>
+            Deadline
+            <input type="date" id="deadline">
+          </label>
+
+          <div class="form-group" hidden>
+          <label>Genre<select id="apparelType">
+              <option value="">Pilih Genre</option>
+              <option value="Bola">Bola</option>
+              <option value="Voli">Voli</option>
+              <option value="Badminton">Badminton</option>
+              <option value="Mancing">Mancing</option>
+              <option value="Running">Running</option>
+              <option value="Kicau">Kicau</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </label>
+          </div>
+
+          <label>
+            Bentuk Jahitan
+            <select id="wearerCategory">
+              <option value="">Pilih kategori</option>
+              <option value="Pria">Pria</option>
+              <option value="Wanita">Wanita</option>
+              <option value="Anak">Anak</option>
+              <option value="Jaket">Jaket</option>
+              <option value="Tas">Tas</option>
+              <option value="Kerodong">Kerodong</option>
+              <option value="Bendera">Bendera</option>
+            </select>
+          </label>      
+        </div>
+      </section>
+
+      <section class="panel" data-wizard-step="2">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">PRODUCT SPECIFICATION</p>
+            <h2>Spesifikasi Produk</h2>
+          </div>
+        </div>
+
+        <h3>Spesifikasi Baju</h3>
+
+        <div class="form-grid">
+          <label>
+            Model Kerah
+            <select id="shirtCollar">
+              <option value="">Pilih model kerah</option>
+              <option value="OBLONG">OBLONG</option>
+              <option value="V KERAH">V KERAH</option>
+              <option value="V DIDAZ">V DIDAZ</option>
+              <option value="V SHANGHAI">V SHANGHAI</option>
+              <option value="V NECK">V NECK</option>
+              <option value="V TUMPUK">V TUMPUK</option>
+              <option value="V BALANCE">V BALANCE</option>
+              <option value="POLO">POLO</option>
+              <option value="POLO RESLETING">POLO RESLETING</option>
+              <option value="POLO KONTUR">POLO KONTUR</option>
+              <option value="MANWES">MANWES</option>
+              <option value="MANWES">MANWES</option>
+              <option value="SHANGHAI KANCING">SHANGHAI KANCING</option>
+              <option value="DUNKNECK">DUNKNECK</option>
+              <option value="TRIANGLE">TRIANGLE</option>
+              <option value="WINGKI INSERT">WINGKI INSERT</option>
+              <option value="V NECK WINGKI">V NECK WINGKI</option>
+            </select>
+          </label>
+
+          <label>
+            Model Bahan
+            <select id="shirtMaterial">
+              <option value="">Pilih bahan baju</option>
+              <option value="Embos Mono">Embos Mono</option>
+              <option value="Embos Topo">Embos Topo</option>
+              <option value="">-</option>
+              <option value="Milano">Milano</option>
+              <option value="Benzema">Benzema</option>
+              <option value="Jarum A">Jarum A</option>
+              <option value="Serena">Serena</option>
+              <option value="Lotto">Lotto</option>
+              <option value="">-</option>
+              <option value="Jarum B">Jarum B</option>
+              <option value="">-</option>
+              <option value="Diadora">Diadora</option>
+              <option value="Parasut">Parasut</option>
+            </select>
+          </label>
+
+          <label>
+            Model Lengan
+            <select id="shirtSleeve">
+              <option value="">Pilih model lengan</option>
+              <option value="Pendek">Pendek</option>
+              <option value="Panjang">Panjang</option>
+              <option value="Kensi">Kensi</option>
+            </select>
+          </label>
+
+          <label>
+            Lis Lengan
+            <select id="shirtSleeveTrim">
+              <option value="">Pilih Lis lengan</option>
+              <option value="Pakai Lis">Pakai Lis</option>
+              <option value="RIB">RIB</option>
+              <option value="Custom">Kensi</option>
+            </select>
+          </label>
+
+         <div class="form-group">
+          <label for="shirtChestPocket">Kantong Dada</label>
+          <select id="shirtChestPocket">
+            <option value="">Pilih Kantong Dada</option>
+            <option value="1 kantong dada">1 Kantong Dada</option>
+            <option value="2 kantong dada">2 Kantong Dada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="shirtWaistElastic">Karet Pinggang</label>
+          <select id="shirtWaistElastic">
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="shirtButtonColor">Warna Kancing</label>
+          <select id="shirtButtonColor">
+            <option value="">Pilih Warna Kancing</option>
+            <option value="Hitam">Hitam</option>
+            <option value="Putih">Putih</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="shirtLining">Puring</label>
+          <select id="shirtLining">
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Spesifikasi Celana</h3>
+
+        <div class="form-grid">
+          <label>
+            Model Celana
+            <select id="pantsModel">
+              <option value="">Pilih model celana</option>
+              <option value="Pendek">Pendek</option>
+              <option value="Panjang">Panjang</option>
+              <option value="Training">Training</option>
+            </select>
+          </label>
+
+          <label>
+            Lis Celana
+            <select id="pantsTrim">
+              <option value="">Pilih Lis Celana</option>
+              <option value="Pakai Lis">Pakai Lis</option>
+            </select>
+          </label>
+
+          <div class="form-group">
+            <label for="pantsPocket">Kantong Celana</label>
+            <select id="pantsPocket">
+              <option value="">Pilih</option>
+              <option value="Ya">Ya</option>
+              <option value="Tidak">Tidak</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="pantsDrawstring">Tali Kolor</label>
+            <select id="pantsDrawstring">
+              <option value="">Pilih</option>
+              <option value="Ya">Ya</option>
+              <option value="Tidak">Tidak</option>
+            </select>
+          </div>
+
+          <label>
+            Model Bahan
+            <select id="pantsMaterial">
+              <option value="">Pilih bahan celana</option>
+              <option value="Embos Mono">Embos Mono</option>
+              <option value="Embos Topo">Embos Topo</option>
+              <option value="">-</option>
+              <option value="Milano">Milano</option>
+              <option value="Benzema">Benzema</option>
+              <option value="Jarum A">Jarum A</option>
+              <option value="Serena">Serena</option>
+              <option value="Lotto">Lotto</option>
+              <option value="">-</option>
+              <option value="Jarum B">Jarum B</option>
+              <option value="">-</option>
+              <option value="Diadora">Diadora</option>
+              <option value="Parasut">Parasut</option>
+            </select>
+          </label>
+
+        </div>
+      </section>
+
+      <section class="panel" data-wizard-step="3">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">SHIPPING INFORMATION</p>
+            <h2>Informasi Pengiriman</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>Nama Penerima
+            <input type="text" id="receiverName">
+          </label>
+
+          <label>Nomor Telepon
+            <input type="text" id="receiverPhone">
+          </label>
+
+          <label class="full-width">Alamat Pengiriman
+            <textarea id="shippingAddress" rows="3"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <div class="form-group" data-wizard-step="3">
+          <label for="tulanganMerk">Tulangan/Merk</label>
+          <select id="tulanganMerk" name="tulanganMerk">
+            <option value="">-- Pilih Tulangan/Merk --</option>
+            <option value="Ex Studio">Ex Studio</option>
+            <option value="Akhtar">Akhtar</option>
+            <option value="Tibon Sport">Tibon Sport</option>
+            <option value="YS Jersey">YS Jersey</option>
+            <option value="Imaan Printing">Imaan Printing</option>
+            <option value="Diva Sport">Diva Sport</option>
+            <option value="Viello Sport">Viello Sport</option>
+            <option value="FanSport">FanSport</option>
+            <option value="Alvaro Sport">Alvaro Sport</option>
+            <option value="IFHO JERSEY">IFHO JERSEY</option>
+            <option value="X-SAN Sport">X-SAN Sport</option>
+            <option value="Lewotana Sport">Lewotana Sport</option>
+            <option value="Kaos Plat AD">Kaos Plat AD</option>
+            <option value="@Madi_rom Jersey">@Madi_rom Jersey</option>
+            <option value="Affa Collection12">Affa Collection12</option>
+            <option value="Shootingstar Jersey">Shootingstar Jersey</option>
+            <option value="Anugrah Desain">Anugrah Desain</option>
+            <option value="Ais Prime">Ais Prime</option>
+            <option value="MRI Store">MRI Store</option>
+            <option value="YOEZ Sport">YOEZ Sport</option>
+            <option value="esemuproject">esemuproject</option>
+            <option value="Rain Sport">Rain Sport</option>
+            <option value="SENKOM">SENKOM</option>
+            <option value="Egit Sport">Egit Sport</option>
+            <option value="MNA Sport">MNA Sport</option>
+          </select>
+        </div>
+
+      
+      <section class="panel" data-wizard-step="4">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ORDER ITEMS</p>
+            <h2>Daftar Nama dan Ukuran</h2>
+          </div>
+        </div>
+
+        <div class="po-table-wrap">
+          <table class="po-input-table">
+            <thead>
+              <tr>
+                <th>SIZE</th>
+                <th>NOMOR</th>
+                <th>NAMA</th>
+                <th>JUMLAH</th>
+                <th>CATATAN</th>
+                <th>AKSI</th>
+              </tr>
+            </thead>
+            <tbody id="itemRows"></tbody>
+          </table>
+        </div>
+
+        <div class="po-add-item-bar">
+          <button type="button" class="btn btn-primary" id="addItemBtn">
+            + Tambah Nama
+          </button>
+        </div>
+      </section>
+
+
+      <div class="po-wizard-nav">
+        <button type="button" class="btn btn-ghost" id="poWizardBack" hidden>← KEMBALI</button>
+        <button type="button" class="btn btn-primary" id="poWizardNext">LANJUT →</button>
+      </div>
+      <section class="panel" data-wizard-step="5">
+        <label>
+          Catatan Tambahan
+          <textarea id="poNotes" rows="4"></textarea>
+        </label>
+      </section>
+
+      <div class="po-form-actions" data-wizard-step="5">
+        <button type="button" class="btn btn-ghost" id="saveDraftBtn">
+          SIMPAN DRAFT
+        </button>
+
+        <button type="submit" class="btn btn-primary" id="submitPOBtn">
+          SIMPAN & KIRIM PO →
+        </button>
+      </div>
+      </div><!-- /po-wizard -->
+
+    </form>
+  </main>
+
+  <script type="module" src="js/po-form.js"></script>
+  <script>
+    (() => {
+      const wizard = document.querySelector("#poWizard");
+      if (!wizard) return;
+
+      const steps = [...wizard.querySelectorAll("[data-wizard-step]")];
+      const progress = [...document.querySelectorAll("#poWizardProgress span")];
+      const caption = document.querySelector("#poWizardCaption");
+      const back = document.querySelector("#poWizardBack");
+      const next = document.querySelector("#poWizardNext");
+      const form = document.querySelector("#poForm");
+      const titles = [
+        "Informasi Pesanan",
+        "Spesifikasi Baju dan Celana",
+        "Informasi Pengiriman dan Tulangan/Merk",
+        "Daftar Nama dan Ukuran",
+        "Catatan Tambahan dan Simpan PO"
+      ];
+      let currentStep = 1;
+
+      function showStep(number) {
+        currentStep = Math.max(1, Math.min(5, number));
+        steps.forEach(el => {
+          el.classList.toggle("wizard-active", Number(el.dataset.wizardStep) === currentStep);
+        });
+        progress.forEach((el, index) => {
+          el.classList.toggle("active", index + 1 === currentStep);
+          el.classList.toggle("done", index + 1 < currentStep);
+        });
+        caption.textContent = `Tahap ${currentStep} dari 5 — ${titles[currentStep - 1]}`;
+        back.hidden = currentStep === 1;
+        next.hidden = currentStep === 5;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function validateCurrentStep() {
+        const activeBlocks = steps.filter(el => Number(el.dataset.wizardStep) === currentStep);
+        for (const block of activeBlocks) {
+          const requiredFields = [...block.querySelectorAll("[required]")];
+          for (const field of requiredFields) {
+            if (!field.value.trim()) {
+              field.reportValidity?.();
+              field.focus();
+              return false;
+            }
+          }
+        }
+
+        if (currentStep === 1) {
+          if (!document.querySelector("#customerName").value.trim()) {
+            alert("Nama Agen/User wajib diisi.");
+            document.querySelector("#customerName").focus();
+            return false;
+          }
+          if (!document.querySelector("#orderDate").value) {
+            alert("Tanggal PO wajib diisi.");
+            document.querySelector("#orderDate").focus();
+            return false;
+          }
+        }
+
+        if (currentStep === 4) {
+          const rows = [...document.querySelectorAll("#itemRows tr")];
+          if (!rows.length) {
+            alert("Tambahkan minimal satu nama/ukuran pesanan.");
+            return false;
+          }
+          for (const row of rows) {
+            const size = row.querySelector(".item-size");
+            const qty = row.querySelector(".item-quantity");
+            if (!size.value) {
+              alert("Pilih size untuk setiap item.");
+              size.focus();
+              return false;
+            }
+            if (!Number.isInteger(Number(qty.value)) || Number(qty.value) < 1) {
+              alert("Jumlah setiap item minimal 1.");
+              qty.focus();
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      next.addEventListener("click", () => {
+        if (validateCurrentStep()) showStep(currentStep + 1);
+      });
+      back.addEventListener("click", () => showStep(currentStep - 1));
+
+      // Cegah pengiriman form lewat Enter sebelum tahap terakhir.
+      form.addEventListener("keydown", event => {
+        if (event.key === "Enter" && event.target.tagName !== "TEXTAREA" && currentStep < 5) {
+          event.preventDefault();
+        }
+      });
+
+      showStep(1);
+    })();
+  </script>
+</body>
+</html>
