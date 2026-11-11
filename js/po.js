@@ -106,7 +106,8 @@ async function loadPO() {
       deadline,
       status,
       created_at,
-      created_by
+      created_by,
+      design_id
     `)
     .order("created_at", { ascending: false });
 
@@ -217,6 +218,18 @@ function renderPO() {
         >
           DETAIL PO →
         </button>
+
+        ${(isAdmin || isMarketing) &&
+        po.design_id &&
+        ["draft", "submitted", "revision"].includes(po.status) ? `
+        <button
+          type="button"
+          class="btn btn-warning"
+          data-return-design="${escapeHtml(po.id)}"
+        >
+          KEMBALIKAN KE DESAIN
+        </button>
+      ` : ""}
 
         ${(isAdmin || isAdminPO || isMarketing) &&
           po.status === "submitted" ? `
@@ -350,6 +363,59 @@ async function approvePO(poId) {
 }
 
 // =====================================
+// KEMBALIKAN PO KE DESAIN
+// =====================================
+
+async function returnPOToDesign(poId) {
+  const po = allPO.find(item => item.id === poId);
+  if (!po) return;
+
+  if (!(isAdmin || isMarketing)) {
+    alert("Anda tidak memiliki akses.");
+    return;
+  }
+
+  if (
+    !po.design_id ||
+    !["draft", "submitted", "revision"].includes(po.status)
+  ) {
+    alert("PO ini tidak dapat dikembalikan ke desain.");
+    return;
+  }
+
+  const confirmed = confirm(
+    `Kembalikan PO ${po.po_number || ""} ke desain?\n\n` +
+    "PO lama beserta seluruh itemnya akan dihapus permanen.\n" +
+    "Desain akan kembali ke Marketing untuk divalidasi ulang.\n\n" +
+    "PO baru harus dibuat setelah desain disetujui kembali."
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const { data, error } = await supabase.rpc(
+      "return_po_to_design",
+      { p_po_id: poId }
+    );
+
+    if (error) throw error;
+    if (!data?.success) {
+      throw new Error("Proses pengembalian PO gagal.");
+    }
+
+    alert(
+      "Berhasil! PO lama telah dihapus dan desain kembali ke Marketing."
+    );
+
+    await loadPO();
+
+  } catch (error) {
+    console.error("Gagal mengembalikan PO:", error);
+    alert(`Gagal mengembalikan PO: ${error.message}`);
+  }
+}
+
+// =====================================
 // EVENT
 // =====================================
 
@@ -358,6 +424,13 @@ statusFilter.addEventListener("change", renderPO);
 searchPO.addEventListener("input", renderPO);
 
 poList.addEventListener("click", event => {
+
+  const returnButton = event.target.closest("[data-return-design]");
+
+  if (returnButton) {
+    returnPOToDesign(returnButton.dataset.returnDesign);
+    return;
+  }
 
   const approveButton = event.target.closest("[data-approve-po]");
 
