@@ -2462,3 +2462,48 @@ textarea {
     overflow: hidden;
   }
 }
+
+/* ==========================================
+   ANTRIAN DESAIN - COMPACT CARD
+========================================== */
+
+.dashboard-page .dashboard-work-panel .work-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.dashboard-page .work-card {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: #171f19;
+  border: 1px solid #2b392e;
+}
+
+.dashboard-page .work-card h3 {
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.dashboard-page .work-card p {
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+.dashboard-page .work-card button {
+  padding: 7px 10px;
+  min-height: 30px;
+  font-size: 9px;
+  margin: 5px 4px 0 0;
+}
+
+/* Tablet dan HP */
+@media (max-width: 700px) {
+  .dashboard-page .dashboard-work-panel .work-list {
+    grid-template-columns: 1fr;
+  }
+}
