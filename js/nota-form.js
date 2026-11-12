@@ -12,6 +12,8 @@ const notaDate = $("#notaDate");
 const notaNotes = $("#notaNotes");
 const saveNotaBtn = $("#saveNotaBtn");
 const formMessage = $("#formMessage");
+const shippingCostInput = $("#shippingCost");
+const summarySubtotal = $("#summarySubtotal");
 
 let currentUser = null;
 let approvedPOs = [];
@@ -941,6 +943,7 @@ function renderSelectedPOs() {
   updateCalculations();
 }
 
+
 function updateCalculations() {
   let grandTotal = 0;
   let grandQty = 0;
@@ -964,7 +967,7 @@ function updateCalculations() {
       rupiah(calculation.subtotal);
 
     card.querySelector(".promo-total-discount").textContent =
-    rupiah(calculation.promoTotalDiscount);
+      rupiah(calculation.promoTotalDiscount);
 
     const sizeList = card.querySelector(".size-extra-list");
 
@@ -986,10 +989,19 @@ function updateCalculations() {
     grandQty += calculation.totalQty;
   });
 
+  const shippingCost = Math.max(
+    0,
+    toAmount(shippingCostInput.value)
+  );
+
+  const finalTotal = grandTotal + shippingCost;
+
   $("#summaryPOCount").textContent = selectedPOs.length;
   $("#summaryQty").textContent = grandQty;
-  $("#summaryTotal").textContent = rupiah(grandTotal);
+  summarySubtotal.textContent = rupiah(grandTotal);
+  $("#summaryTotal").textContent = rupiah(finalTotal);
 }
+
 
 // Menambahkan PO ke Nota
 async function addSelectedPO() {
@@ -1087,10 +1099,17 @@ async function saveNota() {
       calculation: getPOCalculation(po.id)
     }));
 
-    const totalAmount = calculations.reduce(
-      (sum, item) => sum + item.calculation.subtotal,
-      0
+    const subtotalAmount = calculations.reduce(
+    (sum, item) => sum + item.calculation.subtotal,
+    0
     );
+
+    const shippingCost = Math.max(
+      0,
+      toAmount(shippingCostInput.value)
+    );
+
+    const totalAmount = subtotalAmount + shippingCost;
 
     let notaNumber = originalNotaNumber;
 
@@ -1099,7 +1118,8 @@ async function saveNota() {
       nota_date: notaDate.value,
       notes: notaNotes.value.trim() || null,
       updated_by: currentUser.id,
-      total_amount: totalAmount
+      total_amount: totalAmount,
+      shipping_cost: shippingCost
     };
 
     if (editingNotaId) {
@@ -1337,5 +1357,7 @@ poSelect.addEventListener("change", addSelectedPO);
 $("#loadPOBtn").addEventListener("click", addSelectedPO);
 
 saveNotaBtn.addEventListener("click", saveNota);
+
+shippingCostInput.addEventListener("input", updateCalculations);
 
 init();

@@ -87,6 +87,7 @@
       </div>
     </section>
 
+    
     <section class="form-section">
       <h2>Ringkasan Nota</h2>
 
@@ -95,16 +96,36 @@
           <span>Jumlah PO</span>
           <strong id="summaryPOCount">0</strong>
         </div>
+
         <div class="summary-item">
           <span>Total Qty</span>
           <strong id="summaryQty">0</strong>
         </div>
+
+        <div class="summary-item">
+          <span>Subtotal PO</span>
+          <strong id="summarySubtotal">Rp0</strong>
+        </div>
+
+        <div class="summary-item">
+          <label for="shippingCost">Ongkir (Rp)</label>
+          <input
+            type="number"
+            id="shippingCost"
+            min="0"
+            step="1000"
+            value="0"
+            placeholder="Masukkan ongkir"
+          >
+        </div>
+
         <div class="summary-item summary-total">
           <span>Total Nota</span>
           <strong id="summaryTotal">Rp0</strong>
         </div>
       </div>
     </section>
+
 
     <div class="form-actions">
       <a href="nota.html" class="btn btn-secondary">Batal</a>
