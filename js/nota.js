@@ -129,6 +129,7 @@ async function loadNota() {
         customer_name,
         nota_date,
         total_amount,
+        shipping_cost,
         created_at
       `)
       .order("nota_date", { ascending: false });
@@ -343,7 +344,13 @@ function renderNotaList(notas) {
 
       <td>${poCounts[nota.id] || 0} PO</td>
 
-      <td>${formatRupiah(nota.total_amount)}</td>
+      <td>
+        <strong>${formatRupiah(nota.total_amount)}</strong>
+        <br>
+        <small style="color:#888;">
+          Termasuk ongkir: ${formatRupiah(nota.shipping_cost)}
+        </small>
+      </td>
 
       <td>
         <div class="nota-actions">
