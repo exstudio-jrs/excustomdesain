@@ -574,6 +574,162 @@ async function loadDesignerOptions() {
   });
 }
 
+
+/* =====================================================
+   DASHBOARD PURCHASE ORDER
+   Statistik PO dan daftar PO terbaru
+===================================================== */
+
+const dashPoTotal = document.querySelector("#dashPoTotal");
+const dashPoSubmitted = document.querySelector("#dashPoSubmitted");
+const dashPoRevision = document.querySelector("#dashPoRevision");
+const dashPoApproved = document.querySelector("#dashPoApproved");
+const dashRecentPO = document.querySelector("#dashRecentPO");
+
+// Format tanggal PO
+function formatDashboardPODate(value) {
+  if (!value) return "-";
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+// Label status PO
+function dashboardPOStatusLabel(status) {
+  const labels = {
+    draft: "Draft",
+    submitted: "Menunggu Pemeriksaan",
+    revision: "Perlu Revisi",
+    approved: "Approved",
+    printed: "Sudah Dicetak"
+  };
+
+  return labels[status] || status || "-";
+}
+
+// Memuat statistik dan PO terbaru
+async function loadDashboardPO() {
+  // Pastikan elemen dashboard tersedia
+  if (!dashPoTotal || !dashRecentPO) return;
+
+  dashRecentPO.innerHTML =
+    '<p class="muted">Memuat data PO...</p>';
+
+  try {
+    let query = supabase
+      .from("purchase_orders")
+      .select(`
+        id,
+        po_number,
+        customer_name,
+        order_date,
+        deadline,
+        status,
+        created_at,
+        created_by,
+        design_id
+      `)
+      .order("created_at", { ascending: false });
+
+    // Marketing hanya melihat PO miliknya
+    if (isMarketing) {
+      query = query.eq("created_by", user.id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    const purchaseOrders = data || [];
+
+    // =====================================
+    // UPDATE STATISTIK
+    // =====================================
+
+    const total = purchaseOrders.length;
+
+    const submitted = purchaseOrders.filter(
+      po => po.status === "submitted"
+    ).length;
+
+    const revision = purchaseOrders.filter(
+      po => po.status === "revision"
+    ).length;
+
+    const approved = purchaseOrders.filter(
+      po => ["approved", "printed"].includes(po.status)
+    ).length;
+
+    dashPoTotal.textContent = total;
+    dashPoSubmitted.textContent = submitted;
+    dashPoRevision.textContent = revision;
+    dashPoApproved.textContent = approved;
+
+    // =====================================
+    // TAMPILKAN 5 PO TERBARU
+    // =====================================
+
+    const recentPO = purchaseOrders.slice(0, 5);
+
+    if (!recentPO.length) {
+      dashRecentPO.innerHTML = `
+        <div class="po-empty">
+          Belum ada data Purchase Order.
+        </div>
+      `;
+      return;
+    }
+
+    dashRecentPO.innerHTML = recentPO.map(po => `
+      <div class="recent-po-item">
+
+        <div class="recent-po-info">
+          <strong>
+            ${escapeHtml(po.po_number || "PO belum bernomor")}
+          </strong>
+
+          <small>
+            ${escapeHtml(po.customer_name || "-")}
+            &nbsp; • &nbsp;
+            ${formatDashboardPODate(po.order_date)}
+          </small>
+        </div>
+
+        <span class="recent-po-status">
+          ${escapeHtml(dashboardPOStatusLabel(po.status))}
+        </span>
+
+      </div>
+    `).join("");
+
+  } catch (error) {
+    console.error("Gagal memuat dashboard PO:", error);
+
+    dashRecentPO.innerHTML = `
+      <div class="po-empty">
+        Gagal memuat data PO:
+        ${escapeHtml(error.message || "Terjadi kesalahan")}
+      </div>
+    `;
+
+    dashPoTotal.textContent = "-";
+    dashPoSubmitted.textContent = "-";
+    dashPoRevision.textContent = "-";
+    dashPoApproved.textContent = "-";
+  }
+}
+
+// Jalankan dashboard PO
+loadDashboardPO();
+
+
 // ======================================
 // 9. INPUT BRIEF DESAIN
 // ======================================
