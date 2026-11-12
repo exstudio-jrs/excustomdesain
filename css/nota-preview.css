@@ -364,3 +364,65 @@
     break-inside: avoid;
   }
 }
+
+
+/* RINCIAN SUBTOTAL DAN ONGKIR */
+.nota-grand-summary {
+  width: 100%;
+  max-width: 400px;
+  margin: 22px 0 0 auto;
+}
+
+.nota-grand-summary .nota-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.nota-grand-summary .nota-discount-row {
+  color: #c62828;
+}
+
+.nota-grand-summary .nota-summary-final {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 15px;
+  background: #f1f1f1;
+  border: 2px solid #222;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.nota-grand-summary .nota-summary-final strong {
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .nota-grand-summary {
+    max-width: 100%;
+  }
+
+  .nota-grand-summary .nota-summary-final {
+    font-size: 13px;
+  }
+
+  .nota-grand-summary .nota-summary-final strong {
+    font-size: 17px;
+  }
+}
+
+@media print {
+  .nota-grand-summary .nota-summary-final {
+    background: #f1f1f1 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
