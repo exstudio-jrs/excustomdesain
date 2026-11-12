@@ -267,6 +267,7 @@ async function loadNotaForEdit() {
   // Isi informasi Nota
   notaDate.value = nota.nota_date || todayLocal();
   notaNotes.value = nota.notes || "";
+  shippingCostInput.value = Number(nota.shipping_cost || 0);
 
   if (![...customerSelect.options].some(
     option => option.value === nota.customer_name
