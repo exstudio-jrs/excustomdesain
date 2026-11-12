@@ -1070,7 +1070,7 @@ textarea {
 }
 
 .dashboard-page .page-head h1 {
-  color: #14213a;
+  color: #ffffff;
   font-size: clamp(42px, 5vw, 58px);
   letter-spacing: -1px;
   line-height: 1;
