@@ -220,3 +220,49 @@
     flex-direction: column;
   }
 }
+
+
+/* ==========================================
+   DASHBOARD - ANTRIAN DESAIN COMPACT
+========================================== */
+
+.dashboard-page #workList.work-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 320px));
+  gap: 12px;
+  align-items: start;
+  justify-content: start;
+  width: 100%;
+}
+
+.dashboard-page #workList .work-card {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 9px;
+  box-sizing: border-box;
+}
+
+.dashboard-page #workList .work-card h3 {
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.dashboard-page #workList .work-card p {
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 5px 0;
+}
+
+.dashboard-page #workList .work-card button {
+  padding: 7px 10px;
+  min-height: 30px;
+  font-size: 9px;
+  margin: 5px 4px 0 0;
+}
+
+@media (max-width: 600px) {
+  .dashboard-page #workList.work-list {
+    grid-template-columns: 1fr;
+  }
+}
