@@ -275,7 +275,8 @@ async function loadNotaPreview() {
         customer_name,
         nota_date,
         notes,
-        total_amount
+        total_amount,
+        shipping_cost
       `)
       .eq("id", notaId)
       .single();
@@ -369,10 +370,15 @@ const grandTotalDiscount = poCalculations.reduce(
 const grandTotalAfterDiscount =
   grandTotalBeforeDiscount - grandTotalDiscount;
 
+// Ambil ongkir yang tersimpan pada Nota
+const shippingCost = Number(nota.shipping_cost || 0);
+
+// Total akhir termasuk ongkir
+const finalTotal = grandTotalAfterDiscount + shippingCost;
+
+
 // Tampilkan total Nota
-$("#notaGrandTotal").textContent = rupiah(
-  grandTotalAfterDiscount
-);
+$("#notaGrandTotal").textContent = rupiah(finalTotal);
 
 // Tampilkan tabel ringkas PO
 poContainer.innerHTML = `
@@ -404,7 +410,8 @@ poContainer.innerHTML = `
         `).join("")}
       </tbody>
     </table>
-        ${poCalculations.map(po => `
+
+    ${poCalculations.map(po => `
       <div class="nota-po-extra-detail">
         <h4>Rincian Tambahan PO ${escapeHtml(po.po_number)}</h4>
         ${po.extrasHtml || "<p>Tidak ada biaya tambahan.</p>"}
@@ -423,12 +430,23 @@ poContainer.innerHTML = `
       <strong>- ${rupiah(grandTotalDiscount)}</strong>
     </div>
 
+    <div class="nota-summary-row">
+      <span>Subtotal PO</span>
+      <strong>${rupiah(grandTotalAfterDiscount)}</strong>
+    </div>
+
+    <div class="nota-summary-row">
+      <span>Ongkir</span>
+      <strong>${rupiah(shippingCost)}</strong>
+    </div>
+
     <div class="nota-summary-final">
       <span>TOTAL KESELURUHAN</span>
-      <strong>${rupiah(grandTotalAfterDiscount)}</strong>
+      <strong>${rupiah(finalTotal)}</strong>
     </div>
   </div>
 `;
+
 
     // Catatan Nota
     if (nota.notes) {
