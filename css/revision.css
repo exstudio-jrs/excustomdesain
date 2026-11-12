@@ -222,8 +222,9 @@
 }
 
 
+
 /* ==========================================
-   DASHBOARD - ANTRIAN DESAIN COMPACT
+   ANTRIAN DESAIN - KARTU COMPACT
 ========================================== */
 
 .dashboard-page #workList.work-list {
@@ -235,34 +236,56 @@
   width: 100%;
 }
 
-.dashboard-page #workList .work-card {
+.dashboard-page #workList .work-item {
   width: 100%;
   min-width: 0;
-  padding: 12px 14px;
-  border-radius: 9px;
+  max-width: 320px;
   box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 9px;
+  align-self: start;
 }
 
-.dashboard-page #workList .work-card h3 {
+.dashboard-page #workList .work-item h3 {
   font-size: 13px;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
+  line-height: 1.4;
 }
 
-.dashboard-page #workList .work-card p {
+.dashboard-page #workList .work-item .work-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 8px;
   font-size: 10px;
   line-height: 1.5;
-  margin: 5px 0;
 }
 
-.dashboard-page #workList .work-card button {
-  padding: 7px 10px;
-  min-height: 30px;
+.dashboard-page #workList .work-item p {
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.dashboard-page #workList .work-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.dashboard-page #workList .work-actions button {
+  padding: 7px 9px;
+  min-height: 29px;
   font-size: 9px;
-  margin: 5px 4px 0 0;
+  margin: 0;
 }
 
 @media (max-width: 600px) {
   .dashboard-page #workList.work-list {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-page #workList .work-item {
+    max-width: 100%;
   }
 }
