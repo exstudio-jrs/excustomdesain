@@ -217,16 +217,16 @@ async function extractPdf(file) {
         .map(c => c.text)
         .join(" ");
 
-      if (leftName.trim()) {
+      if (leftSize) {
         leftPlayers.push({
-          size: leftSize?.text || "",
+          size: leftSize.text,
           name: leftName.trim()
         });
       }
 
-      if (rightName.trim()) {
+      if (rightSize) {
         rightPlayers.push({
-          size: rightSize?.text || "",
+          size: rightSize.text,
           name: rightName.trim()
         });
       }
