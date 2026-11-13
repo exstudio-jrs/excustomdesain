@@ -1129,10 +1129,6 @@ async function load() {
             <span>${referenceCount} referensi</span>
           </div>
 
-          <p class="muted">
-            ${escapeHtml(d.brief || "").slice(0, 150)}
-          </p>
-
           <div class="work-actions">
             <button
               type="button"
