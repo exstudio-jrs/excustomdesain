@@ -143,29 +143,113 @@ function normalizeRows(rows) {
   });
 }
 
+
 async function extractPdf(file) {
   const pdfjsLib = await getPdfJs();
   const bytes = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-  const allRows = [];
+
+  const players = [];
 
   for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
     showMessage(`Membaca halaman ${pageNumber} dari ${pdf.numPages}...`);
+
     const page = await pdf.getPage(pageNumber);
     const content = await page.getTextContent();
-    const rows = groupTextItemsIntoRows(content.items);
-    if (rows.length) {
-      if (allRows.length) allRows.push([]);
-      allRows.push(...rows);
+
+    const items = content.items
+      .filter(item => item.str && item.str.trim())
+      .map(item => ({
+        text: item.str.trim(),
+        x: item.transform[4],
+        y: item.transform[5]
+      }));
+
+    // Cari posisi header SIZE pada kelompok kiri dan kanan.
+    const sizeHeaders = items
+      .filter(item => item.text.toUpperCase() === "SIZE")
+      .sort((a, b) => a.x - b.x);
+
+    if (sizeHeaders.length < 2) {
+      throw new Error("Header SIZE kiri dan kanan tidak ditemukan.");
     }
+
+    const headerY = sizeHeaders[0].y;
+
+    // Kelompokkan teks berdasarkan posisi baris.
+    const rows = [];
+
+    items
+      .filter(item =>
+        item.y < headerY - 5 &&
+        item.y > 20
+      )
+      .forEach(item => {
+        let row = rows.find(r => Math.abs(r.y - item.y) <= 3);
+
+        if (!row) {
+          row = { y: item.y, items: [] };
+          rows.push(row);
+        }
+
+        row.items.push(item);
+      });
+
+    rows.sort((a, b) => b.y - a.y);
+
+    const leftPlayers = [];
+    const rightPlayers = [];
+
+    rows.forEach(row => {
+      const cells = row.items.sort((a, b) => a.x - b.x);
+
+      // Kelompok kiri.
+      const leftSize = cells.find(c => c.x >= 600 && c.x < 675);
+      const leftName = cells
+        .filter(c => c.x >= 675 && c.x < 820)
+        .map(c => c.text)
+        .join(" ");
+
+      // Kelompok kanan.
+      const rightSize = cells.find(c => c.x >= 820 && c.x < 900);
+      const rightName = cells
+        .filter(c => c.x >= 900 && c.x < 1100)
+        .map(c => c.text)
+        .join(" ");
+
+      if (leftName.trim()) {
+        leftPlayers.push({
+          size: leftSize?.text || "",
+          name: leftName.trim()
+        });
+      }
+
+      if (rightName.trim()) {
+        rightPlayers.push({
+          size: rightSize?.text || "",
+          name: rightName.trim()
+        });
+      }
+    });
+
+    players.push(...leftPlayers, ...rightPlayers);
   }
 
-  const filtered = allRows.filter(row => row.some(cell => String(cell).trim()));
-  if (!filtered.length) {
-    throw new Error("Tidak ditemukan teks pada PDF. Jika PDF berupa hasil scan/foto, diperlukan fitur OCR.");
+  if (!players.length) {
+    throw new Error("Data pemain tidak ditemukan.");
   }
-  return normalizeRows(filtered);
+
+  return [
+    ["NOMOR", "SIZE", "NO", "NAMA"],
+    ...players.map((player, index) => [
+      String(index + 1),
+      player.size,
+      "",
+      player.name
+    ])
+  ];
 }
+
 
 function renderTable(rows) {
   resultTable.innerHTML = "";
@@ -175,7 +259,8 @@ function renderTable(rows) {
 
   for (let column = 0; column < maxColumns; column++) {
     const th = document.createElement("th");
-    th.textContent = `Kolom ${column + 1}`;
+    const headers = ["NOMOR", "SIZE", "NO", "NAMA"];
+    th.textContent = headers[column] || `Kolom ${column + 1}`;
     headerRow.appendChild(th);
   }
   thead.appendChild(headerRow);
