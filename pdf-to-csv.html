@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF to CSV - EXS EX STUDIO</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/revision.css">
+  <link rel="stylesheet" href="css/pdf-to-csv.css">
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <a class="brand" href="dashboard.html">EXS<span>.</span><small>EX STUDIO</small></a>
+      <div class="sidebar-label">DESIGNER MENU</div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html"><span class="nav-icon">▦</span>Dashboard</a>
+        <a href="gallery.html"><span class="nav-icon">▧</span>Gallery</a>
+        <a href="pdf-to-csv.html" class="active"><span class="nav-icon">▤</span>PDF to CSV</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-status"><span class="status-dot"></span><span>EXSTUDIO WORKSPACE</span></div>
+        <a href="https://exstudio-jrs.github.io/exstudio/" target="_blank" rel="noopener">Home Ex Studio ↗</a>
+      </div>
+    </aside>
+
+    <div class="dashboard-main">
+      <header class="dashboard-topbar">
+        <div class="topbar-left">
+          <p class="eyebrow">EXSTUDIO / DESIGNER TOOLS</p>
+          <span class="topbar-title">PDF to CSV</span>
+        </div>
+        <div class="user-area">
+          <div class="user-indicator">
+            <span class="user-indicator-dot"></span>
+            <span id="userLabel">Loading...</span>
+          </div>
+          <button id="logoutBtn" class="btn btn-ghost">Keluar ↗</button>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <section class="page-head">
+          <div>
+            <p class="eyebrow">DESIGNER WORKSPACE / UTILITIES</p>
+            <h1>PDF to CSV<span>.</span></h1>
+            <p class="muted">Ekstrak tabel dari PDF, periksa hasilnya, lalu unduh sebagai CSV.</p>
+          </div>
+        </section>
+
+        <section class="panel pdf-converter-panel">
+          <div class="pdf-upload-area">
+            <div class="pdf-upload-icon">⇧</div>
+            <h2>Upload dokumen PDF</h2>
+            <p class="muted">Untuk PDF yang memiliki teks/tabel digital. Maksimal 25 MB.</p>
+            <label class="btn btn-primary" for="pdfFile">PILIH FILE PDF</label>
+            <input id="pdfFile" type="file" accept="application/pdf,.pdf" hidden>
+            <p id="pdfFileName" class="pdf-file-name">Belum ada file dipilih</p>
+          </div>
+
+          <div class="pdf-actions">
+            <button id="convertBtn" class="btn btn-primary" disabled>KONVERSI PDF → CSV</button>
+            <button id="clearBtn" class="btn btn-ghost" type="button">RESET</button>
+          </div>
+          <div id="pdfMessage" class="form-message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section id="previewPanel" class="panel pdf-preview-panel hidden">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">EXTRACTED DATA</p>
+              <h2>Preview Hasil Konversi</h2>
+              <p class="muted">Klik sel untuk mengedit data sebelum mengunduh CSV.</p>
+            </div>
+            <button id="downloadCsvBtn" class="btn btn-primary" type="button">DOWNLOAD CSV ↓</button>
+          </div>
+          <div id="tableInfo" class="pdf-table-info"></div>
+          <div class="pdf-table-wrap">
+            <table id="resultTable" class="pdf-result-table"></table>
+          </div>
+        </section>
+
+        <footer class="dashboard-footer">
+          <span>EXS<span class="footer-lime">.</span> EX STUDIO</span>
+          <span>DESIGN • PRODUCTION • QUALITY</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/pdf-to-csv.js"></script>
+</body>
+</html>
