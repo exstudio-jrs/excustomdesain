@@ -1,0 +1,122 @@
+/* PDF TO CSV */
+.pdf-converter-panel,
+.pdf-preview-panel {
+  padding: 22px;
+  margin-bottom: 22px;
+}
+
+.pdf-upload-area {
+  min-height: 230px;
+  border: 1px dashed var(--lime, #b6e34b);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: rgba(255,255,255,.02);
+}
+
+.pdf-upload-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  color: var(--lime, #b6e34b);
+  background: rgba(182,227,75,.10);
+  margin-bottom: 12px;
+}
+
+.pdf-upload-area h2 {
+  margin: 0 0 7px;
+  font-size: 20px;
+}
+
+.pdf-upload-area p {
+  margin: 5px 0 14px;
+}
+
+.pdf-file-name {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.pdf-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.pdf-actions button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.pdf-table-info {
+  color: var(--muted, #999);
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+.pdf-table-wrap {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+}
+
+.pdf-result-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.pdf-result-table th,
+.pdf-result-table td {
+  border: 1px solid rgba(255,255,255,.10);
+  padding: 0;
+  vertical-align: top;
+}
+
+.pdf-result-table th {
+  background: rgba(182,227,75,.10);
+  color: var(--text, #fff);
+  text-align: left;
+  padding: 10px;
+  white-space: nowrap;
+}
+
+.pdf-result-table td input {
+  width: 100%;
+  min-width: 90px;
+  border: 0;
+  border-radius: 0;
+  padding: 9px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline-offset: -2px;
+}
+
+.pdf-result-table td input:focus {
+  background: rgba(182,227,75,.08);
+  outline: 1px solid var(--lime, #b6e34b);
+}
+
+@media (max-width: 600px) {
+  .pdf-converter-panel,
+  .pdf-preview-panel {
+    padding: 14px;
+  }
+
+  .pdf-preview-panel .section-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
