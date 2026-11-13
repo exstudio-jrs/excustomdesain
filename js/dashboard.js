@@ -280,12 +280,15 @@ const closeDetailBtn = document.querySelector("#closeDetailModal");
 const detailBackdrop = document.querySelector("#detailBackdrop");
 
 
-async function loadDrivePreviews() {
-  if (!detailContent) return;
+
+async function loadDrivePreviews(container = detailContent) {
+  if (!container) return;
 
   const images = Array.from(
-    detailContent.querySelectorAll("img[data-drive-preview]")
+    container.querySelectorAll("img[data-drive-preview]")
   );
+
+  if (!images.length) return;
 
   const {
     data: { session },
@@ -335,24 +338,24 @@ async function loadDrivePreviews() {
 
         const objectUrl = URL.createObjectURL(blob);
 
-        // Simpan URL blob agar dapat digunakan popup
         img.dataset.previewBlobUrl = objectUrl;
-
-        img.onerror = () => {
-          img.alt = "Gagal menampilkan preview gambar";
-          img.dataset.loaded = "false";
-        };
-
         img.src = objectUrl;
         img.dataset.loaded = "true";
 
+        img.onerror = () => {
+          img.closest(".work-cover")?.classList.add("preview-error");
+          img.remove();
+        };
+
       } catch (error) {
         console.error("Gagal memuat preview:", fileId, error);
-        img.alt = "Preview tidak tersedia";
+        img.closest(".work-cover")?.classList.add("preview-error");
+        img.remove();
       }
     })
   );
 }
+
 
 
 function openDesignDetail(id) {
@@ -1075,9 +1078,31 @@ async function load() {
     const owner = d.profiles?.username || "—";
     const designerName = d.designer?.username || "Belum ditugaskan";
 
-    const referenceCount = (d.design_files || []).filter(file =>
+    
+    const references = (d.design_files || []).filter(file =>
       ["reference", "revision_reference"].includes(file.file_type)
-    ).length;
+    );
+
+    const referenceCount = references.length;
+    const cover = references.find(file => file.drive_file_id);
+
+    const coverHTML = cover
+      ? `
+        <div class="work-cover">
+          <img
+            data-drive-preview="${escapeHtml(cover.drive_file_id)}"
+            data-design-id="${escapeHtml(d.id)}"
+            alt="Referensi ${escapeHtml(d.project_name || "desain")}"
+            loading="lazy"
+          >
+        </div>
+      `
+      : `
+        <div class="work-cover work-cover-empty">
+          <span>▧</span>
+          <small>Belum ada preview referensi</small>
+        </div>
+      `;
 
     return `
       <article
@@ -1087,39 +1112,45 @@ async function load() {
         role="button"
         aria-label="Lihat detail ${escapeHtml(d.project_name || "")}"
       >
-        <div>
+
+        ${coverHTML}
+
+        <div class="work-card-content">
+
+          <span class="status ${escapeHtml(d.status)}">
+            ${escapeHtml(statusText)}
+          </span>
+
           <h3>${escapeHtml(d.project_name || "-")}</h3>
 
           <div class="work-meta">
-            <span>${escapeHtml(d.apparel_type || "—")}</span>
-            <span>Marketing: ${escapeHtml(owner)}</span>
             <span>Desainer: ${escapeHtml(designerName)}</span>
             <span>${escapeHtml(formatDate(d.created_at))}</span>
             <span>${referenceCount} referensi</span>
           </div>
 
           <p class="muted">
-            ${escapeHtml(d.brief || "").slice(0, 220)}
+            ${escapeHtml(d.brief || "").slice(0, 150)}
           </p>
 
-          <span class="status ${escapeHtml(d.status)}">
-            ${escapeHtml(statusText)}
-          </span>
-        </div>
+          <div class="work-actions">
+            <button
+              type="button"
+              class="btn btn-ghost"
+              data-open-detail="${escapeHtml(d.id)}">
+              DETAIL ↗
+            </button>
 
-        <div class="work-actions">
-          <button
-            type="button"
-            class="btn btn-ghost"
-            data-open-detail="${escapeHtml(d.id)}">
-            DETAIL ↗
-          </button>
+            ${actions}
+          </div>
 
-          ${actions}
         </div>
       </article>
     `;
+
   }).join("");
+    // Muat gambar referensi pada kartu Antrian Desain
+  await loadDrivePreviews(workList);
 
   // ======================================
   // 13. EVENT LISTENER DETAIL

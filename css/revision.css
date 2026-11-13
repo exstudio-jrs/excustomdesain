@@ -289,3 +289,124 @@
     max-width: 100%;
   }
 }
+
+
+/* ==========================================
+   ANTRIAN DESAIN - PROJECT GALLERY CARD
+========================================== */
+
+.dashboard-page #workList.work-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+  gap: 16px;
+  justify-content: start;
+  align-items: start;
+}
+
+.dashboard-page #workList .work-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 280px;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.dashboard-page #workList .work-cover {
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  background: #202b23;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-page #workList .work-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dashboard-page #workList .work-cover-empty {
+  flex-direction: column;
+  gap: 8px;
+  color: #829184;
+}
+
+.dashboard-page #workList .work-cover-empty span {
+  font-size: 32px;
+}
+
+.dashboard-page #workList .work-cover-empty small {
+  font-size: 10px;
+}
+
+.dashboard-page #workList .work-cover.preview-error::after {
+  content: "Preview tidak tersedia";
+  color: #829184;
+  font-size: 11px;
+}
+
+.dashboard-page #workList .work-card-content {
+  padding: 13px;
+  min-width: 0;
+}
+
+.dashboard-page #workList .work-card-content h3 {
+  font-size: 14px;
+  margin: 9px 0;
+  line-height: 1.4;
+}
+
+.dashboard-page #workList .work-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 10px;
+}
+
+.dashboard-page #workList .work-card-content p {
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 9px 0;
+}
+
+.dashboard-page #workList .work-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dashboard-page #workList .work-actions button {
+  font-size: 9px;
+  padding: 7px 9px;
+  min-height: 29px;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .dashboard-page #workList.work-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-page #workList .work-item {
+    max-width: 100%;
+  }
+
+  .dashboard-page #workList .work-cover {
+    height: 125px;
+  }
+}
+
+@media (max-width: 380px) {
+  .dashboard-page #workList.work-list {
+    grid-template-columns: 1fr;
+  }
+}
