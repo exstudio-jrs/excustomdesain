@@ -52,6 +52,11 @@ if (navMasterHarga) {
 const navManajemenPO = document.querySelector("#navManajemenPO");
 const navManajemenNota = document.querySelector("#navManajemenNota");
 const navReportOmset = document.querySelector("#navReportOmset");
+const navPdfToCsv = document.querySelector("#navPdfToCsv");
+
+if (navPdfToCsv) {
+  navPdfToCsv.classList.toggle("hidden", !isDesigner);
+}
 
 // Manajemen PO: Marketing dan Admin
 if (navManajemenPO) {
