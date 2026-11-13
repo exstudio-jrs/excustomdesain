@@ -144,6 +144,7 @@ function normalizeRows(rows) {
 }
 
 
+
 async function extractPdf(file) {
   const pdfjsLib = await getPdfJs();
   const bytes = await file.arrayBuffer();
@@ -165,7 +166,6 @@ async function extractPdf(file) {
         y: item.transform[5]
       }));
 
-    // Cari posisi header SIZE pada kelompok kiri dan kanan.
     const sizeHeaders = items
       .filter(item => item.text.toUpperCase() === "SIZE")
       .sort((a, b) => a.x - b.x);
@@ -176,7 +176,45 @@ async function extractPdf(file) {
 
     const headerY = sizeHeaders[0].y;
 
-    // Kelompokkan teks berdasarkan posisi baris.
+    // Cari posisi kolom berdasarkan header PDF.
+    const headers = items.filter(item =>
+      Math.abs(item.y - headerY) <= 3
+    );
+
+    const getHeaderX = (text, fallback) => {
+      const found = headers.find(
+        item => item.text.toUpperCase() === text &&
+                item.x > fallback.min &&
+                item.x < fallback.max
+      );
+      return found ? found.x : fallback.default;
+    };
+
+    const leftSizeX = getHeaderX("SIZE", {
+      min: 0, max: 820, default: 600
+    });
+
+    const leftNoX = getHeaderX("NO", {
+      min: leftSizeX, max: 820, default: 640
+    });
+
+    const leftNameX = getHeaderX("NAMA", {
+      min: leftNoX, max: 820, default: 675
+    });
+
+    const rightSizeX = getHeaderX("SIZE", {
+      min: 820, max: 1100, default: 820
+    });
+
+    const rightNoX = getHeaderX("NO", {
+      min: rightSizeX, max: 1100, default: 860
+    });
+
+    const rightNameX = getHeaderX("NAMA", {
+      min: rightNoX, max: 1200, default: 900
+    });
+
+    // Kelompokkan teks berdasarkan baris.
     const rows = [];
 
     items
@@ -203,23 +241,42 @@ async function extractPdf(file) {
     rows.forEach(row => {
       const cells = row.items.sort((a, b) => a.x - b.x);
 
-      // Kelompok kiri.
-      const leftSize = cells.find(c => c.x >= 600 && c.x < 675);
+      // Kelompok kiri: SIZE, NO, NAMA.
+      const leftSize = cells.find(c =>
+        c.x >= leftSizeX - 5 &&
+        c.x < leftNoX - 2
+      );
+
+      const leftNo = cells.find(c =>
+        c.x >= leftNoX - 5 &&
+        c.x < leftNameX - 2
+      );
+
       const leftName = cells
-        .filter(c => c.x >= 675 && c.x < 820)
+        .filter(c => c.x >= leftNameX - 5 && c.x < rightSizeX)
         .map(c => c.text)
         .join(" ");
 
-      // Kelompok kanan.
-      const rightSize = cells.find(c => c.x >= 820 && c.x < 900);
+      // Kelompok kanan: SIZE, NO, NAMA.
+      const rightSize = cells.find(c =>
+        c.x >= rightSizeX - 5 &&
+        c.x < rightNoX - 2
+      );
+
+      const rightNo = cells.find(c =>
+        c.x >= rightNoX - 5 &&
+        c.x < rightNameX - 2
+      );
+
       const rightName = cells
-        .filter(c => c.x >= 900 && c.x < 1100)
+        .filter(c => c.x >= rightNameX - 5)
         .map(c => c.text)
         .join(" ");
 
       if (leftSize) {
         leftPlayers.push({
           size: leftSize.text,
+          no: leftNo ? leftNo.text : "",
           name: leftName.trim()
         });
       }
@@ -227,6 +284,7 @@ async function extractPdf(file) {
       if (rightSize) {
         rightPlayers.push({
           size: rightSize.text,
+          no: rightNo ? rightNo.text : "",
           name: rightName.trim()
         });
       }
@@ -244,11 +302,12 @@ async function extractPdf(file) {
     ...players.map((player, index) => [
       String(index + 1),
       player.size,
-      "",
+      player.no,
       player.name
     ])
   ];
 }
+
 
 
 function renderTable(rows) {
