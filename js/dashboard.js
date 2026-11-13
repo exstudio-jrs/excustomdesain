@@ -45,6 +45,25 @@ if (navMasterHarga) {
   );
 }
 
+const designStatsSection =
+  document.querySelector("#designStatsSection");
+
+const poOverviewSection =
+  document.querySelector("#poOverviewSection");
+
+// Marketing melihat statistik PO.
+// Desainer melihat statistik desain.
+// Admin melihat keduanya.
+designStatsSection?.classList.toggle(
+  "hidden",
+  !isDesigner && !isAdmin
+);
+
+poOverviewSection?.classList.toggle(
+  "hidden",
+  !isMarketing && !isAdmin
+);
+
 // ======================================
 // 2. PENGATURAN NAVIGASI BERDASARKAN ROLE
 // ======================================
@@ -735,7 +754,9 @@ async function loadDashboardPO() {
 }
 
 // Jalankan dashboard PO
-loadDashboardPO();
+if (isMarketing || isAdmin) {
+  loadDashboardPO();
+}
 
 
 // ======================================
@@ -942,7 +963,13 @@ async function load() {
         );
 
   // Statistik.
-  const counts = designs.reduce((result, item) => {
+  const statsDesigns = isDesigner
+  ? designs.filter(d => d.assigned_to === profile.id)
+  : isMarketing
+    ? designs.filter(d => d.created_by === profile.id)
+    : designs;
+
+  const counts = statsDesigns.reduce((result, item) => {
     result.total++;
     result[item.status] = (result[item.status] || 0) + 1;
     return result;
