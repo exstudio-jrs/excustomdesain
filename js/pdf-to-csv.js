@@ -320,7 +320,7 @@ const leftNo = cells.find(c => {
          center < leftNoNameBoundary;
 });
 
-const leftName = cells
+let leftName = cells
   .filter(c => {
     const center = c.x + (c.width || 0) / 2;
     return center >= leftNoNameBoundary &&
@@ -342,7 +342,7 @@ const rightNo = cells.find(c => {
          center < rightNoNameBoundary;
 });
 
-const rightName = cells
+let rightName = cells
   .filter(c => {
     const center = c.x + (c.width || 0) / 2;
     return center >= rightNoNameBoundary;
@@ -350,7 +350,24 @@ const rightName = cells
   .map(c => c.text)
   .join(" ");
 
+  // PERBAIKAN: Nama yang terbaca di kolom NO
+// harus dipindahkan ke kolom NAMA jika bukan angka.
 
+if (leftNo && !/^\d+$/.test(leftNo.text.trim())) {
+  leftName = [leftNo.text, leftName]
+    .filter(Boolean)
+    .join(" ");
+
+  leftNo = null;
+}
+
+if (rightNo && !/^\d+$/.test(rightNo.text.trim())) {
+  rightName = [rightNo.text, rightName]
+    .filter(Boolean)
+    .join(" ");
+
+  rightNo = null;
+}
       
       // Simpan data kelompok kiri.
       // Data tetap dimasukkan sesuai posisi kolomnya,
