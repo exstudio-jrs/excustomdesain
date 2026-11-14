@@ -270,13 +270,13 @@ const leftSizeNoBoundary =
   (leftSizeCenter + leftNoCenter) / 2;
 
 const leftNoNameBoundary =
-  (leftNoCenter + leftNameCenter) / 2;
+  leftNoCenter + (leftNameCenter - leftNoCenter) * 0.4;
 
 const rightSizeNoBoundary =
   (rightSizeCenter + rightNoCenter) / 2;
 
 const rightNoNameBoundary =
-  (rightNoCenter + rightNameCenter) / 2;
+  rightNoCenter + (rightNameCenter - rightNoCenter) * 0.4;
 
 
     // Kelompokkan teks berdasarkan baris.
