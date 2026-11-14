@@ -169,14 +169,14 @@ async function extractPdf(file) {
     showMessage(`Membaca halaman ${pageNumber} dari ${pdf.numPages}...`);
 
     const page = await pdf.getPage(pageNumber);
-    const content = await page.getTextContent();
-
+    const content = await page.getTextContent();    
     const items = content.items
       .filter(item => item.str && item.str.trim())
       .map(item => ({
         text: item.str.trim(),
         x: item.transform[4],
-        y: item.transform[5]
+        y: item.transform[5],
+        width: item.width || 0
       }));
 
     const sizeHeaders = items
