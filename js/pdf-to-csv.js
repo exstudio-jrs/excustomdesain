@@ -90,12 +90,14 @@ async function getPdfJs() {
 
 function groupTextItemsIntoRows(items) {
   const sorted = items
-    .filter(item => item.str && item.str.trim())
+    .filter(item => item.str && item.str.trim())    
     .map(item => ({
       text: item.str.trim(),
-      x: item.transform?.[4] || 0,
-      y: item.transform?.[5] || 0
-    }))
+      x: item.transform[4],
+      y: item.transform[5],
+      width: item.width || 0
+    }));
+
     .sort((a, b) => Math.abs(b.y - a.y) > 2 ? b.y - a.y : a.x - b.x);
 
   const rows = [];
@@ -214,6 +216,58 @@ async function extractPdf(file) {
       min: rightNoX, max: 1200, default: 900
     });
 
+
+// Hitung titik tengah teks header.
+const getHeaderCenter = (text, min, max, fallback) => {
+  const found = headers.find(item =>
+    item.text.toUpperCase() === text &&
+    item.x > min &&
+    item.x < max
+  );
+
+  return found
+    ? found.x + (found.width || 0) / 2
+    : fallback;
+};
+
+const leftSizeCenter = getHeaderCenter(
+  "SIZE", 0, 820, leftSizeX
+);
+
+const leftNoCenter = getHeaderCenter(
+  "NO", leftSizeX, 820, leftNoX
+);
+
+const leftNameCenter = getHeaderCenter(
+  "NAMA", leftNoX, 820, leftNameX
+);
+
+const rightSizeCenter = getHeaderCenter(
+  "SIZE", 820, 1100, rightSizeX
+);
+
+const rightNoCenter = getHeaderCenter(
+  "NO", rightSizeX, 1100, rightNoX
+);
+
+const rightNameCenter = getHeaderCenter(
+  "NAMA", rightNoX, 1200, rightNameX
+);
+
+// Batas antar kolom.
+const leftSizeNoBoundary =
+  (leftSizeCenter + leftNoCenter) / 2;
+
+const leftNoNameBoundary =
+  (leftNoCenter + leftNameCenter) / 2;
+
+const rightSizeNoBoundary =
+  (rightSizeCenter + rightNoCenter) / 2;
+
+const rightNoNameBoundary =
+  (rightNoCenter + rightNameCenter) / 2;
+
+
     // Kelompokkan teks berdasarkan baris.
     const rows = [];
 
@@ -241,37 +295,50 @@ async function extractPdf(file) {
     rows.forEach(row => {
       const cells = row.items.sort((a, b) => a.x - b.x);
 
-      // Kelompok kiri: SIZE, NO, NAMA.
-      const leftSize = cells.find(c =>
-        c.x >= leftSizeX - 5 &&
-        c.x < leftNoX - 2
-      );
+      
+// Kelompok kiri: SIZE, NO, NAMA.
+const leftSize = cells.find(c => {
+  const center = c.x + (c.width || 0) / 2;
+  return center >= leftSizeX - 5 &&
+         center < leftSizeNoBoundary;
+});
 
-      const leftNo = cells.find(c =>
-        c.x >= leftNoX - 5 &&
-        c.x < leftNameX - 2
-      );
+const leftNo = cells.find(c => {
+  const center = c.x + (c.width || 0) / 2;
+  return center >= leftSizeNoBoundary &&
+         center < leftNoNameBoundary;
+});
 
-      const leftName = cells
-        .filter(c => c.x >= leftNameX - 5 && c.x < rightSizeX)
-        .map(c => c.text)
-        .join(" ");
+const leftName = cells
+  .filter(c => {
+    const center = c.x + (c.width || 0) / 2;
+    return center >= leftNoNameBoundary &&
+           center < rightSizeX;
+  })
+  .map(c => c.text)
+  .join(" ");
 
-      // Kelompok kanan: SIZE, NO, NAMA.
-      const rightSize = cells.find(c =>
-        c.x >= rightSizeX - 5 &&
-        c.x < rightNoX - 2
-      );
+// Kelompok kanan: SIZE, NO, NAMA.
+const rightSize = cells.find(c => {
+  const center = c.x + (c.width || 0) / 2;
+  return center >= rightSizeX - 5 &&
+         center < rightSizeNoBoundary;
+});
 
-      const rightNo = cells.find(c =>
-        c.x >= rightNoX - 5 &&
-        c.x < rightNameX - 2
-      );
+const rightNo = cells.find(c => {
+  const center = c.x + (c.width || 0) / 2;
+  return center >= rightSizeNoBoundary &&
+         center < rightNoNameBoundary;
+});
 
-      const rightName = cells
-        .filter(c => c.x >= rightNameX - 5)
-        .map(c => c.text)
-        .join(" ");
+const rightName = cells
+  .filter(c => {
+    const center = c.x + (c.width || 0) / 2;
+    return center >= rightNoNameBoundary;
+  })
+  .map(c => c.text)
+  .join(" ");
+
 
       
       // Simpan data kelompok kiri.
