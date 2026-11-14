@@ -273,21 +273,27 @@ async function extractPdf(file) {
         .map(c => c.text)
         .join(" ");
 
-      if (leftSize) {
+      
+      // Simpan data kelompok kiri.
+      // Data tetap dimasukkan sesuai posisi kolomnya,
+      // meskipun SIZE, NO, atau NAMA kosong.
+      if (leftSize || leftNo || leftName.trim()) {
         leftPlayers.push({
-          size: leftSize.text,
-          no: leftNo ? leftNo.text : "",
+          size: leftSize?.text || "",
+          no: leftNo?.text || "",
           name: leftName.trim()
         });
       }
 
-      if (rightSize) {
+      // Simpan data kelompok kanan.
+      if (rightSize || rightNo || rightName.trim()) {
         rightPlayers.push({
-          size: rightSize.text,
-          no: rightNo ? rightNo.text : "",
+          size: rightSize?.text || "",
+          no: rightNo?.text || "",
           name: rightName.trim()
         });
       }
+
     });
 
     players.push(...leftPlayers, ...rightPlayers);
