@@ -88,25 +88,32 @@ async function getPdfJs() {
   return pdfjsLib;
 }
 
+
 function groupTextItemsIntoRows(items) {
   const sorted = items
-    .filter(item => item.str && item.str.trim())    
+    .filter(item => item.str && item.str.trim())
     .map(item => ({
       text: item.str.trim(),
       x: item.transform[4],
       y: item.transform[5],
       width: item.width || 0
-    }));
-
-    .sort((a, b) => Math.abs(b.y - a.y) > 2 ? b.y - a.y : a.x - b.x);
+    }))
+    .sort((a, b) =>
+      Math.abs(b.y - a.y) > 2
+        ? b.y - a.y
+        : a.x - b.x
+    );
 
   const rows = [];
+
   for (const item of sorted) {
     let row = rows.find(r => Math.abs(r.y - item.y) <= 2.5);
+
     if (!row) {
       row = { y: item.y, cells: [] };
       rows.push(row);
     }
+
     row.cells.push(item);
   }
 
@@ -119,7 +126,7 @@ function groupTextItemsIntoRows(items) {
       let previousRight = null;
 
       for (const cell of cells) {
-        const estimatedWidth = Math.max(4, cell.text.length * 4.5);
+        const estimatedWidth = Math.max(4, cell.width || cell.text.length * 4.5);
         const gap = previousRight === null ? 0 : cell.x - previousRight;
 
         if (current && gap > 22) {
@@ -128,13 +135,17 @@ function groupTextItemsIntoRows(items) {
         } else {
           current = current ? `${current} ${cell.text}` : cell.text;
         }
+
         previousRight = cell.x + estimatedWidth;
       }
+
       if (current.trim()) output.push(current.trim());
+
       return output;
     })
     .filter(row => row.length);
 }
+
 
 function normalizeRows(rows) {
   const maxColumns = Math.max(0, ...rows.map(row => row.length));
