@@ -1,5 +1,6 @@
 import { supabase } from "./config.js";
 import { requireUser, escapeHtml } from "./common.js";
+import { initNotifications } from "./notifications.js";
 
 const API_URL = "https://script.google.com/macros/s/AKfycbzg2QFxtVsUiqraewCt1w_LnTf4ZU5uhfdeCnoDLNW0uJLtxDMQ80RUf1Y3WXtIgN10/exec";
 
@@ -1281,6 +1282,12 @@ async function init() {
       ...user,
       role: profile.role
     };
+
+    // ======================================
+    // NOTIFICATION SYSTEM
+    // ====================================== 
+
+    initNotifications(supabase, user.id);
 
     if (!["marketing", "admin_po", "admin"].includes(profile.role)) {
       window.location.href = "nota.html";

@@ -1,6 +1,8 @@
 
 import { supabase } from "./config.js";
 import { requireUser, escapeHtml } from "./common.js";
+import { initNotifications } from "./notifications.js";
+
 
 // =====================================
 // LOGIN DAN ROLE
@@ -13,6 +15,12 @@ if (!context) {
 }
 
 const { user, profile } = context;
+
+// =====================================
+// NOTIFICATION SYSTEM
+// ======================================
+
+initNotifications(supabase, user.id);
 
 const isAdmin = profile.role === "admin";
 const isAdminPO = profile.role === "admin_po";

@@ -50,13 +50,20 @@ export function initNotifications(supabase, userId) {
 
     switch (notification.entity_type) {
       case "design":
-        return id ? `dashboard.html?design_id=${id}` : "dashboard.html";
+        return id
+          ? `dashboard.html?design_id=${id}`
+          : "dashboard.html";
 
+      case "po":
       case "purchase_order":
-        return id ? `po.html?id=${id}` : "po.html";
+        return id
+          ? `po-detail.html?id=${id}`
+          : "po.html";
 
       case "nota":
-        return id ? `nota.html?id=${id}` : "nota.html";
+        return id
+          ? `nota.html?id=${id}`
+          : "nota.html";
 
       default:
         return "dashboard.html";

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Input Nota - EXSTUDIO</title>
   <link rel="stylesheet" href="css/nota-form.css">
+  <link rel="stylesheet" href="css/notifications.css">
 </head>
 <body>
 
@@ -20,6 +21,45 @@
       <a href="report-omset.html">Report Omset</a>
     </nav>
     <div class="topbar-user">
+      <div id="notificationRoot" class="notification-root">
+
+      <button
+        type="button"
+        id="notificationToggle"
+        class="notification-toggle"
+        aria-label="Notifikasi"
+        aria-expanded="false"
+      >
+        <span class="notification-bell">🔔</span>
+        <span id="notificationBadge" class="notification-badge hidden">0</span>
+      </button>
+
+      <div id="notificationPanel" class="notification-panel hidden">
+
+        <div class="notification-header">
+          <div>
+            <strong>Notifikasi</strong>
+            <small id="notificationUnreadText">
+              Tidak ada notifikasi baru
+            </small>
+          </div>
+
+          <button
+            type="button"
+            id="notificationMarkAll"
+            class="notification-mark-all"
+          >
+            Tandai dibaca
+          </button>
+        </div>
+
+        <div id="notificationList" class="notification-list">
+          <p class="notification-loading">Memuat notifikasi...</p>
+        </div>
+
+      </div>
+
+    </div>
       <span id="userLabel">Memuat pengguna...</span>
       <button id="logoutBtn" type="button">Logout</button>
     </div>
