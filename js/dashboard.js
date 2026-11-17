@@ -421,6 +421,15 @@ function openDesignDetail(id) {
         const previewUrl = getDrivePreview(file);
         const fileId = getDriveFileId(file);
 
+        console.log("DETAIL FILE:", {
+          file_name: file.file_name,
+          file_type: file.file_type,
+          drive_file_id: file.drive_file_id,
+          drive_url: file.drive_url,
+          preview_url: file.preview_url,
+          fileId: fileId
+        });
+
         return `
           <div class="detail-image-item">
             ${
