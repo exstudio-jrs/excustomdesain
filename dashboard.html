@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/revision.css">
+  <link rel="stylesheet" href="css/notifications.css">
 </head>
 
 <body class="dashboard-page">
@@ -89,6 +90,45 @@
         </div>
 
         <div class="user-area">
+
+          <div id="notificationRoot" class="notification-root">
+
+            <button
+              type="button"
+              id="notificationToggle"
+              class="notification-toggle"
+              aria-label="Notifikasi"
+              aria-expanded="false"
+            >
+              <span class="notification-bell">♧</span>
+              <span id="notificationBadge" class="notification-badge hidden">0</span>
+            </button>
+
+            <div id="notificationPanel" class="notification-panel hidden">
+
+              <div class="notification-header">
+                <div>
+                  <strong>Notifikasi</strong>
+                  <small id="notificationUnreadText">Tidak ada notifikasi baru</small>
+                </div>
+
+                <button
+                  type="button"
+                  id="notificationMarkAll"
+                  class="notification-mark-all"
+                >
+                  Tandai dibaca
+                </button>
+              </div>
+
+              <div id="notificationList" class="notification-list">
+                <p class="notification-loading">Memuat notifikasi...</p>
+              </div>
+
+            </div>
+
+          </div>
+
           <div class="user-indicator">
             <span class="user-indicator-dot"></span>
             <span id="userLabel">Loading...</span>
@@ -97,6 +137,7 @@
           <button id="logoutBtn" class="btn btn-ghost">
             Keluar ↗
           </button>
+
         </div>
 
       </header>

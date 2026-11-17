@@ -11,6 +11,8 @@ import {
   escapeHtml
 } from "./common.js";
 
+import { initNotifications } from "./notifications.js";
+
 // ======================================
 // 1. USER DAN ROLE
 // ======================================
@@ -22,6 +24,12 @@ if (!context?.user || !context?.profile) {
 }
 
 const { user, profile } = context;
+
+// ======================================
+// NOTIFICATION SYSTEM
+// ======================================
+
+initNotifications(supabase, user.id);
 
 // Identifikasi role
 const isAdmin = profile.role === "admin";
@@ -1505,3 +1513,20 @@ workList.querySelectorAll("[data-file]").forEach(input => {
 
 await loadDesignerOptions();
 await load();
+
+// Membuka detail desain jika dashboard dibuka dari notifikasi.
+const notificationParams = new URLSearchParams(location.search);
+const notificationDesignId = notificationParams.get("design_id");
+
+if (notificationDesignId) {
+  const design = designCache.get(String(notificationDesignId));
+
+  if (design) {
+    openDesignDetail(notificationDesignId);
+  } else {
+    console.warn(
+      "Desain dari notifikasi tidak ditemukan:",
+      notificationDesignId
+    );
+  }
+}
