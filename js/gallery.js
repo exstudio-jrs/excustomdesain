@@ -5,31 +5,188 @@ import {
   SUPABASE_ANON_KEY
 } from "./config.js";
 
-import { requireUser, escapeHtml } from "./common.js";
-
+import { requireUser } from "./common.js";
 
 const context = await requireUser();
 
-if (!context) {
-  throw new Error("Unauthenticated");
+if (!context?.user || !context?.profile) {
+  throw new Error("Data login atau profil tidak ditemukan.");
 }
 
-const { user, profile } = context;
+const { profile } = context;
 
 const grid = document.querySelector("#galleryGrid");
-const isAdmin = profile.role === "admin";
-const isMarketing = profile.role === "marketing";
 const isDesigner = profile.role === "designer";
-const isAdminPO = profile.role === "admin_po";
 
 // ======================================
-// PREVIEW GOOGLE DRIVE GALLERY
+// 1. STYLE GALLERY DAN LIGHTBOX
 // ======================================
 
-async function loadGalleryPreview(img, designId, fileId) {
+const galleryStyle = document.createElement("style");
+
+galleryStyle.textContent = `
+  .approved-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 22px;
+  }
+
+  .approved-image-card {
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--card-bg, #fff);
+    border: 1px solid rgba(128,128,128,.2);
+  }
+
+  .approved-image-frame {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f1f1f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .approved-image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .approved-image-fallback {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    color: #888;
+  }
+
+  .approved-image-actions {
+    padding: 12px;
+  }
+
+  .approved-image-actions button {
+    width: 100%;
+  }
+
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    background: rgba(0,0,0,.92);
+  }
+
+  .gallery-lightbox.show {
+    display: flex;
+  }
+
+  .gallery-lightbox img {
+    max-width: 95%;
+    max-height: 88vh;
+    object-fit: contain;
+  }
+
+  .gallery-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: white;
+    color: #111;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  @media(max-width:600px) {
+    .approved-gallery-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .approved-image-actions {
+      padding: 8px;
+    }
+
+    .approved-image-actions button {
+      font-size: 11px;
+      padding: 9px 5px;
+    }
+  }
+`;
+
+document.head.append(galleryStyle);
+
+// ======================================
+// 2. LIGHTBOX
+// ======================================
+
+const lightbox = document.createElement("div");
+
+lightbox.className = "gallery-lightbox";
+
+lightbox.innerHTML = `
+  <button
+    type="button"
+    class="gallery-lightbox-close"
+    aria-label="Tutup"
+  >×</button>
+
+  <img src="" alt="Preview gambar desain">
+`;
+
+document.body.append(lightbox);
+
+const lightboxImage = lightbox.querySelector("img");
+
+function closeLightbox() {
+  lightbox.classList.remove("show");
+  lightboxImage.src = "";
+  document.body.style.overflow = "";
+}
+
+function openLightbox(imageUrl) {
+  if (!imageUrl) return;
+
+  lightboxImage.src = imageUrl;
+  lightbox.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+lightbox.querySelector(".gallery-lightbox-close")
+  .addEventListener("click", closeLightbox);
+
+lightbox.addEventListener("click", event => {
+  if (event.target === lightbox) {
+    closeLightbox();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeLightbox();
+  }
+});
+
+// ======================================
+// 3. PREVIEW GOOGLE DRIVE
+// ======================================
+
+const previewUrls = new Set();
+
+async function loadGalleryPreview(img, button, designId, fileId) {
   try {
-    const { data: { session }, error } =
-      await supabase.auth.getSession();
+    const {
+      data: { session },
+      error
+    } = await supabase.auth.getSession();
 
     if (error) throw error;
 
@@ -37,9 +194,15 @@ async function loadGalleryPreview(img, designId, fileId) {
       throw new Error("Sesi login tidak ditemukan.");
     }
 
+    const params = new URLSearchParams({
+      designId,
+      fileId
+    });
+
     const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/drive-preview?designId=${encodeURIComponent(designId)}&fileId=${encodeURIComponent(fileId)}`,
+      `${SUPABASE_URL}/functions/v1/drive-preview?${params}`,
       {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${session.access_token}`,
           apikey: SUPABASE_ANON_KEY
@@ -52,224 +215,78 @@ async function loadGalleryPreview(img, designId, fileId) {
     }
 
     const blob = await response.blob();
+
+    if (!blob.type.startsWith("image/")) {
+      throw new Error("File bukan gambar.");
+    }
+
     const imageUrl = URL.createObjectURL(blob);
+
+    previewUrls.add(imageUrl);
 
     img.src = imageUrl;
 
     img.onload = () => {
-      URL.revokeObjectURL(imageUrl);
+      button.disabled = false;
+      button.textContent = "PERBESAR GAMBAR";
+    };
+
+    img.onerror = () => {
+      button.disabled = true;
+      img.style.display = "none";
+
+      const fallback = img
+        .closest(".approved-image-card")
+        ?.querySelector(".approved-image-fallback");
+
+      if (fallback) {
+        fallback.style.display = "block";
+      }
     };
 
   } catch (error) {
-    console.error("Gallery preview error:", error);
+    console.error("Gallery preview error:", {
+      designId,
+      fileId,
+      error
+    });
 
     img.style.display = "none";
 
-    const fallback = img.nextElementSibling;
+    const fallback = img
+      .closest(".approved-image-card")
+      ?.querySelector(".approved-image-fallback");
 
     if (fallback) {
-      fallback.style.display = "grid";
+      fallback.style.display = "block";
     }
+
+    button.disabled = true;
+    button.textContent = "GAMBAR TIDAK TERSEDIA";
   }
 }
 
 // ======================================
-// 1. MODAL DETAIL GALLERY
-// ======================================
-
-const modal = document.createElement("div");
-
-modal.id = "galleryDetailModal";
-modal.className = "detail-modal hidden";
-
-modal.innerHTML = `
-  <div class="detail-modal-backdrop" id="galleryBackdrop"></div>
-
-  <div class="detail-modal-content">
-    <div class="detail-modal-header">
-      <div>
-        <p class="eyebrow">APPROVED COLLECTION</p>
-        <h2>Detail Desain<span>.</span></h2>
-      </div>
-
-      <button
-        type="button"
-        class="btn btn-ghost"
-        id="closeGalleryDetail"
-      >✕</button>
-    </div>
-
-    <div id="galleryDetailContent">
-      <p class="muted">Memuat detail...</p>
-    </div>
-  </div>
-`;
-
-document.body.append(modal);
-
-function closeDetail() {
-  modal.classList.add("hidden");
-  document.body.style.overflow = "";
-}
-
-modal.querySelector("#closeGalleryDetail")
-  .addEventListener("click", closeDetail);
-
-modal.querySelector("#galleryBackdrop")
-  .addEventListener("click", closeDetail);
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeDetail();
-});
-
-// ======================================
-// 2. FORMAT DATA
-// ======================================
-
-function formatDate(value) {
-  if (!value) return "—";
-
-  return new Date(value).toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  });
-}
-
-function thumbnailUrl(file) {
-  if (!file?.drive_file_id) return "";
-
-  return file.drive_file_id;
-}
-
-function driveUrl(file) {
-  if (file.drive_url) return file.drive_url;
-
-  if (file.drive_file_id) {
-    return `https://drive.google.com/file/d/${encodeURIComponent(file.drive_file_id)}/view`;
-  }
-
-  return "";
-}
-
-// ======================================
-// 3. DETAIL DESAIN
-// ======================================
-
-function openDetail(design) {
-  const content = modal.querySelector("#galleryDetailContent");
-
-  const results = (design.design_files || [])
-    .filter(file => file.file_type === "result");
-
-  content.innerHTML = `
-    <div class="detail-info-grid">
-
-      <div class="detail-info-item full">
-        <small>Nama Project / Customer</small>
-        <p><strong>${escapeHtml(design.project_name)}</strong></p>
-      </div>
-
-      <div class="detail-info-item">
-        <small>Jenis Apparel</small>
-        <p>${escapeHtml(design.apparel_type || "—")}</p>
-      </div>
-
-      <div class="detail-info-item">
-        <small>Tanggal Approved</small>
-        <p>${formatDate(design.approved_at)}</p>
-      </div>
-
-      <div class="detail-info-item full">
-        <small>Detail Brief</small>
-        <p>${escapeHtml(design.brief || "Tidak ada detail brief.")}</p>
-      </div>
-
-      <div class="detail-info-item full">
-        <small>Hasil Desain (${results.length})</small>
-
-        ${
-          results.length
-            ? `
-              <div class="detail-images">
-                ${results.map(file => {
-                  const image = thumbnailUrl(file);
-                  const link = driveUrl(file);
-
-                  return `
-                    <div class="gallery-detail-image">
-                      ${
-                        image
-                          ? `
-                            <img
-                              src="${escapeHtml(image)}"
-                              alt="${escapeHtml(file.file_name || "Hasil desain")}"
-                              loading="lazy"
-                              onerror="
-                                this.style.display='none';
-                                this.nextElementSibling.style.display='block';
-                              "
-                            >
-                            <div class="preview-fallback" style="display:none">
-                              Preview tidak tersedia
-                            </div>
-                          `
-                          : `
-                            <div class="preview-fallback">
-                              Preview tidak tersedia
-                            </div>
-                          `
-                      }
-
-                      ${
-                        link
-                          ? `
-                            <a
-                              href="${escapeHtml(link)}"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              ${escapeHtml(file.file_name || "Buka hasil desain")} ↗
-                            </a>
-                          `
-                          : `<small>${escapeHtml(file.file_name || "File desain")}</small>`
-                      }
-                    </div>
-                  `;
-                }).join("")}
-              </div>
-            `
-            : `<p class="muted">Belum ada hasil desain.</p>`
-        }
-      </div>
-
-    </div>
-  `;
-
-  modal.classList.remove("hidden");
-  document.body.style.overflow = "hidden";
-}
-
-// ======================================
-// 4. LOAD GALLERY
+// 4. LOAD GALLERY APPROVED
 // ======================================
 
 async function loadGallery() {
   if (!grid) return;
 
   grid.innerHTML = `
-    <p class="muted">Memuat gallery...</p>
+    <p class="muted">Memuat Gallery Approved...</p>
   `;
 
   const { data, error } = await supabase
     .from("designs")
     .select(`
       id,
-      project_name,
-      apparel_type,
-      brief,
-      approved_at,
-      design_files(*)
+      design_files (
+        id,
+        file_type,
+        file_name,
+        drive_file_id
+      )
     `)
     .eq("status", "approved")
     .order("approved_at", { ascending: false });
@@ -282,189 +299,109 @@ async function loadGallery() {
 
   const designs = data || [];
 
-  if (!designs.length) {
-    grid.innerHTML = `
-      <p class="muted">
-        Belum ada desain approved.
-      </p>
-    `;
-    return;
-  }
+  // Ambil semua hasil desain dari desain yang approved
+  const approvedImages = [];
 
-  // Hanya desain yang memiliki hasil upload
-  const approvedDesigns = designs.filter(design =>
-    (design.design_files || []).some(
-      file => file.file_type === "result"
-    )
-  );
-
-  if (!approvedDesigns.length) {
-    grid.innerHTML = `
-      <p class="muted">
-        Desain sudah approved, tetapi belum ada hasil desain yang dapat ditampilkan.
-      </p>
-    `;
-    return;
-  }
-
-  grid.innerHTML = approvedDesigns.map(design => {
+  designs.forEach(design => {
     const results = (design.design_files || [])
-      .filter(file => file.file_type === "result");
+      .filter(file =>
+        file.file_type === "result" &&
+        file.drive_file_id
+      );
 
-    const firstImage = thumbnailUrl(results[0]);
-
-    return `
-      <article class="gallery-card">
-
-        <div class="gallery-card-preview">
-          ${
-            firstImage
-              ? `
-                <img
-                  data-gallery-preview="${escapeHtml(firstImage)}"
-                  data-design-id="${escapeHtml(design.id)}"
-                  alt="${escapeHtml(design.project_name)}"
-                  loading="lazy"
-                >
-                <div class="gallery-no-preview" style="display:none">
-                  Preview tidak tersedia
-                </div>
-              `
-              : `
-                <div class="gallery-no-preview">
-                  Preview tidak tersedia
-                </div>
-              `
-          }
-        </div>
-
-        <div class="gallery-info">
-
-          <span class="status approved">APPROVED</span>
-
-          <h3>${escapeHtml(design.project_name)}</h3>
-
-          <p>
-            ${escapeHtml(design.apparel_type || "—")}
-            · ${formatDate(design.approved_at)}
-          </p>
-
-          <p>
-            ${escapeHtml((design.brief || "").slice(0, 140))}
-          </p>
-
-          <small class="muted">
-            ${results.length} hasil desain
-          </small>
-
-          <div class="gallery-actions">
-          <button
-            type="button"
-            class="btn btn-primary gallery-detail-btn"
-            data-gallery-detail="${escapeHtml(design.id)}"
-          >
-            LIHAT DETAIL ↗
-          </button>
-
-          ${
-            isAdmin
-              ? `
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  data-gallery-delete="${escapeHtml(design.id)}"
-                >
-                  HAPUS PERMANEN
-                </button>
-              `
-              : ""
-          }
-          </div>
-
-        </div>
-      </article>
-    `;
-  }).join("");
-
-  // Load preview gambar dari Google Drive
-grid.querySelectorAll("[data-gallery-preview]")
-  .forEach(img => {
-    loadGalleryPreview(
-      img,
-      img.dataset.designId,
-      img.dataset.galleryPreview
-    );
-  });
-
-  // Event tombol detail
-  grid.querySelectorAll("[data-gallery-detail]")
-    .forEach(button => {
-      button.addEventListener("click", () => {
-        const design = approvedDesigns.find(
-          item => String(item.id) === button.dataset.galleryDetail
-        );
-
-        if (design) openDetail(design);
+    results.forEach(file => {
+      approvedImages.push({
+        designId: design.id,
+        fileId: file.drive_file_id
       });
     });
+  });
+
+  if (!approvedImages.length) {
+    grid.innerHTML = `
+      <p class="muted">
+        Belum ada gambar desain approved.
+      </p>
+    `;
+    return;
+  }
+
+  grid.classList.add("approved-gallery-grid");
+
+  grid.innerHTML = approvedImages.map((item, index) => `
+    <article class="approved-image-card">
+
+      <div class="approved-image-frame">
+
+        <img
+          data-gallery-image="${index}"
+          alt="Desain approved ${index + 1}"
+          loading="lazy"
+        >
+
+        <div class="approved-image-fallback">
+          Preview tidak tersedia
+        </div>
+
+      </div>
+
+      <div class="approved-image-actions">
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-enlarge-image="${index}"
+          disabled
+        >
+          MEMUAT GAMBAR...
+        </button>
+
+      </div>
+
+    </article>
+  `).join("");
+
+  // Muat gambar dari Google Drive
+  approvedImages.forEach((item, index) => {
+    const img = grid.querySelector(
+      `[data-gallery-image="${index}"]`
+    );
+
+    const button = grid.querySelector(
+      `[data-enlarge-image="${index}"]`
+    );
+
+    loadGalleryPreview(
+      img,
+      button,
+      item.designId,
+      item.fileId
+    );
+  });
 }
 
 // ======================================
-// HAPUS PERMANEN KHUSUS ADMIN
+// 5. EVENT PERBESAR GAMBAR
 // ======================================
 
-grid.addEventListener("click", async (event) => {
-  const button = event.target.closest("[data-gallery-delete]");
+grid?.addEventListener("click", event => {
+  const button = event.target.closest("[data-enlarge-image]");
 
-  if (!button || !isAdmin) return;
+  if (!button || button.disabled) return;
 
-  const designId = button.dataset.galleryDelete;
+  const index = button.dataset.enlargeImage;
 
-  const confirmed = window.confirm(
-    "YAKIN HAPUS PERMANEN?\n\n" +
-    "Data desain dan seluruh file terkait akan dihapus " +
-    "dari Supabase dan Google Drive.\n\n" +
-    "Tindakan ini tidak dapat dibatalkan."
+  const img = grid.querySelector(
+    `[data-gallery-image="${index}"]`
   );
 
-  if (!confirmed) return;
-
-  button.disabled = true;
-  button.textContent = "MENGHAPUS...";
-
-  try {
-    const { data, error } =
-      await supabase.functions.invoke("drive-delete", {
-        body: { designId }
-      });
-
-    if (error) {
-      throw error;
-    }
-
-    if (!data?.success) {
-      throw new Error(data?.error || "Penghapusan gagal.");
-    }
-
-    window.alert("Desain berhasil dihapus permanen.");
-
-    await loadGallery();
-
-  } catch (error) {
-    console.error("DELETE GALLERY ERROR:", error);
-
-    window.alert(
-      "Gagal menghapus desain:\n" +
-      (error.message || String(error))
-    );
-
-    button.disabled = false;
-    button.textContent = "HAPUS PERMANEN";
+  if (img?.src && img.complete) {
+    openLightbox(img.src);
   }
 });
 
 // ======================================
-// PENGATURAN NAVIGASI BERDASARKAN ROLE
+// 6. NAVIGASI BERDASARKAN ROLE
 // ======================================
 
 const navMasterHarga = document.querySelector("#navMasterHarga");
@@ -473,7 +410,6 @@ const navManajemenNota = document.querySelector("#navManajemenNota");
 const navReportOmset = document.querySelector("#navReportOmset");
 const navPdfToCsv = document.querySelector("#navPdfToCsv");
 
-// Master Harga: Admin dan Marketing
 if (navMasterHarga) {
   navMasterHarga.classList.toggle(
     "hidden",
@@ -481,22 +417,18 @@ if (navMasterHarga) {
   );
 }
 
-// PDF to CSV: Designer
 if (navPdfToCsv) {
   navPdfToCsv.classList.toggle("hidden", !isDesigner);
 }
 
-// Manajemen PO: Marketing dan Admin
 if (navManajemenPO) {
   navManajemenPO.classList.toggle("hidden", isDesigner);
 }
 
-// Manajemen Nota: Marketing dan Admin
 if (navManajemenNota) {
   navManajemenNota.classList.toggle("hidden", isDesigner);
 }
 
-// Report Omset: Semua role yang diizinkan
 if (navReportOmset) {
   navReportOmset.classList.toggle(
     "hidden",
@@ -504,9 +436,8 @@ if (navReportOmset) {
   );
 }
 
-
 // ======================================
-// JALANKAN GALLERY
+// 7. JALANKAN GALLERY
 // ======================================
 
 await loadGallery();
