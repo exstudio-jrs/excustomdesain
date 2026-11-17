@@ -17,7 +17,10 @@ if (!context) {
 const { user, profile } = context;
 
 const grid = document.querySelector("#galleryGrid");
-const isAdmin = context.profile?.role === "admin";
+const isAdmin = profile.role === "admin";
+const isMarketing = profile.role === "marketing";
+const isDesigner = profile.role === "designer";
+const isAdminPO = profile.role === "admin_po";
 
 // ======================================
 // PREVIEW GOOGLE DRIVE GALLERY
