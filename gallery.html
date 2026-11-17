@@ -1,23 +1,145 @@
+
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>EXS—Gallery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EXS — Gallery</title>
   <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="dashboard.html">EXS<span>.</span> <small>EX STUDIO</small></a>
-    <nav>
-      <a href="https://exstudio-jrs.github.io/exstudio/">Home Ex Studio</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a class="active" href="gallery.html">Gallery</a></nav>
-    <div class="user-area"><span id="userLabel">Loading...</span><button id="logoutBtn" class="btn btn-ghost">Keluar</button></div>
-  </header>
-  <main class="container">
-    <section class="page-head"><div><p class="eyebrow">APPROVED COLLECTION</p><h1>Design Gallery<span>.</span></h1><p class="muted">Koleksi hasil desain yang telah disetujui Marketing.</p></div></section>
-    <section id="galleryGrid" class="gallery-grid"><p class="muted">Memuat gallery...</p></section>
-  </main>
+
+<body class="dashboard-page">
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
+
+      <a class="brand" href="dashboard.html">
+        EXS<span>.</span>
+        <small>EX STUDIO</small>
+      </a>
+
+      <div class="sidebar-label">MAIN MENU</div>
+
+      <nav class="sidebar-nav">
+
+        <a href="dashboard.html">
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+
+        <a href="gallery.html" class="active">
+          <span class="nav-icon">▧</span>
+          Gallery
+        </a>
+
+        <a href="pdf-to-csv.html" id="navPdfToCsv" class="hidden">
+          <span class="nav-icon">▤</span>
+          PDF to CSV
+        </a>
+
+        <a href="po.html" id="navManajemenPO">
+          <span class="nav-icon">▤</span>
+          Manajemen PO
+        </a>
+
+        <a href="nota.html" id="navManajemenNota" class="hidden">
+          <span class="nav-icon">▣</span>
+          Manajemen Nota
+        </a>
+
+        <a href="master-harga.html" id="navMasterHarga" class="hidden">
+          <span class="nav-icon">◈</span>
+          Master Harga
+        </a>
+
+        <a href="report-omset.html" id="navReportOmset" class="hidden">
+          <span class="nav-icon">▥</span>
+          Report Omset
+        </a>
+
+      </nav>
+
+      <div class="sidebar-bottom">
+
+        <div class="sidebar-status">
+          <span class="status-dot"></span>
+          <span>EXSTUDIO WORKSPACE</span>
+        </div>
+
+        <a href="https://exstudio-jrs.github.io/exstudio/"
+           target="_blank"
+           rel="noopener">
+          Home Ex Studio ↗
+        </a>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN AREA -->
+    <div class="dashboard-main">
+
+      <!-- TOP HEADER -->
+      <header class="dashboard-topbar">
+
+        <div class="topbar-left">
+          <p class="eyebrow">EXSTUDIO / WORKSPACE</p>
+          <span class="topbar-title">Design Gallery</span>
+        </div>
+
+        <div class="user-area">
+
+          <div class="user-indicator">
+            <span class="user-indicator-dot"></span>
+            <span id="userLabel">Loading...</span>
+          </div>
+
+          <button id="logoutBtn" class="btn btn-ghost">
+            Keluar ↗
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- CONTENT -->
+      <main class="dashboard-content">
+
+        <section class="page-head dashboard-page-head">
+
+          <div>
+            <p class="eyebrow">APPROVED COLLECTION</p>
+            <h1>Design Gallery<span>.</span></h1>
+            <p class="muted">
+              Koleksi hasil desain yang telah disetujui Marketing.
+            </p>
+          </div>
+
+        </section>
+
+        <!-- GALLERY -->
+        <section id="galleryGrid" class="gallery-grid">
+          <p class="muted">Memuat gallery...</p>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+          <span>EXS<span class="footer-lime">.</span> EX STUDIO</span>
+          <span>DESIGN • PRODUCTION • QUALITY</span>
+        </footer>
+
+      </main>
+
+    </div>
+
+  </div>
+
   <script type="module" src="js/gallery.js"></script>
-</body></html>
+
+</body>
+</html>

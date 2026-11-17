@@ -459,6 +459,48 @@ grid.addEventListener("click", async (event) => {
 });
 
 // ======================================
+// PENGATURAN NAVIGASI BERDASARKAN ROLE
+// ======================================
+
+const navMasterHarga = document.querySelector("#navMasterHarga");
+const navManajemenPO = document.querySelector("#navManajemenPO");
+const navManajemenNota = document.querySelector("#navManajemenNota");
+const navReportOmset = document.querySelector("#navReportOmset");
+const navPdfToCsv = document.querySelector("#navPdfToCsv");
+
+// Master Harga: Admin dan Marketing
+if (navMasterHarga) {
+  navMasterHarga.classList.toggle(
+    "hidden",
+    !["admin", "marketing"].includes(profile.role)
+  );
+}
+
+// PDF to CSV: Designer
+if (navPdfToCsv) {
+  navPdfToCsv.classList.toggle("hidden", !isDesigner);
+}
+
+// Manajemen PO: Marketing dan Admin
+if (navManajemenPO) {
+  navManajemenPO.classList.toggle("hidden", isDesigner);
+}
+
+// Manajemen Nota: Marketing dan Admin
+if (navManajemenNota) {
+  navManajemenNota.classList.toggle("hidden", isDesigner);
+}
+
+// Report Omset: Semua role yang diizinkan
+if (navReportOmset) {
+  navReportOmset.classList.toggle(
+    "hidden",
+    !["marketing", "admin", "admin_po", "designer"].includes(profile.role)
+  );
+}
+
+
+// ======================================
 // JALANKAN GALLERY
 // ======================================
 
