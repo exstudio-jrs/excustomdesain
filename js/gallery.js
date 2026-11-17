@@ -14,6 +14,8 @@ if (!context) {
   throw new Error("Unauthenticated");
 }
 
+const { user, profile } = context;
+
 const grid = document.querySelector("#galleryGrid");
 const isAdmin = context.profile?.role === "admin";
 
