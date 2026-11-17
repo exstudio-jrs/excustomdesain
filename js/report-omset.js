@@ -1,6 +1,16 @@
 import { supabase } from "./config.js";
 import { requireUser, escapeHtml } from "./common.js";
 
+const context = await requireUser();
+
+if (!context) {
+  throw new Error("Unauthenticated");
+}
+
+const { user, profile } = context;
+
+const isDesigner = profile.role === "designer";
+
 const yearFilter = document.querySelector("#yearFilter");
 const monthFilter = document.querySelector("#monthFilter");
 
@@ -22,6 +32,41 @@ const monthDetailAmount = document.querySelector("#monthDetailAmount");
 
 const reportNotaList = document.querySelector("#reportNotaList");
 const reportMessage = document.querySelector("#reportMessage");
+
+// =====================================
+// NAVIGASI BERDASARKAN ROLE
+// =====================================
+const navMasterHarga = document.querySelector("#navMasterHarga");
+const navManajemenPO = document.querySelector("#navManajemenPO");
+const navManajemenNota = document.querySelector("#navManajemenNota");
+const navReportOmset = document.querySelector("#navReportOmset");
+const navPdfToCsv = document.querySelector("#navPdfToCsv");
+
+if (navMasterHarga) {
+  navMasterHarga.classList.toggle(
+    "hidden",
+    !["admin", "marketing"].includes(profile.role)
+  );
+}
+
+if (navPdfToCsv) {
+  navPdfToCsv.classList.toggle("hidden", !isDesigner);
+}
+
+if (navManajemenPO) {
+  navManajemenPO.classList.toggle("hidden", isDesigner);
+}
+
+if (navManajemenNota) {
+  navManajemenNota.classList.toggle("hidden", isDesigner);
+}
+
+if (navReportOmset) {
+  navReportOmset.classList.toggle(
+    "hidden",
+    !["marketing", "admin", "admin_po", "designer"].includes(profile.role)
+  );
+}
 
 const monthNames = [
   "Januari",
@@ -118,10 +163,7 @@ async function loadReport() {
   reportMessage.textContent = "Memuat data laporan...";
 
   try {
-    const userSession = await requireUser();
-
-    if (!userSession) return;
-
+    
     // Mengambil data Nota
     const notas = await fetchAllRows(
       "notas",
