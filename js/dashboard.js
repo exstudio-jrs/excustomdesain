@@ -193,25 +193,29 @@ function formatDate(value) {
   });
 }
 
-function getDrivePreview(file) {
-  let fileId = file.drive_file_id || "";
 
-  if (!fileId) {
-    const url = file.preview_url || file.drive_url || "";
-    const match = url.match(/\/file\/d\/([^/?]+)/);
-
-    if (match) {
-      fileId = match[1];
-    }
+function getDriveFileId(file) {
+  if (file.drive_file_id) {
+    return file.drive_file_id;
   }
+
+  const url = file.preview_url || file.drive_url || "";
+
+  const match =
+    url.match(/\/file\/d\/([^/?]+)/) ||
+    url.match(/[?&]id=([^&]+)/);
+
+  return match ? decodeURIComponent(match[1]) : "";
+}
+
+function getDrivePreview(file) {
+  const fileId = getDriveFileId(file);
 
   if (fileId) {
-    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(
-      fileId
-    )}&sz=w1000`;
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
   }
 
-  const previewUrl = file.preview_url || "";
+  const previewUrl = file.preview_url || file.drive_url || "";
 
   if (previewUrl && !previewUrl.includes("/file/d/")) {
     return previewUrl;
@@ -219,6 +223,7 @@ function getDrivePreview(file) {
 
   return "";
 }
+
 
 function getDriveFileUrl(file) {
   if (file.drive_url) {
@@ -414,13 +419,14 @@ function openDesignDetail(id) {
     <div class="detail-images">
       ${items.map(file => {
         const previewUrl = getDrivePreview(file);
+        const fileId = getDriveFileId(file);
 
         return `
           <div class="detail-image-item">
             ${
               previewUrl
                 ? `<img
-                    data-drive-preview="${escapeHtml(file.drive_file_id || "")}"
+                    data-drive-preview="${escapeHtml(fileId)}"
                     data-design-id="${escapeHtml(d.id)}"
                     alt="${escapeHtml(file.file_name || "Preview desain")}"
                     loading="lazy"
