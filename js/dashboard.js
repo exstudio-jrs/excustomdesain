@@ -469,12 +469,7 @@ function openDesignDetail(id) {
         <p><strong>${escapeHtml(d.project_name || "-")}</strong></p>
       </div>
 
-      <div class="detail-info-item">
-        <small>Jenis Apparel</small>
-        <p>${escapeHtml(d.apparel_type || "—")}</p>
-      </div>
-
-    
+          
       <div class="detail-info-item">
         <small>Deadline</small>
         <p>${escapeHtml(formatDate(d.deadline))}</p>
@@ -820,10 +815,7 @@ form?.addEventListener("submit", async event => {
       throw new Error("Detail brief wajib diisi.");
     }
 
-    if (!values.apparel_type?.trim()) {
-      throw new Error("Jenis apparel wajib dipilih.");
-    }
-
+  
     if (!values.assigned_designer) {
       throw new Error("Pilih desainer yang akan mengerjakan brief.");
     }
@@ -834,7 +826,6 @@ form?.addEventListener("submit", async event => {
       .from("designs")
       .insert({
         project_name: values.project_name.trim(),
-        apparel_type: values.apparel_type,
         deadline: values.deadline || null,
         main_color: values.main_color || "",
         brief: values.brief.trim(),
