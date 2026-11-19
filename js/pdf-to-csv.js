@@ -314,7 +314,7 @@ const leftSize = cells.find(c => {
          center < leftSizeNoBoundary;
 });
 
-const leftNo = cells.find(c => {
+Let leftNo = cells.find(c => {
   const center = c.x + (c.width || 0) / 2;
   return center >= leftSizeNoBoundary &&
          center < leftNoNameBoundary;
